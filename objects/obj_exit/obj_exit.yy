@@ -10,8 +10,8 @@
   "name":"obj_exit",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"TOP-DOWN",
+    "path":"folders/Objects/TOP-DOWN.yy",
   },
   "parentObjectId":null,
   "persistent":false,

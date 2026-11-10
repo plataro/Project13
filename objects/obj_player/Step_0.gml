@@ -136,38 +136,39 @@ switch (state) {
         }
 
         // สกิล 1
-        else if (keyboard_check(ord("1")) && shot1_timer <= 0 && shot1_ammo > 0) {
+		else if (keyboard_check(ord("1")) && shot1_timer <= 0 && shot1_ammo > 0) {
 
-            var _b = instance_create_depth(x, y, depth, obj_bullet);
-            _b.direction = aim;
-            _b.image_angle = aim;
-            _b.speed = bullet_speed;
-            _b.lift = chest;
+			var _b = instance_create_depth(x, y, depth, obj_bullet);
 
-            shot1_ammo--;
-            shot1_timer = shot1_gap;
+			_b.direction = aim;
+			_b.image_angle = aim;
+			_b.speed = bullet_speed;
+			_b.lift = aim_height;
 
-            if (shot1_ammo <= 0) {
-                shot1_reload_timer = shot1_reload;
-            }
-        }
+			shot1_ammo--;
+			shot1_timer = shot1_gap;
+
+			if (shot1_ammo <= 0) {
+				shot1_reload_timer = shot1_reload;
+			}
+		}
 
         // สกิล 2
-        else if (keyboard_check(ord("2")) && skill2_timer <= 0) {
+		else if (keyboard_check(ord("2")) && skill2_timer <= 0) {
 
-            for (var _i = -1; _i <= 1; _i++) {
+			for (var _i = -1; _i <= 1; _i++) {
 
-                var _a = aim + _i * 15;
-                var _b2 = instance_create_depth(x, y, depth, obj_bullet);
+				var _a = aim + _i * 15;
+				var _b2 = instance_create_depth(x, y, depth, obj_bullet);
 
-                _b2.direction = _a;
-                _b2.image_angle = _a;
-                _b2.speed = bullet_speed;
-                _b2.lift = chest;
-            }
+				_b2.direction = _a;
+				_b2.image_angle = _a;
+				_b2.speed = bullet_speed;
+				_b2.lift = aim_height;
+			}
 
-            skill2_timer = skill2_cooldown;
-        }
+			skill2_timer = skill2_cooldown;
+		}
 
         break;
 
@@ -365,16 +366,48 @@ if (state == PState.ROLL) {
 
 depth = -y;
 
+
 // ==========================================
-// CAMERA
+// CAMERA + DYNAMIC ZOOM
 // ==========================================
 
 var _cam = view_camera[0];
-var _cw = camera_get_view_width(_cam);
-var _ch = camera_get_view_height(_cam);
 
-camera_set_view_pos(
-    _cam,
-    floor(clamp(x - _cw / 2, 0, room_width - _cw)),
-    floor(clamp(y - chest - _ch / 2, 0, room_height - _ch))
-);
+// เก็บขนาดกล้องตั้งต้นเพียงครั้งเดียว
+if (!variable_instance_exists(id, "camera_base_w")) {
+    camera_base_w = camera_get_view_width(_cam);
+    camera_base_h = camera_get_view_height(_cam);
+    camera_zoom = 1;
+}
+
+// ตรวจจับความเร็ว
+var _camera_spd = point_distance(0, 0, mvx, mvy);
+
+// เป้าหมายการซูม
+// 1.00 = ระยะปกติ
+// 1.06 = ซูมออก 6%
+var _zoom_target = 1.0;
+
+if (state == PState.MOVE && _camera_spd > move_speed + 0.5) {
+    _zoom_target = 1.06;
+}
+
+// ค่อย ๆ เปลี่ยนระยะซูม
+camera_zoom = lerp(camera_zoom, _zoom_target, 0.10);
+
+// ป้องกันค่าซูมคลาดเคลื่อนสะสม
+var _cw = round(camera_base_w * camera_zoom);
+var _ch = round(camera_base_h * camera_zoom);
+
+camera_set_view_size(_cam, _cw, _ch);
+
+// ติดตามตำแหน่งผู้เล่นเหมือนเดิม
+var _cam_x = floor(x - _cw / 2);
+var _cam_y = floor(y - chest - _ch / 2);
+
+// จำกัดขอบเขตห้อง
+_cam_x = clamp(_cam_x, 0, max(0, room_width - _cw));
+_cam_y = clamp(_cam_y, 0, max(0, room_height - _ch));
+
+camera_set_view_pos(_cam, _cam_x, _cam_y);
+
