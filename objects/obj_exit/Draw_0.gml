@@ -1,0 +1,1 @@
+draw_sprite_ext(sprite_index, 0, x, y, 1, 1, 0, locked ? c_gray : c_white, locked ? 0.4 : 1);

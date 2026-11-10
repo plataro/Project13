@@ -1,0 +1,29 @@
+if (keyboard_check_pressed(ord("H"))) show = !show;
+if (keyboard_check_pressed(ord("X"))) global.god = !global.god;
+
+if (keyboard_check_pressed(ord("Z")) && instance_exists(obj_player)) {
+    obj_player.hp = obj_player.max_hp;
+}
+
+if (keyboard_check_pressed(ord("C"))) {
+    with (obj_enemy) hp = 0;
+}
+
+var _go = noone;
+if (keyboard_check_pressed(ord("B"))) {
+    var _i = level_index();   // อยู่เมนูจะได้ -1 แล้วไปด่าน 1
+    _go = global.levels[min(_i + 1, array_length(global.levels) - 1)];
+}
+if (keyboard_check_pressed(ord("V"))) {
+    var _i2 = level_index();
+    _go = global.levels[max(_i2 - 1, 0)];
+}
+if (keyboard_check_pressed(ord("N"))) {
+    _go = rm_menu;
+}
+
+if (_go != noone && !instance_exists(obj_fade)) {
+    if (instance_exists(obj_player)) global.player_hp = obj_player.hp;
+    var _f = instance_create_depth(0, 0, -10000, obj_fade);
+    _f.target_room = _go;
+}

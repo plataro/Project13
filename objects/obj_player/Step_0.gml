@@ -1,0 +1,203 @@
+if (hp <= 0) {
+    if (!instance_exists(obj_gameover)) instance_create_depth(0, 0, -9000, obj_gameover);
+    hsp = 0;
+    vsp = 0;
+    mvx = 0;
+    mvy = 0;
+    exit;
+}
+
+if (instance_exists(obj_fade) || instance_exists(obj_dialogue)) {
+    hsp = 0;
+    vsp = 0;
+    mvx = 0;
+    mvy = 0;
+    sliding = false;
+    exit;
+}
+
+var _kx = (keyboard_check(ord("D")) || keyboard_check(vk_right))
+        - (keyboard_check(ord("A")) || keyboard_check(vk_left));
+var _ky = (keyboard_check(ord("S")) || keyboard_check(vk_down))
+        - (keyboard_check(ord("W")) || keyboard_check(vk_up));
+var _len = point_distance(0, 0, _kx, _ky);
+
+aim = point_direction(x, y - chest, mouse_x, mouse_y);
+
+// ตัวจับเวลา
+if (roll_cd_timer > 0) roll_cd_timer--;
+if (invuln_timer > 0) invuln_timer--;
+if (attack_cd > 0) attack_cd--;
+if (shot1_timer > 0) shot1_timer--;
+if (skill2_timer > 0) skill2_timer--;
+if (shot1_reload_timer > 0) {
+    shot1_reload_timer--;
+    if (shot1_reload_timer <= 0) shot1_ammo = shot1_max;
+}
+
+switch (state) {
+    case PState.MOVE:
+        face = round(aim / 90) mod 4;
+
+        // หมดหน้าต่างต่อคอมโบ = รีเซ็ต
+        if (combo_window > 0) {
+            combo_window--;
+            if (combo_window <= 0) combo = 0;
+        }
+
+        // เดิน / วิ่ง พร้อมแรงเฉื่อย
+        var _running = keyboard_check(vk_shift) && _len > 0;
+        var _spd = point_distance(0, 0, mvx, mvy);
+
+        if (_len > 0) {
+            dir_x = _kx / _len;
+            dir_y = _ky / _len;
+            var _tspeed = _running ? run_speed : move_speed;
+            var _step = _running ? run_accel : ((_spd > move_speed + 0.2) ? slide_friction : walk_accel);
+            // หักเลี้ยวเกิน 60 องศาตอนมีแรงเฉื่อย ตอบสนองไวขึ้น
+            if (_spd > 1 && abs(angle_difference(point_direction(0, 0, mvx, mvy), point_direction(0, 0, dir_x, dir_y))) > 60) {
+                _step *= turn_boost;
+            }
+            steer(dir_x * _tspeed, dir_y * _tspeed, _step);
+        } else {
+            steer(0, 0, sliding ? slide_friction : walk_friction);
+        }
+
+        if (_running) sliding = true;
+        if (point_distance(0, 0, mvx, mvy) < 0.3) sliding = false;
+
+        hsp = mvx;
+        vsp = mvy;
+
+        if (keyboard_check_pressed(vk_space) && roll_cd_timer <= 0) {
+            state = PState.ROLL;
+            roll_timer = roll_time;
+            combo = 0;
+            combo_window = 0;
+            if (_len == 0) {
+                dir_x = lengthdir_x(1, aim);
+                dir_y = lengthdir_y(1, aim);
+            }
+        }
+        else if (mouse_check_button_pressed(mb_left) && attack_cd <= 0) {
+            // คลิกต่อภายในช่วงต่อคอมโบ = ท่าถัดไป ไม่งั้นเริ่มท่า 1
+            start_attack((combo_window > 0) ? combo + 1 : 1);
+        }
+        else if (keyboard_check(ord("1")) && shot1_timer <= 0 && shot1_ammo > 0) {
+            // สกิล 1: ยิงรัวได้ ครบนัดแล้วรีโหลด
+            var _b = instance_create_depth(x, y, depth, obj_bullet);
+            _b.direction = aim;
+            _b.image_angle = aim;
+            _b.speed = bullet_speed;
+            _b.lift = chest;
+            shot1_ammo--;
+            shot1_timer = shot1_gap;
+            if (shot1_ammo <= 0) shot1_reload_timer = shot1_reload;
+        }
+        else if (keyboard_check(ord("2")) && skill2_timer <= 0) {
+            // สกิล 2: ยิง 3 ทิศ
+            for (var _i = -1; _i <= 1; _i++) {
+                var _a = aim + _i * 15;
+                var _b2 = instance_create_depth(x, y, depth, obj_bullet);
+                _b2.direction = _a;
+                _b2.image_angle = _a;
+                _b2.speed = bullet_speed;
+                _b2.lift = chest;
+            }
+            skill2_timer = skill2_cooldown;
+        }
+        break;
+
+    case PState.ROLL:
+        hsp = dir_x * roll_speed;
+        vsp = dir_y * roll_speed;
+        roll_timer--;
+        if (roll_timer <= 0) {
+            state = PState.MOVE;
+            roll_cd_timer = roll_cooldown;
+            // ไถลต่อนิดหน่อยหลังกลิ้งจบ
+            mvx = dir_x * roll_speed * 0.5;
+            mvy = dir_y * roll_speed * 0.5;
+            sliding = true;
+        }
+        break;
+
+    case PState.ATTACK:
+        // ตอนฟัน เดินช้า ๆ แต่แรงเฉื่อยจากการวิ่งยังพาไปต่อแล้วค่อยหมด
+        var _atx = 0;
+        var _aty = 0;
+        if (_len > 0) {
+            _atx = (_kx / _len) * move_speed * attack_move_mult;
+            _aty = (_ky / _len) * move_speed * attack_move_mult;
+        }
+        steer(_atx, _aty, slide_friction);
+
+        // พุ่งตามท่า
+        var _lx = 0;
+        var _ly = 0;
+        if (lunge_timer > 0) {
+            _lx = lengthdir_x(lunge_speed, lunge_dir);
+            _ly = lengthdir_y(lunge_speed, lunge_dir);
+            lunge_timer--;
+        }
+        hsp = mvx + _lx;
+        vsp = mvy + _ly;
+
+        // กลิ้งตัดจังหวะ (คอมโบรีเซ็ต)
+        if (keyboard_check_pressed(vk_space) && roll_cd_timer <= 0) {
+            state = PState.ROLL;
+            roll_timer = roll_time;
+            combo = 0;
+            combo_window = 0;
+            combo_buffer = false;
+            if (_len > 0) {
+                dir_x = _kx / _len;
+                dir_y = _ky / _len;
+            } else {
+                dir_x = lengthdir_x(1, aim);
+                dir_y = lengthdir_y(1, aim);
+            }
+            break;
+        }
+
+        // คลิกระหว่างฟันอยู่ = จองท่าถัดไป
+        if (mouse_check_button_pressed(mb_left)) combo_buffer = true;
+
+        attack_timer--;
+        if (attack_timer <= 0) {
+            if (combo_buffer && combo < 4) {
+                start_attack(combo + 1);
+            } else {
+                state = PState.MOVE;
+                combo_buffer = false;
+                if (combo >= 4) {
+                    combo = 0;
+                    combo_window = 0;
+                    attack_cd = attack_end_lag;
+                } else {
+                    combo_window = combo_window_time;
+                }
+            }
+        }
+        break;
+}
+
+move_and_collide(hsp + kb_x, vsp + kb_y, obj_wall);
+
+// ชนกำแพงแล้วแรงเฉื่อยในทิศนั้นหาย
+if (mvx != 0 && place_meeting(x + sign(mvx), y, obj_wall)) mvx = 0;
+if (mvy != 0 && place_meeting(x, y + sign(mvy), obj_wall)) mvy = 0;
+
+kb_x *= 0.8;
+kb_y *= 0.8;
+if (abs(kb_x) < 0.1) kb_x = 0;
+if (abs(kb_y) < 0.1) kb_y = 0;
+
+depth = -y;
+
+var _cam = view_camera[0];
+var _cw = camera_get_view_width(_cam);
+var _ch = camera_get_view_height(_cam);
+camera_set_view_pos(_cam,
+    floor(clamp(x - _cw / 2, 0, room_width - _cw)),
+    floor(clamp(y - chest - _ch / 2, 0, room_height - _ch)));
