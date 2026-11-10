@@ -13,8 +13,8 @@
   ],
   "name":"rm_test_ss",
   "parent":{
-    "name":"Rooms",
-    "path":"folders/Rooms.yy",
+    "name":"SIDE SCROLLING",
+    "path":"folders/Rooms/SIDE SCROLLING.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

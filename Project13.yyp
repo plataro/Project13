@@ -62,6 +62,7 @@
     {"id":{"name":"obj_gameover","path":"objects/obj_gameover/obj_gameover.yy",},},
     {"id":{"name":"obj_ground_ss","path":"objects/obj_ground_ss/obj_ground_ss.yy",},},
     {"id":{"name":"obj_hitbox","path":"objects/obj_hitbox/obj_hitbox.yy",},},
+    {"id":{"name":"obj_interactable_ss","path":"objects/obj_interactable_ss/obj_interactable_ss.yy",},},
     {"id":{"name":"obj_menu","path":"objects/obj_menu/obj_menu.yy",},},
     {"id":{"name":"obj_player_ss","path":"objects/obj_player_ss/obj_player_ss.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
