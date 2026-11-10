@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"obj_interactable_ss",
+  "%Name":"Object25",
   "eventList":[],
   "managed":true,
-  "name":"obj_interactable_ss",
+  "name":"Object25",
   "overriddenProperties":[],
   "parent":{
     "name":"SIDE SCROLLING",
