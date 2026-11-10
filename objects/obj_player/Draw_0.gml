@@ -2,11 +2,14 @@
 var _cfg = anim_config();
 var _spd = point_distance(0, 0, mvx, mvy);
 
-// เลือก Animation ตามสถานะ
+// ==========================================
+// SELECT ANIMATION
+// ==========================================
+
 var _name = "idle";
 
 if (state == PState.ROLL) {
-    _name = "roll";
+    _name = "run";
 }
 else if (state == PState.ATTACK) {
     _name = "attack";
@@ -23,54 +26,80 @@ else if (_spd > 0.3) {
 
 var _a = _cfg[$ _name];
 
-// เลือก Sprite
-var _spr;
+// เลือก Sprite ตามทิศทาง
+var _spr = _a.spr[face];
 
-if (_name == "idle") {
-    _spr = _a.spr[face];
-}
-else {
-    _spr = _a.spr;
-}
+// จำนวนเฟรมจริงของ Sprite
+var _frames = sprite_get_number(_spr);
 
-// ตัวนับ Animation
+// ==========================================
+// ANIMATION TIMER
+// ==========================================
+
 if (!variable_instance_exists(id, "anim_t")) {
     anim_t = 0;
 }
 
 anim_t += _a.fps / 60;
 
-// คำนวณเฟรม
 var _f = 0;
 
 switch (_name) {
 
     case "attack":
         _f = floor(
-            ((attack_total - attack_timer) / attack_total) * _a.n
-        );
-        break;
-
-    case "roll":
-        _f = floor(
-            ((roll_time - roll_timer) / roll_time) * _a.n
+            ((attack_total - attack_timer) / attack_total) * _frames
         );
         break;
 
     case "hurt":
         _f = floor(
-            ((invuln_time - invuln_timer) / 12) * _a.n
+            ((invuln_time - invuln_timer) / 12) * _frames
         );
         break;
 
     default:
-        _f = floor(anim_t) mod _a.n;
+        _f = floor(anim_t) mod _frames;
         break;
 }
 
-_f = clamp(_f, 0, _a.n - 1);
+_f = clamp(_f, 0, _frames - 1);
 
-// เงา
+// ==========================================
+// AFTERIMAGE
+// ==========================================
+
+if (state == PState.ROLL) {
+
+    var _run_spr = _cfg.run.spr[face];
+
+    for (var i = 3; i >= 0; i--) {
+
+        if (roll_echo_age[i] < 12) {
+
+            var _alpha = 0.38 * (
+                1 - roll_echo_age[i] / 12
+            );
+
+            draw_sprite_ext(
+                _run_spr,
+                roll_echo_frame[i],
+                round(roll_echo_x[i]),
+                round(roll_echo_y[i]),
+                global.pl_scale,
+                global.pl_scale,
+                0,
+                make_color_rgb(175, 65, 255),
+                _alpha
+            );
+        }
+    }
+}
+
+// ==========================================
+// SHADOW
+// ==========================================
+
 var _sw = (bbox_right - bbox_left) * 0.75;
 
 draw_shadow(
@@ -80,11 +109,16 @@ draw_shadow(
     _sw * 0.35
 );
 
-// Debug
+// ==========================================
+// DEBUG
+// ==========================================
+
 if (global.debug) {
+
     var _r = player_hurt_rect(id);
 
     draw_set_color(c_lime);
+
     draw_rectangle(
         _r[0], _r[1],
         _r[2], _r[3],
@@ -94,46 +128,37 @@ if (global.debug) {
     draw_set_color(c_white);
 }
 
-// กะพริบเมื่อได้รับความเสียหาย
+// ==========================================
+// INVULNERABILITY FLASH
+// ==========================================
+
 if (invuln_timer > 0 && (invuln_timer div 4) mod 2 == 0) {
     exit;
 }
 
-// วาด Idle จาก Sprite แยกทิศทาง
-if (_name == "idle") {
+// ==========================================
+// PLAYER COLOR
+// ==========================================
 
-    draw_sprite_ext(
-        _spr,
-        _f,
-        round(x),
-        round(y),
-        global.pl_scale,
-        global.pl_scale,
-        0,
-        c_white,
-        1
-    );
+var _color = c_white;
 
+// Roll = Violet
+if (state == PState.ROLL) {
+    _color = make_color_rgb(190, 115, 255);
 }
 
-// วาด Animation อื่นจาก Sprite Sheet 4 ทิศทาง
-else {
+// ==========================================
+// DRAW PLAYER
+// ==========================================
 
-    var _row = global.face_row[face];
-
-    draw_sprite_part_ext(
-        _spr,
-        _f,
-        0,
-        _row * 64,
-        64,
-        64,
-        round(x),
-        round(y - _row * 64 * global.pl_scale),
-        global.pl_scale,
-        global.pl_scale,
-        c_white,
-        1
-    );
-
-}
+draw_sprite_ext(
+    _spr,
+    _f,
+    round(x),
+    round(y),
+    global.pl_scale,
+    global.pl_scale,
+    0,
+    _color,
+    1
+);

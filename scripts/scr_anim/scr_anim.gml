@@ -1,8 +1,4 @@
 
-// ตาราง Animation ของผู้เล่น
-// Idle แยก Sprite ตามทิศทาง
-// Animation อื่นใช้ Sprite Sheet 4 ทิศทาง
-
 function anim_config() {
     return {
         idle: {
@@ -12,37 +8,46 @@ function anim_config() {
                 spr_pl_idle_left,
                 spr_pl_idle_down
             ],
-            n: 12,
             fps: 8
         },
 
         walk: {
-            spr: spr_pl_walk,
-            n: 6,
+            spr: [
+                spr_pl_walk_right,
+                spr_pl_walk_up,
+                spr_pl_walk_left,
+                spr_pl_walk_down
+            ],
             fps: 10
         },
 
         run: {
-            spr: spr_pl_walk,
-            n: 6,
+            spr: [
+                spr_pl_run_right,
+                spr_pl_run_up,
+                spr_pl_run_left,
+                spr_pl_run_down
+            ],
             fps: 16
         },
 
-        roll: {
-            spr: spr_pl_roll,
-            n: 8,
+        attack: {
+            spr: [
+                spr_pl_attack_right,
+                spr_pl_attack_up,
+                spr_pl_attack_left,
+                spr_pl_attack_down
+            ],
             fps: 0
         },
 
         hurt: {
-            spr: spr_pl_hurt_down,
-            n: 5,
-            fps: 0
-        },
-
-        attack: {
-            spr: spr_pl_attack_down,
-            n: 8,
+            spr: [
+                spr_pl_hurt_right,
+                spr_pl_hurt_up,
+                spr_pl_hurt_left,
+                spr_pl_hurt_down
+            ],
             fps: 0
         }
     };
@@ -54,13 +59,4 @@ function anim_config() {
 // 2 = Left
 // 3 = Down
 
-// ลำดับแถวใน Sprite Sheet:
-// Row 0 = Down
-// Row 1 = Left
-// Row 2 = Right
-// Row 3 = Up
-
-global.face_row = [2, 3, 1, 0];
-
-// ขนาดตัวละคร
 global.pl_scale = 2;

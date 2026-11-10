@@ -101,6 +101,13 @@ switch (state) {
 
             state = PState.ROLL;
             roll_timer = roll_time;
+			
+			roll_echo_timer = 0;
+
+			for (var i = 0; i < 4; i++) {
+				roll_echo_age[i] = 999;
+			}
+
 
             combo = 0;
             combo_window = 0;
@@ -227,6 +234,13 @@ switch (state) {
 
             state = PState.ROLL;
             roll_timer = roll_time;
+			
+			roll_echo_timer = 0;
+
+			for (var i = 0; i < 4; i++) {
+				roll_echo_age[i] = 999;
+			}
+
 
             combo = 0;
             combo_window = 0;
@@ -309,6 +323,45 @@ kb_y *= 0.8;
 
 if (abs(kb_x) < 0.1) kb_x = 0;
 if (abs(kb_y) < 0.1) kb_y = 0;
+
+// ==========================================
+// ROLL AFTERIMAGE
+// ==========================================
+
+// เพิ่มอายุให้เงาทุกดวง
+for (var i = 0; i < 4; i++) {
+    roll_echo_age[i]++;
+}
+
+// เก็บตำแหน่งเฉพาะตอน Roll
+if (state == PState.ROLL) {
+
+    roll_echo_timer--;
+
+    if (roll_echo_timer <= 0) {
+
+        // เลื่อนเงาเก่าออกไป
+        for (var i = 3; i > 0; i--) {
+            roll_echo_x[i] = roll_echo_x[i - 1];
+            roll_echo_y[i] = roll_echo_y[i - 1];
+            roll_echo_frame[i] = roll_echo_frame[i - 1];
+            roll_echo_age[i] = roll_echo_age[i - 1];
+        }
+
+        // บันทึกตำแหน่งล่าสุด
+        roll_echo_x[0] = x;
+        roll_echo_y[0] = y;
+
+        roll_echo_frame[0] = floor(
+            ((roll_time - roll_timer) / roll_time) * 8
+        ) mod 8;
+
+        roll_echo_age[0] = 0;
+
+        // สร้างเงาทุก 3 เฟรม
+        roll_echo_timer = 3;
+    }
+}
 
 depth = -y;
 

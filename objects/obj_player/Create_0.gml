@@ -23,6 +23,15 @@ roll_cooldown = 30;
 roll_timer = 0;
 roll_cd_timer = 0;
 
+roll_echo_timer = 0;
+
+// เก็บตำแหน่งเงา 4 ชุด
+roll_echo_x = array_create(4, x);
+roll_echo_y = array_create(4, y);
+roll_echo_frame = array_create(4, 0);
+roll_echo_age = array_create(4, 999);
+
+
 // ---- คอมโบฟัน 4 ท่า (รายละเอียดแต่ละท่าอยู่ใน combo_step_data) ----
 attack_move_mult = 0.4;   // เดินช้า ๆ ระหว่างฟัน
 combo = 0;                // ท่าปัจจุบัน 0 = ไม่ได้อยู่ในคอมโบ
