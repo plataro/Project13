@@ -2,6 +2,7 @@ display_set_gui_size(960, 540);
 
 mask_index = spr_mask_small;
 chest = 56;
+aim_height = 10; // จุดอ้างอิงการเล็งและ Hitbox
 
 state = PState.MOVE;
 
@@ -112,9 +113,9 @@ start_attack = function(_n) {
     lunge_speed = _d.lunge_speed;
 
     var _h = instance_create_depth(x, y, depth, obj_hitbox);
-    _h.owner = id;
-    _h.image_angle = aim;
-    _h.lift = chest;
-    _h.step_data = _d;
-    _h.damage = _d.dmg;
+	_h.owner = id;
+	_h.image_angle = aim;
+	_h.lift = aim_height;
+	_h.step_data = _d;
+	_h.damage = _d.dmg;
 }

@@ -23,7 +23,7 @@ var _ky = (keyboard_check(ord("S")) || keyboard_check(vk_down))
         - (keyboard_check(ord("W")) || keyboard_check(vk_up));
 var _len = point_distance(0, 0, _kx, _ky);
 
-aim = point_direction(x, y - chest, mouse_x, mouse_y);
+aim = point_direction(x, y - aim_height, mouse_x, mouse_y);
 
 // ตัวจับเวลา
 if (roll_cd_timer > 0) roll_cd_timer--;

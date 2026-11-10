@@ -19,9 +19,23 @@ function enemy_hit_by_circle(_e, _cx, _cy, _r) {
 }
 
 // กล่องโดนตีของผู้เล่น (ปรับตามขนาดตัวละครจริงได้)
+
 function player_hurt_rect(_p) {
-    return [_p.x - 22, _p.y - 88, _p.x + 22, _p.y];
+
+    // ขนาด Hitbox อิงจาก Scale ของตัวละคร
+    var _scale = global.pl_scale;
+
+    var _w = 12 * _scale;
+    var _h = 22 * _scale;
+
+    return [
+        _p.x - _w,
+        _p.y - _h,
+        _p.x + _w,
+        _p.y
+    ];
 }
+
 
 function player_hit_by_circle(_p, _cx, _cy, _r) {
     var _b = player_hurt_rect(_p);
