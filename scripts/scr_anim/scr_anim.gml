@@ -35,13 +35,13 @@ function anim_config() {
         },
 
         hurt: {
-            spr: spr_pl_hurt,
+            spr: spr_pl_hurt_down,
             n: 5,
             fps: 0
         },
 
         attack: {
-            spr: spr_pl_attack,
+            spr: spr_pl_attack_down,
             n: 8,
             fps: 0
         }
