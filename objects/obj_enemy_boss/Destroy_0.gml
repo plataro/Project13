@@ -1,3 +1,5 @@
+event_inherited();
+
 with (obj_enemy) {
     if (id != other.id) hp = 0;
 }

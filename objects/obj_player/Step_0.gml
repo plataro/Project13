@@ -31,6 +31,7 @@ if (invuln_timer > 0) invuln_timer--;
 if (attack_cd > 0) attack_cd--;
 if (shot1_timer > 0) shot1_timer--;
 if (skill2_timer > 0) skill2_timer--;
+if (keyboard_check_pressed(ord("Q"))) player_use_potion();
 
 if (shot1_reload_timer > 0) {
     shot1_reload_timer--;

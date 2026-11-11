@@ -43,3 +43,6 @@ draw_set_color(_ready ? c_yellow : c_gray);
 draw_rectangle(_bx + 24, _s2y, _bx + 24 + _s2w * (_ready ? 1 : 1 - skill2_timer / skill2_cooldown), _s2y + 15, false);
 
 draw_set_color(c_white);
+
+// เหรียญ + ยา
+draw_hud_money();

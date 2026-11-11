@@ -1,0 +1,1 @@
+if (hp <= 0) spawn_drops(x, y, object_index);

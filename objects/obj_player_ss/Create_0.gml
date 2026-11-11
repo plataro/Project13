@@ -49,4 +49,5 @@ die = function() {
     }
 }
 
+save_snapshot_new_room();
 instance_create_depth(0, 0, -15000, obj_title_card);

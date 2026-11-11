@@ -5,5 +5,6 @@ draw_sprite_ext(sprite_index, image_index, round(x), round(y), face * sc, sc, 0,
 if (keyboard_check(vk_f1)) {
     draw_set_color(c_lime);
     draw_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, true);
+	draw_text(bbox_left, bbox_top - 40, "grounded=" + string(grounded) + " vsp=" + string(vsp) + " hsp=" + string(hsp));
     draw_set_color(c_white);
 }

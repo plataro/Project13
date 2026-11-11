@@ -1,3 +1,25 @@
+var _solids = global.ss_solids;
+
+// ล็อกตำแหน่งเป็นพิกเซลเต็ม + ตัวสะสมเศษความเร็ว
+x = round(x);
+y = round(y);
+if (!variable_instance_exists(id, "hrem")) {
+    hrem = 0;
+    vrem = 0;
+}
+
+// ถ้าฝังอยู่ในพื้น/กำแพง/ลัง ให้ดันออกมา
+if (place_meeting(x, y, _solids)) {
+    var _fixed = false;
+    for (var _d = 1; _d <= 48 && !_fixed; _d++) {
+        if (!place_meeting(x, y - _d, _solids))      { y -= _d; _fixed = true; }
+        else if (!place_meeting(x + _d, y, _solids)) { x += _d; _fixed = true; }
+        else if (!place_meeting(x - _d, y, _solids)) { x -= _d; _fixed = true; }
+    }
+    vsp = 0;
+    vrem = 0;
+}
+
 var _frozen = instance_exists(obj_fade) || instance_exists(obj_dialogue) || respawn_timer > 0;
 if (respawn_timer > 0) respawn_timer--;
 
@@ -13,8 +35,6 @@ if (!_frozen) {
     _jp = keyboard_check_pressed(vk_space) || keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up);
     _jh = keyboard_check(vk_space) || keyboard_check(ord("W")) || keyboard_check(vk_up);
 }
-
-var _solids = global.ss_solids;
 
 // ---- สถานะพื้น / coyote / buffer ----
 grounded = place_meeting(x, y + 1, _solids);
@@ -37,17 +57,40 @@ vsp = min(vsp + grav, max_fall);
 
 if (jump_buffer > 0 && coyote > 0) {
     vsp = -jump_speed;
+    vrem = 0;
     jump_buffer = 0;
     coyote = 0;
 }
 if (!_jh && vsp < -jump_cut) vsp = -jump_cut;
 
-// ---- ชน ----
-move_and_collide(hsp, 0, _solids);
-if (hsp != 0 && place_meeting(x + sign(hsp), y, _solids)) hsp = 0;
+// ---- ชน: ขยับทีละ 1px ----
+hrem += hsp;
+var _mx = round(hrem);
+hrem -= _mx;
+var _sx = sign(_mx);
+repeat (abs(_mx)) {
+    if (!place_meeting(x + _sx, y, _solids)) {
+        x += _sx;
+    } else {
+        hsp = 0;
+        hrem = 0;
+        break;
+    }
+}
 
-move_and_collide(0, vsp, _solids);
-if (vsp != 0 && place_meeting(x, y + sign(vsp), _solids)) vsp = 0;
+vrem += vsp;
+var _my = round(vrem);
+vrem -= _my;
+var _sy = sign(_my);
+repeat (abs(_my)) {
+    if (!place_meeting(x, y + _sy, _solids)) {
+        y += _sy;
+    } else {
+        vsp = 0;
+        vrem = 0;
+        break;
+    }
+}
 
 grounded = place_meeting(x, y + 1, _solids);
 

@@ -48,13 +48,49 @@ function difficulty_data(_i = global.difficulty) {
     }
 }
 
+// ---------- ข้อมูลเซฟ (เหรียญ ของ ยา สกิล เควส) ----------
+function save_default() {
+    return {
+        gold: 0,
+        potions: 1,        // ยาที่ถืออยู่
+        potion_max: 3,     // ถือได้สูงสุด
+        hp_bonus: 0,       // หัวใจที่ซื้อเพิ่ม
+        items: {},         // ของสะสม เช่น { fang: 2, ore: 1 }
+        sp: 0,             // แต้มสกิลที่ยังไม่ได้ใช้
+        skills: {},        // สกิลที่ปลดแล้ว
+        quests: {},        // สถานะเควส
+        flags: {}          // ธงเนื้อเรื่อง เช่น mine_done
+    };
+}
+
 function apply_difficulty() {
-    global.max_hp = difficulty_data().player_hp;
+    global.max_hp = difficulty_data().player_hp + global.save.hp_bonus;
 }
 
 // เริ่มเกมใหม่ (เลือดเต็มตามระดับความยาก บทสนทนาเล่นใหม่ได้) ไม่แตะสถานะ debug
 function game_reset() {
+    global.save = save_default();
+    global.snap = "";
+    global.snap_room = noone;
     apply_difficulty();
     global.player_hp = global.max_hp;
     global.story_seen = {};
 }
+
+// เก็บภาพเซฟตอนเข้าห้องใหม่ (ตายแล้วเริ่มห้องซ้ำ ไม่เก็บซ้ำ)
+function save_snapshot_new_room() {
+    if (global.snap_room != room) {
+        global.snap = json_stringify(global.save);
+        global.snap_room = room;
+    }
+}
+
+// ตายแล้วคืนเงิน/ของ/ยา กลับไปเท่าตอนเข้าห้อง กันฟาร์ม
+function save_restore_snapshot() {
+    if (global.snap != "") global.save = json_parse(global.snap);
+    apply_difficulty();
+}
+
+global.save = save_default();
+global.snap = "";
+global.snap_room = noone;
