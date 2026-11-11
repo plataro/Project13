@@ -1,5 +1,5 @@
 t++;
-if (picked) exit;
+if (picked && start_t < 0) exit;
 
 var _p = instance_find(obj_player_ss, 0);
 var _near = (_p != noone) && point_distance(x, y - 30, _p.x, _p.y - 30) < 110;
@@ -13,7 +13,9 @@ if (start_t >= 0) {
     exit;
 }
 
-if (_near && keyboard_check_pressed(ord("E"))) {
+// กด E ตอนอยู่ใกล้ หรือเดินทับดาบก็หยิบได้เลย
+var _touch = (_p != noone) && !instance_exists(obj_fade) && !instance_exists(obj_dialogue) && abs(_p.x - x) < 36 && abs(_p.y - y) < 80;
+if ((_near && keyboard_check_pressed(ord("E"))) || _touch) {
     flag_set("sword");
     picked = true;
     start_t = 3;

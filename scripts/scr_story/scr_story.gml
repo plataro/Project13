@@ -226,9 +226,10 @@ function draw_key_hint(_x, _y, _items, _alpha, _t, _tick = false) {
         for (var _d = 0; _d < array_length(_ks2); _d++) {
             var _kw = max(28, string_width(_ks2[_d]) * _s + 16);
             draw_set_alpha(_alpha * 0.95);
-            draw_set_color(make_color_rgb(38, 42, 60));
+            var _gt = variable_struct_exists(_items[_c], "g") && _items[_c].g[_d];
+            draw_set_color(_gt ? make_color_rgb(30, 110, 60) : make_color_rgb(38, 42, 60));
             draw_roundrect_ext(_cx, _cy - 13, _cx + _kw, _cy + 13, 6, 6, false);
-            draw_set_color(make_color_rgb(255, 214, 102));
+            draw_set_color(_gt ? c_lime : make_color_rgb(255, 214, 102));
             draw_roundrect_ext(_cx, _cy - 13, _cx + _kw, _cy + 13, 6, 6, true);
             draw_set_halign(fa_center);
             draw_set_color(c_white);

@@ -11,12 +11,26 @@ if (_p != noone) _near = point_distance(x, y, _p.x, _p.y) < radius;
 if (instance_exists(obj_dialogue) || instance_exists(obj_cutscene) || instance_exists(obj_fade)) _near = false;
 if (hide_flag != "" && flag_get(hide_flag)) _near = false;
 
-if (_near && !done) {
-    for (var _i = 0; _i < array_length(watch); _i++) {
-        var _w = watch[_i];
-        var _hit = (_w < 0) ? mouse_check_button_pressed(mb_left) : keyboard_check_pressed(_w);
-        if (_hit && a > 0.6) done = true;
+// ต้องกดครบทุกปุ่มที่โชว์ ปุ่มที่กดแล้วจะเปลี่ยนเป็นสีเขียว (เก็บใน items[i].g[j])
+if (_near && !done && a > 0.6) {
+    var _total = 0;
+    var _have = 0;
+    for (var _i = 0; _i < array_length(items); _i++) {
+        var _it = items[_i];
+        if (!variable_struct_exists(_it, "c")) continue;
+        if (!variable_struct_exists(_it, "g")) _it.g = array_create(array_length(_it.c), false);
+        for (var _j = 0; _j < array_length(_it.c); _j++) {
+            var _code = _it.c[_j];
+            var _hit = false;
+            if (_code == -1) _hit = mouse_check_button_pressed(mb_left);
+            else if (_code == -2) _hit = mouse_wheel_up() || mouse_wheel_down();
+            else _hit = keyboard_check_pressed(_code);
+            if (_hit) _it.g[_j] = true;
+            _total++;
+            if (_it.g[_j]) _have++;
+        }
     }
+    if (_total > 0 && _have >= _total) done = true;
 }
 
 if (done) {

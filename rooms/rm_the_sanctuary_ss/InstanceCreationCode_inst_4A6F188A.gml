@@ -1,4 +1,3 @@
-items = [{ k: ["Space"], t: "กระโดด" }];
-watch = [vk_space, ord("W"), vk_up];
+items = [{ k: ["Space"], c: [vk_space], t: "กระโดด" }];
 hkey = "hint_ss_jump";
 radius = 300;
