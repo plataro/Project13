@@ -36,6 +36,13 @@ if (atk_state == "windup" && !is_undefined(atk_cur)) {
 
 draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y), image_xscale, image_yscale, 0, _col, vis);
 
+// แฟลชขาวช่วงแรกที่โดนตี (บวกสีขาวทับตัวศัตรู)
+if (flash > 3) {
+    gpu_set_blendmode(bm_add);
+    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y), image_xscale, image_yscale, 0, c_white, vis * 0.85);
+    gpu_set_blendmode(bm_normal);
+}
+
 // โหมด Debug: กรอบเขียว = กล่องโดนตี, กรอบแดง = กล่องชนที่เท้า
 if (global.debug) {
     var _r = enemy_hurt_rect(id);

@@ -19,6 +19,8 @@ if (hp <= 0) {
     exit;
 }
 
+if (global.hitstop > 0) exit;   // hit-stop
+
 if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_shop) || instance_exists(obj_skilltree)) {
     hsp = 0;
     vsp = 0;
@@ -426,5 +428,7 @@ var _cam_y = floor(y - chest - _ch / 2);
 _cam_x = clamp(_cam_x, 0, max(0, room_width - _cw));
 _cam_y = clamp(_cam_y, 0, max(0, room_height - _ch));
 
-camera_set_view_pos(_cam, _cam_x, _cam_y);
+// กล้องสั่น (global.shake ลดลงเองใน obj_fx)
+var _shk = global.shake;
+camera_set_view_pos(_cam, _cam_x + random_range(-_shk, _shk), _cam_y + random_range(-_shk, _shk));
 

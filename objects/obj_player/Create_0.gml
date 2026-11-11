@@ -77,6 +77,7 @@ face = 3;   // 0=ขวา 1=บน 2=ซ้าย 3=ล่าง
 take_damage = function(_dmg, _sx, _sy) {
     if (global.god || invuln_timer > 0 || state == PState.ROLL) exit;
     hp -= _dmg;
+    fx_player_hurt(_dmg);
     invuln_timer = invuln_time;
     var _d = point_direction(_sx, _sy, x, y);
     kb_x = lengthdir_x(8, _d);
@@ -126,3 +127,4 @@ player_apply_skills();
 save_snapshot_new_room();
 arrive_pending = (global.arrive != "");   // ย้ายไปจุดเกิดของประตูใน Step (รอให้ประตูถูกสร้างครบก่อน)
 instance_create_depth(0, 0, -15000, obj_title_card);
+if (!instance_exists(obj_fx)) instance_create_depth(0, 0, -19000, obj_fx);

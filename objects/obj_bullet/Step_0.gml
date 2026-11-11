@@ -1,3 +1,4 @@
+if (global.hitstop > 0) exit;   // hit-stop
 if (place_meeting(x, y, obj_wall)) {
     instance_destroy();
     exit;

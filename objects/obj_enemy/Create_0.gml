@@ -236,6 +236,7 @@ ai = function() {
 take_damage = function(_dmg, _dir) {
     hp -= _dmg;
     flash = 6;
+    fx_enemy_hit(id, _dmg, _dir);
     alert_timer = 300;   // โดนตี = รู้ตัวทันที
     hp_bar_timer = 180;   // ★ แสดงหลอดเลือด 3 วินาทีหลังโดนตี
     kb_x = lengthdir_x(8, _dir);

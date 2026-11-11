@@ -12,6 +12,7 @@ if (!variable_instance_exists(id, "diff_applied")) {
 }
 
 if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade) || instance_exists(obj_skilltree)) exit;
+if (global.hitstop > 0) exit;   // hit-stop
 
 if (flash > 0) flash--;
 

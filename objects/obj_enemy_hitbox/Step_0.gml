@@ -1,3 +1,4 @@
+if (global.hitstop > 0) exit;   // hit-stop
 age++;
 
 if (!instance_exists(owner) || is_undefined(atk)) {
