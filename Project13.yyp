@@ -47,6 +47,7 @@
   "resources":[
     {"id":{"name":"fnt_dialog","path":"fonts/fnt_dialog/fnt_dialog.yy",},},
     {"id":{"name":"obj_bullet","path":"objects/obj_bullet/obj_bullet.yy",},},
+    {"id":{"name":"obj_chest","path":"objects/obj_chest/obj_chest.yy",},},
     {"id":{"name":"obj_checkpoint_ss","path":"objects/obj_checkpoint_ss/obj_checkpoint_ss.yy",},},
     {"id":{"name":"obj_crate_ss","path":"objects/obj_crate_ss/obj_crate_ss.yy",},},
     {"id":{"name":"obj_damage_text","path":"objects/obj_damage_text/obj_damage_text.yy",},},
