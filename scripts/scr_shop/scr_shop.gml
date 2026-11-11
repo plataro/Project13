@@ -132,3 +132,17 @@ function shop_sell(_kind, _all = false, _mul = 1) {
     _s.gold += _gain;
     return _gain;
 }
+
+// สลับอาวุธตามลำดับ (_dir = 1 ถัดไป, -1 ก่อนหน้า) ข้ามอันที่ยังไม่มี
+function weapon_cycle(_dir) {
+    var _list = ["sword", "greatsword", "hammer"];
+    var _n = array_length(_list);
+    var _i = array_get_index(_list, global.save.weapon);
+    for (var _k = 1; _k <= _n; _k++) {
+        var _id = _list[((_i + _dir * _k) mod _n + _n) mod _n];
+        if (weapon_owned(_id)) {
+            weapon_equip(_id);
+            return;
+        }
+    }
+}

@@ -33,9 +33,8 @@ if (shot1_timer > 0) shot1_timer--;
 if (skill2_timer > 0) skill2_timer--;
 if (keyboard_check_pressed(ord("Q"))) player_use_potion();
 if (keyboard_check_pressed(ord("T"))) skilltree_toggle();
-if (keyboard_check_pressed(ord("1"))) weapon_equip("sword");
-if (keyboard_check_pressed(ord("2"))) weapon_equip("greatsword");
-if (keyboard_check_pressed(ord("3"))) weapon_equip("hammer");
+if (keyboard_check_pressed(ord("R")) || mouse_wheel_down()) weapon_cycle(1);
+if (mouse_wheel_up()) weapon_cycle(-1);
 
 if (shot1_reload_timer > 0) {
     shot1_reload_timer--;

@@ -135,10 +135,10 @@ function draw_hud_money() {
         draw_set_color(make_color_rgb(255, 220, 90));
         draw_text_transformed(932, 96, "[T] สกิล  SP " + string(_s.sp), 0.6, 0.6, 0);
     }
-    // อาวุธ/เกราะ (กด 1-3 สลับอาวุธ)
+    // อาวุธ/เกราะ (กด R สลับอาวุธ)
     draw_set_halign(fa_right);
     draw_set_color(c_ltgray);
-    draw_text_transformed(932, 116, "[1-3] " + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  เกราะ " + string(_s.armor)) : ""), 0.6, 0.6, 0);
+    draw_text_transformed(932, 116, "[R] " + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  เกราะ " + string(_s.armor)) : ""), 0.6, 0.6, 0);
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_color(c_white);
