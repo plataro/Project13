@@ -94,3 +94,4 @@ function save_restore_snapshot() {
 global.save = save_default();
 global.snap = "";
 global.snap_room = noone;
+global.village_return = undefined;

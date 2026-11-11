@@ -41,12 +41,12 @@ function pickup_spawn(_x, _y, _kind, _value = 1) {
 // ศัตรูตายแล้วดรอปอะไร _obj คือ object_index ของศัตรู
 function spawn_drops(_x, _y, _obj) {
     var _n = irandom_range(2, 4);   // จำนวนเหรียญ
-    var _v = 1;                      // มูลค่าเหรียญละ
+    var _v = 3;                      // มูลค่าเหรียญละ
     var _loot = 0.3;                 // โอกาสดรอปของสะสม
 
     switch (_obj) {
         case obj_enemy_boss:
-            _n = 5; _v = 5; _loot = 1;
+            _n = 5; _v = 15; _loot = 1;
             break;
         case obj_enemy_dasher:
         case obj_enemy_shooter:

@@ -123,4 +123,9 @@ start_attack = function(_n) {
 
 player_apply_skills();
 save_snapshot_new_room();
+if (room == rm_the_village && variable_global_exists("village_return") && is_struct(global.village_return)) {
+    x = global.village_return.x;
+    y = global.village_return.y;
+    global.village_return = undefined;
+}
 instance_create_depth(0, 0, -15000, obj_title_card);

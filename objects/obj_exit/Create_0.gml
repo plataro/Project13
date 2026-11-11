@@ -1,2 +1,3 @@
 next_room = level_next_room();
-locked = true;
+req_flag  = "";     // ถ้าใส่ชื่อธง ประตูจะล็อกจนกว่าธงนั้นจะเป็น true
+set_flag  = "";     // ธงที่จะตั้งตอนเดินผ่านประตูนี้
