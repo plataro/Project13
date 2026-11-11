@@ -1,3 +1,4 @@
+locked = false;   // คำนวณใหม่ทุกเฟรม (เดิมค้างเป็น true ตลอดหลังโดนล็อกด้วย req_flag)
 if (channel >= 0) {
     locked = true;
     with (obj_plate_ss) {
