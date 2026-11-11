@@ -1,4 +1,5 @@
-if (!show_hitbox || is_undefined(step_data)) exit;
+// แสดงเฉพาะโหมด debug
+if (!global.debug || !show_hitbox || is_undefined(step_data)) exit;
 
 var _active = (age >= step_data.active_from && age <= step_data.active_to);
 draw_set_alpha(_active ? 0.45 : 0.1);

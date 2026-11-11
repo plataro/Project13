@@ -17,6 +17,13 @@ if (vis > 0.5) draw_shadow(x, y, _sw, _sw * 0.35);
 if (atk_state == "windup" && !is_undefined(atk_cur)) {
     draw_set_alpha(0.15 + 0.1 * sin(current_time / 60));
     draw_set_color(c_red);
+    if (variable_struct_exists(atk_cur, "rects")) {
+        for (var _k = 0; _k < array_length(atk_cur.rects); _k++) {
+            var _r = atk_cur.rects[_k];
+            // เตือนตลอดเส้นทางที่จะพุ่งไป (ระยะพุ่ง + ระยะเอื้อม)
+            draw_oriented_rect(x, y - atk_cur.lift, atk_dir, _r[0], _r[1] + atk_cur.lunge_speed * atk_cur.lunge_frames, _r[2], _r[3]);
+        }
+    }
     for (var _i = 0; _i < array_length(atk_cur.circles); _i++) {
         var _c = atk_cur.circles[_i];
         var _cx = x + lengthdir_x(_c[0], atk_dir) + lengthdir_x(_c[1], atk_dir + 90);

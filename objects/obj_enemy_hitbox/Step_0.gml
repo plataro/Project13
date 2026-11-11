@@ -12,20 +12,34 @@ image_angle = owner.atk_dir;   // วงฟันหมุนตามผู้�
 if (!hit_done && instance_exists(obj_player)) {
     var _p = obj_player;
     if (!wall_between(x, y, _p.x, _p.y)) {
-        for (var _i = 0; _i < array_length(atk.circles); _i++) {
-            var _c = atk.circles[_i];
-            var _gx = x + lengthdir_x(_c[0], image_angle) + lengthdir_x(_c[1], image_angle + 90);
-            var _gy = y + lengthdir_y(_c[0], image_angle) + lengthdir_y(_c[1], image_angle + 90);
+        var _hit = false;
 
-            if (!wall_between(x, y, _gx, _gy) && player_hit_by_circle(_p, _gx, _gy - lift, _c[2])) {
-                var _hp0 = _p.hp;
-                var _dmg = enemy_damage_calc(atk.dmg);   // ★ ดาเมจตามความยาก x ด่าน - เกราะ
-                _p.take_damage(_dmg, owner.x, owner.y);
-                if (_p.hp < _hp0) {   // กลิ้งหลบอยู่จะไม่เสียเลือด hitbox ยังอยู่ต่อ
-                    hit_done = true;
-                    owner.on_hit_player();
-                }
-                break;
+        // สี่เหลี่ยม (ท่าพุ่ง)
+        if (variable_struct_exists(atk, "rects")) {
+            var _pr = player_hurt_rect(_p);
+            for (var _k = 0; _k < array_length(atk.rects); _k++) {
+                var _r = atk.rects[_k];
+                if (obb_hits_rect(x, y - lift, image_angle, _r[0], _r[1], _r[2], _r[3], _pr[0], _pr[1], _pr[2], _pr[3])) { _hit = true; break; }
+            }
+        }
+
+        // วงกลม (ท่าอื่น)
+        if (!_hit) {
+            for (var _i = 0; _i < array_length(atk.circles); _i++) {
+                var _c = atk.circles[_i];
+                var _gx = x + lengthdir_x(_c[0], image_angle) + lengthdir_x(_c[1], image_angle + 90);
+                var _gy = y + lengthdir_y(_c[0], image_angle) + lengthdir_y(_c[1], image_angle + 90);
+                if (!wall_between(x, y, _gx, _gy) && player_hit_by_circle(_p, _gx, _gy - lift, _c[2])) { _hit = true; break; }
+            }
+        }
+
+        if (_hit) {
+            var _hp0 = _p.hp;
+            var _dmg = enemy_damage_calc(atk.dmg);   // ★ ดาเมจตามความยาก x ด่าน - เกราะ
+            _p.take_damage(_dmg, owner.x, owner.y);
+            if (_p.hp < _hp0) {   // กลิ้งหลบอยู่จะไม่เสียเลือด hitbox ยังอยู่ต่อ
+                hit_done = true;
+                owner.on_hit_player();
             }
         }
     }
