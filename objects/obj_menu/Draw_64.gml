@@ -32,7 +32,7 @@ else if (screen == 2) {
 }
 else {
     draw_set_color(c_white);
-    if (screen == 0) draw_text_transformed(480, 120, "ชื่อเกมของเธอ", 2.5, 2.5, 0);
+    if (screen == 0) draw_text_transformed(480, 120, "THE UNKNOWN", 2.5, 2.5, 0);
     else if (screen == 3) draw_text_transformed(480, 120, "เลือกฉาก (Debug)", 1.5, 1.5, 0);
     else draw_text_transformed(480, 120, "เลือกระดับความยาก", 1.5, 1.5, 0);
 
