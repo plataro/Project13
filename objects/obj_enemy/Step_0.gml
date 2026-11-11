@@ -9,7 +9,7 @@ if (!variable_instance_exists(id, "diff_applied")) {
     max_attackers = _df.attackers;
 }
 
-if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade)) exit;
+if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade) || instance_exists(obj_skilltree)) exit;
 
 if (flash > 0) flash--;
 

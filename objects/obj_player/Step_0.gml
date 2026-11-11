@@ -8,7 +8,7 @@ if (hp <= 0) {
     exit;
 }
 
-if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_shop)) {
+if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_shop) || instance_exists(obj_skilltree)) {
     hsp = 0;
     vsp = 0;
     mvx = 0;
@@ -32,6 +32,7 @@ if (attack_cd > 0) attack_cd--;
 if (shot1_timer > 0) shot1_timer--;
 if (skill2_timer > 0) skill2_timer--;
 if (keyboard_check_pressed(ord("Q"))) player_use_potion();
+if (keyboard_check_pressed(ord("T"))) skilltree_toggle();
 
 if (shot1_reload_timer > 0) {
     shot1_reload_timer--;
@@ -145,6 +146,7 @@ switch (state) {
 			_b.image_angle = aim;
 			_b.speed = bullet_speed;
 			_b.lift = aim_height;
+			_b.pierce = bullet_pierce;
 
 			shot1_ammo--;
 			shot1_timer = shot1_gap;
@@ -154,18 +156,19 @@ switch (state) {
 			}
 		}
 
-        // สกิล 2
+                // สกิล 2
 		else if (keyboard_check(ord("2")) && skill2_timer <= 0) {
 
-			for (var _i = -1; _i <= 1; _i++) {
+			for (var _i = 0; _i < skill2_count; _i++) {
 
-				var _a = aim + _i * 15;
+				var _a = aim + (_i - (skill2_count - 1) / 2) * 15;
 				var _b2 = instance_create_depth(x, y, depth, obj_bullet);
 
 				_b2.direction = _a;
 				_b2.image_angle = _a;
 				_b2.speed = bullet_speed;
 				_b2.lift = aim_height;
+				_b2.pierce = bullet_pierce;
 			}
 
 			skill2_timer = skill2_cooldown;

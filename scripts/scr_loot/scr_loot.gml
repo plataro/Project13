@@ -94,7 +94,7 @@ function player_use_potion() {
 
     last_potion = current_time;
     _s.potions--;
-    var _heal = 2;
+    var _heal = variable_instance_exists(id, "potion_heal") ? potion_heal : 2;
     hp = min(max_hp, hp + _heal);
     float_text(x, y - 90, "+" + string(_heal), c_lime, 1.2);
     return true;
@@ -128,6 +128,12 @@ function draw_hud_money() {
     draw_set_color(c_white);
     draw_text_transformed(932 - _s.potion_max * 22 - 6, 71, "Q", 0.6, 0.6, 0);
 
+
+    if (_s.sp > 0) {
+        draw_set_halign(fa_right);
+        draw_set_color(make_color_rgb(255, 220, 90));
+        draw_text_transformed(932, 96, "[T] สกิล  SP " + string(_s.sp), 0.6, 0.6, 0);
+    }
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_color(c_white);

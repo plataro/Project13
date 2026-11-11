@@ -20,8 +20,9 @@ if (place_meeting(x, y, _solids)) {
     vrem = 0;
 }
 
-var _frozen = instance_exists(obj_fade) || instance_exists(obj_dialogue) || respawn_timer > 0;
+var _frozen = instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_skilltree) || respawn_timer > 0;
 if (respawn_timer > 0) respawn_timer--;
+if (!_frozen && keyboard_check_pressed(ord("T"))) skilltree_toggle();
 
 var _kx = 0;
 var _run = false;

@@ -105,6 +105,7 @@ start_attack = function(_n) {
     face = round(aim / 90) mod 4;
 
     var _d = combo_step_data(_n);
+	_d = skills_modify_combo(_d, _n);
     state = PState.ATTACK;
     attack_timer = _d.time;
     attack_total = _d.time;
@@ -120,5 +121,6 @@ start_attack = function(_n) {
 	_h.damage = _d.dmg;
 }
 
+player_apply_skills();
 save_snapshot_new_room();
 instance_create_depth(0, 0, -15000, obj_title_card);
