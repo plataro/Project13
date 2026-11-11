@@ -1,0 +1,1 @@
+story_key = "hall_2";
