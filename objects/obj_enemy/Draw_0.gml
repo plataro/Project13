@@ -1,3 +1,9 @@
+// เห็นเฉพาะตอนไม่มีกำแพงบัง (จางเข้า/ออกนุ่ม ๆ)
+var _show = los_clear || flash > 0;
+if (!_show && instance_exists(obj_player) && point_distance(x, y, obj_player.x, obj_player.y) < 70) _show = true;
+vis = clamp(vis + (_show ? 0.2 : -0.2), 0, 1);
+if (vis <= 0.01) exit;
+
 var _col = tint;
 if (flash > 0) _col = c_red;
 else if (telegraph) _col = c_yellow;
@@ -5,7 +11,7 @@ else if (telegraph) _col = c_yellow;
 var _ox = telegraph ? irandom_range(-2, 2) : 0;
 
 var _sw = (bbox_right - bbox_left) * 0.75;
-draw_shadow(x, y, _sw, _sw * 0.35);
+if (vis > 0.5) draw_shadow(x, y, _sw, _sw * 0.35);
 
 // วงเตือนพื้นที่โจมตีตอนเตรียมท่า
 if (atk_state == "windup" && !is_undefined(atk_cur)) {
@@ -21,7 +27,7 @@ if (atk_state == "windup" && !is_undefined(atk_cur)) {
     draw_set_color(c_white);
 }
 
-draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y), image_xscale, image_yscale, 0, _col, 1);
+draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y), image_xscale, image_yscale, 0, _col, vis);
 
 // โหมด Debug: กรอบเขียว = กล่องโดนตี, กรอบแดง = กล่องชนที่เท้า
 if (global.debug) {

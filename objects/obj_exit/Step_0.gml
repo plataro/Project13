@@ -1,4 +1,4 @@
-locked = (instance_number(obj_enemy) > 0) || (next_room == noone)
+locked = (instance_number(obj_enemy_boss) > 0) || (next_room == noone)
       || (req_flag != "" && !flag_get(req_flag));
 
 if (!locked && !instance_exists(obj_fade) && place_meeting(x, y, obj_player)) {

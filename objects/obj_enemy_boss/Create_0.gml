@@ -5,7 +5,8 @@ max_hp = hp;
 move_speed = 1.5;
 tint = c_ltgray;
 sep_radius = 120;
-sep_strength = 0.3;   // บอสถูกดันยาก แต่ดันตัวเล็กออกได้แรง
+sep_strength = 0.3;
+sight_range = (room == rm_boss) ? 3000 : 1000;   // บอสไล่เมื่อเห็นผู้เล่นในถิ่นตัวเอง   // บอสถูกดันยาก แต่ดันตัวเล็กออกได้แรง
 
 phase = 1;
 state = "chase";      // chase, burst_windup, burst, recover (ท่ายิงกระสุน)
@@ -27,7 +28,8 @@ ai = function() {
             for (var _i = -1; _i <= 1; _i += 2) {
                 var _sx = x + _i * 110;
                 if (collision_rectangle(_sx - 32, y - 32, _sx + 32, y + 32, obj_wall, false, true) == noone) {
-                    instance_create_depth(_sx, y, depth, obj_enemy);
+                    var _m = instance_create_depth(_sx, y, depth, obj_enemy);
+                    _m.master = id;
                 }
             }
         }

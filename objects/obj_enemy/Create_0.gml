@@ -42,6 +42,17 @@ strafe_sign = choose(-1, 1);
 strafe_timer = irandom_range(60, 150);
 flank = choose(-35, 35);
 
+// ---- การรับรู้: ต้องเห็นผู้เล่นจริง (ไม่มีกำแพงบัง) ถึงจะไล่ ----
+home_x = x;
+home_y = y;
+alert_timer = 0;       // จำผู้เล่นได้อีกกี่เฟรมหลังมองไม่เห็น
+los_clear = false;     // ผลเช็กเส้นสายตา อัปเดตทุก ~8 เฟรม (ประหยัดเฟรม)
+los_timer = irandom(8);
+vis = 0;               // ความทึบตอนวาด (จางเข้า/ออกตามสายตาผู้เล่น)
+zone = undefined;      // [x1,y1,x2,y2] ถ้าตั้ง: ออกนอกกรอบไม่ได้ และไล่เฉพาะตอนผู้เล่นอยู่ในกรอบ
+no_drop = false;       // true = ตายแล้วไม่ดรอป (ลูกน้องที่ตายตามบอส)
+master = noone;        // บอสที่เรียกตัวนี้มา
+
 // ---- สถานะท่าโจมตี ----
 atk_cur = undefined;
 atk_dir = 0;
@@ -68,9 +79,15 @@ aim_at_player = function(_lead) {
     return point_direction(x, y, _tx, _ty);
 }
 
-has_los = function() {
+// เช็กจริง (แพง) เรียกเฉพาะใน Step ทุก ~8 เฟรม
+los_check = function() {
     if (!instance_exists(obj_player)) return false;
-    return collision_line(x, y, obj_player.x, obj_player.y, obj_wall, false, true) == noone;
+    return collision_line(x, y - 20, obj_player.x, obj_player.y - 20, obj_wall, false, true) == noone;
+}
+
+// ผลที่ AI ใช้ (อ่านจากแคช)
+has_los = function() {
+    return los_clear;
 }
 
 count_attackers = function() {
@@ -219,6 +236,7 @@ ai = function() {
 take_damage = function(_dmg, _dir) {
     hp -= _dmg;
     flash = 6;
+    alert_timer = 300;   // โดนตี = รู้ตัวทันที
     hp_bar_timer = 180;   // ★ แสดงหลอดเลือด 3 วินาทีหลังโดนตี
     kb_x = lengthdir_x(8, _dir);
     kb_y = lengthdir_y(8, _dir);

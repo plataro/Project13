@@ -13,6 +13,23 @@ if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_e
 
 if (flash > 0) flash--;
 
+// ---- หลับ: ไกลผู้เล่นมากและไม่ได้ไล่อยู่ = ไม่ทำอะไรเลย (ประหยัดเฟรมมาก) ----
+var _pdist = dist_to_player();
+if (_pdist > 1200 && alert_timer <= 0 && atk_state == "") {
+    los_clear = false;
+    vis = 0;
+    hsp = 0;
+    vsp = 0;
+    depth = -y;
+    if (hp <= 0) instance_destroy();
+    exit;
+}
+
+var _in_zone = true;
+if (!is_undefined(zone) && instance_exists(obj_player)) {
+    _in_zone = point_in_rectangle(obj_player.x, obj_player.y, zone[0], zone[1], zone[2], zone[3]);
+}
+
 // ถ้ากล่องชนจมอยู่ในกำแพง ให้ดันออกมา
 if (place_meeting(x, y, obj_wall)) {
     var _fixed = false;
@@ -29,10 +46,32 @@ if (place_meeting(x, y, obj_wall)) {
     }
 }
 
+// ---- เช็กสายตา (แคช) + ความจำ ----
+los_timer--;
+if (los_timer <= 0) {
+    los_timer = 6 + irandom(3);
+    los_clear = (_pdist < 1200) && los_check();
+}
+if (los_clear && _pdist <= sight_range && _in_zone) alert_timer = 150;
+else if (alert_timer > 0) alert_timer--;
+if (!_in_zone) alert_timer = 0;   // ผู้เล่นอยู่นอกถิ่นของตัวนี้ = เลิกไล่
+
 hsp = 0;
 vsp = 0;
 
-ai();
+var _busy = (atk_state != "") || (variable_instance_exists(id, "state") && state != "chase");
+if (alert_timer > 0 || _busy) {
+    ai();
+} else {
+    // ไม่เห็นผู้เล่น: คืนคิวโจมตี แล้วเดินกลับจุดเกิด
+    if (has_token) release_token(60);
+    var _hd = point_distance(x, y, home_x, home_y);
+    if (_hd > 40) {
+        var _hdir = point_direction(x, y, home_x, home_y);
+        hsp = lengthdir_x(move_speed * 0.7, _hdir);
+        vsp = lengthdir_y(move_speed * 0.7, _hdir);
+    }
+}
 
 // เลี้ยวหลบกำแพง (ไม่ทำตอนกำลังพุ่งโจมตี)
 var _spd = point_distance(0, 0, hsp, vsp);
@@ -60,7 +99,7 @@ if (_spd > 0.1 && atk_state != "active") {
 var _px = 0;
 var _py = 0;
 with (obj_enemy) {
-    if (id != other.id) {
+    if (id != other.id && abs(x - other.x) < 220 && abs(y - other.y) < 220) {
         var _dd = point_distance(x, y, other.x, other.y);
         var _rr = max(sep_radius, other.sep_radius);
         if (_dd < _rr) {
@@ -83,8 +122,8 @@ move_and_collide(hsp + kb_x, vsp + kb_y, obj_wall);
 
 // ไม่ยืนทับผู้เล่น (ยังชนทางกายภาพกับผู้เล่นไม่ได้ แต่ดันออกเบา ๆ)
 if (instance_exists(obj_player)) {
-    var _pd = point_distance(x, y, obj_player.x, obj_player.y);
-    if (_pd < 40) {
+    var _pd2 = point_distance(x, y, obj_player.x, obj_player.y);
+    if (_pd2 < 40) {
         var _pa = point_direction(obj_player.x, obj_player.y, x, y);
         move_and_collide(lengthdir_x(2, _pa), lengthdir_y(2, _pa), obj_wall);
     }
@@ -93,7 +132,7 @@ if (instance_exists(obj_player)) {
 // แยกตัวแบบแข็ง: ห้ามทับกัน ตัวหนักถูกดันน้อย ตัวเบาถูกดันมาก
 var _me = id;
 with (obj_enemy) {
-    if (id != _me) {
+    if (id != _me && abs(x - _me.x) < 220 && abs(y - _me.y) < 220) {
         var _dist = point_distance(x, y, _me.x, _me.y);
         var _min = body_r + _me.body_r;
         if (_dist < _min) {
@@ -114,6 +153,10 @@ with (obj_enemy) {
 // กันหลุดนอกห้อง
 x = clamp(x, 0, room_width);
 y = clamp(y, 0, room_height);
+if (!is_undefined(zone)) {
+    x = clamp(x, zone[0], zone[2]);
+    y = clamp(y, zone[1], zone[3]);
+}
 
 kb_x *= 0.8;
 kb_y *= 0.8;
