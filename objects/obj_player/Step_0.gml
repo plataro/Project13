@@ -405,18 +405,20 @@ var _camera_spd = point_distance(0, 0, mvx, mvy);
 // เป้าหมายการซูม
 // 1.00 = ระยะปกติ
 // 1.06 = ซูมออก 6%
-var _zoom_target = 1.0;
+var _zoom_target = 1.0;   // ซูมออกตอนวิ่งแค่เล็กน้อย (เดิม 1.06)
 
 if (state == PState.MOVE && _camera_spd > move_speed + 0.5) {
-    _zoom_target = 1.06;
+    _zoom_target = 1.03;
 }
 
-// ค่อย ๆ เปลี่ยนระยะซูม
-camera_zoom = lerp(camera_zoom, _zoom_target, 0.10);
+// ค่อย ๆ เปลี่ยนระยะซูมให้นุ่ม: เข้าช้ากว่าออกเล็กน้อย + ทำให้ความเร็วซูมสมูท (ease)
+var _zspd = (_zoom_target > camera_zoom) ? 0.035 : 0.05;
+camera_zoom = lerp(camera_zoom, _zoom_target, _zspd);
+if (abs(camera_zoom - _zoom_target) < 0.0005) camera_zoom = _zoom_target;
 
-// ป้องกันค่าซูมคลาดเคลื่อนสะสม
+// คงสัดส่วนภาพ: คำนวณความกว้างแล้วหาความสูงจากสัดส่วนเดิม (กันขอบสั่นเพราะปัดเศษคนละทาง)
 var _cw = round(camera_base_w * camera_zoom);
-var _ch = round(camera_base_h * camera_zoom);
+var _ch = round(_cw * camera_base_h / camera_base_w);
 
 camera_set_view_size(_cam, _cw, _ch);
 
@@ -430,5 +432,5 @@ _cam_y = clamp(_cam_y, 0, max(0, room_height - _ch));
 
 // กล้องสั่น (global.shake ลดลงเองใน obj_fx)
 var _shk = global.shake;
-camera_set_view_pos(_cam, _cam_x + random_range(-_shk, _shk), _cam_y + random_range(-_shk, _shk));
+camera_set_view_pos(_cam, _cam_x + round(random_range(-_shk, _shk)), _cam_y + round(random_range(-_shk, _shk)));
 
