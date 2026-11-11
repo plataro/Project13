@@ -69,6 +69,14 @@
     {
       "name": "inst_E5F31BED",
       "path": "rooms/rm_the_village/rm_the_village.yy"
+    },
+    {
+      "name": "inst_E36B0753",
+      "path": "rooms/rm_the_village/rm_the_village.yy"
+    },
+    {
+      "name": "inst_CE5915E6",
+      "path": "rooms/rm_the_village/rm_the_village.yy"
     }
   ],
   "isDnd": false,
@@ -518,6 +526,60 @@
           "scaleY": 1.0,
           "x": 1500.0,
           "y": 470.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_E36B0753",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_E36B0753",
+          "objectId": {
+            "name": "obj_story_trigger",
+            "path": "objects/obj_story_trigger/obj_story_trigger.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 256.0,
+          "y": 544.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_CE5915E6",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_CE5915E6",
+          "objectId": {
+            "name": "obj_hint",
+            "path": "objects/obj_hint/obj_hint.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 344.0,
+          "y": 722.0
         }
       ],
       "layers": [],

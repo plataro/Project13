@@ -49,6 +49,10 @@
     {
       "name": "inst_B76D454D",
       "path": "rooms/rm_boss/rm_boss.yy"
+    },
+    {
+      "name": "inst_C147EEA8",
+      "path": "rooms/rm_boss/rm_boss.yy"
     }
   ],
   "isDnd": false,
@@ -363,6 +367,33 @@
           "scaleY": 2.0,
           "x": 1648.0,
           "y": 832.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_C147EEA8",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_C147EEA8",
+          "objectId": {
+            "name": "obj_story_trigger",
+            "path": "objects/obj_story_trigger/obj_story_trigger.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 1088.0,
+          "y": 1152.0
         }
       ],
       "layers": [],

@@ -51,3 +51,9 @@ die = function() {
 
 save_snapshot_new_room();
 instance_create_depth(0, 0, -15000, obj_title_card);
+
+// คัทซีนภาพประกอบก่อนตื่นใน Sanctuary (เล่นครั้งเดียวต่อเกม)
+if (room == rm_the_sanctuary_ss && !variable_struct_exists(global.story_seen, "intro_slides")) {
+    global.story_seen[$ "intro_slides"] = true;
+    cutscene_start("intro");
+}

@@ -1,0 +1,15 @@
+// ป้ายสอนปุ่มในฉาก ตั้งค่าใน Creation Code:
+//   items = [ { k: ["W","A","S","D"], t: "เดิน" } ];
+//   watch = [ord("W"), ord("A")];   // ปุ่มที่กดแล้วถือว่าเรียนรู้แล้ว (-1 = คลิกซ้าย) ว่างได้
+//   hkey  = "hint_move";           // จำว่าเรียนแล้ว ไม่โผล่อีก ว่างได้
+//   hide_flag = "sword";           // ซ่อนเมื่อ flag นี้เป็นจริง ว่างได้
+items = [];
+watch = [];
+hkey = "";
+hide_flag = "";
+radius = 240;
+a = 0;
+t = irandom(100);
+done = false;
+done_t = 0;
+depth = -14000;

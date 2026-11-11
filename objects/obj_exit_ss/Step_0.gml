@@ -5,6 +5,8 @@ if (channel >= 0) {
     }
 }
 
+if (req_flag != "" && !flag_get(req_flag)) locked = true;
+
 image_blend = locked ? c_gray : c_white;
 
 if (!locked && next_room != noone && !instance_exists(obj_fade) && place_meeting(x, y, obj_player_ss)) {

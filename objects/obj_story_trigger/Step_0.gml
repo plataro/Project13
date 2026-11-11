@@ -1,4 +1,4 @@
-if (story_key == "" || instance_exists(obj_dialogue) || instance_exists(obj_fade)) exit;
+if (story_key == "" || instance_exists(obj_dialogue) || instance_exists(obj_fade) || instance_exists(obj_cutscene)) exit;
 
 if (variable_struct_exists(global.story_seen, story_key)) {
     instance_destroy();
@@ -7,5 +7,5 @@ if (variable_struct_exists(global.story_seen, story_key)) {
 
 if (auto_start || place_meeting(x, y, obj_player) || place_meeting(x, y, obj_player_ss)) {
     global.story_seen[$ story_key] = true;
-    dialogue_start(story_lines(story_key));
+    dialogue_start(story_lines(story_key), story_done(story_key));
 }

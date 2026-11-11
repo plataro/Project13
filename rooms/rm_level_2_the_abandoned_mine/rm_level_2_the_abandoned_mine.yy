@@ -185,6 +185,10 @@
     {
       "name": "inst_AF6D114C",
       "path": "rooms/rm_level_2_the_abandoned_mine/rm_level_2_the_abandoned_mine.yy"
+    },
+    {
+      "name": "inst_7C9DF940",
+      "path": "rooms/rm_level_2_the_abandoned_mine/rm_level_2_the_abandoned_mine.yy"
     }
   ],
   "isDnd": false,
@@ -1417,6 +1421,33 @@
           "scaleY": 1.0,
           "x": 2720.0,
           "y": 608.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_7C9DF940",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_7C9DF940",
+          "objectId": {
+            "name": "obj_story_trigger",
+            "path": "objects/obj_story_trigger/obj_story_trigger.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 224.0,
+          "y": 224.0
         }
       ],
       "layers": [],
