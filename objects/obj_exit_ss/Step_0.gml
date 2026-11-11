@@ -1,3 +1,10 @@
+if (channel >= 0) {
+    locked = true;
+    with (obj_plate_ss) {
+        if (channel == other.channel && pressed) other.locked = false;
+    }
+}
+
 image_blend = locked ? c_gray : c_white;
 
 if (!locked && next_room != noone && !instance_exists(obj_fade) && place_meeting(x, y, obj_player_ss)) {

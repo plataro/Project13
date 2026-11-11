@@ -5,7 +5,7 @@ if (variable_struct_exists(global.story_seen, story_key)) {
     exit;
 }
 
-if (auto_start || place_meeting(x, y, obj_player)) {
+if (auto_start || place_meeting(x, y, obj_player) || place_meeting(x, y, obj_player_ss)) {
     global.story_seen[$ story_key] = true;
     dialogue_start(story_lines(story_key));
 }

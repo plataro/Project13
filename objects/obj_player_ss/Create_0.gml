@@ -1,5 +1,5 @@
 // กระเบื้องที่ตัวละครยืน/ชนได้ (เพิ่มประตู/ลังตรงนี้ทีหลัง)
-global.ss_solids = [obj_ground_ss];
+global.ss_solids = [obj_ground_ss, obj_gate_ss, obj_crate_ss, obj_platform_ss];
 global.ss_cam_ready = false;
 
 mask_index = spr_mask_ss;
@@ -41,6 +41,12 @@ die = function() {
     hsp = 0;
     vsp = 0;
     respawn_timer = 40;
+    // ลังกลับที่เดิม กันปริศนาค้าง
+    with (obj_crate_ss) {
+        x = xstart;
+        y = ystart;
+        vsp = 0;
+    }
 }
 
 instance_create_depth(0, 0, -15000, obj_title_card);

@@ -9,8 +9,8 @@
   "name":"obj_story_trigger",
   "overriddenProperties":[],
   "parent":{
-    "name":"TOP-DOWN",
-    "path":"folders/Objects/TOP-DOWN.yy",
+    "name":"Objects",
+    "path":"folders/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,
