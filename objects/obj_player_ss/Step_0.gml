@@ -1,112 +1,85 @@
+var _frozen = instance_exists(obj_fade) || instance_exists(obj_dialogue) || respawn_timer > 0;
+if (respawn_timer > 0) respawn_timer--;
 
-/// obj_player_ss - Step Event
+var _kx = 0;
+var _run = false;
+var _jp = false;
+var _jh = false;
 
-// ==========================================
-// 1. INPUT
-// ==========================================
-
-var move_input = keyboard_check(vk_right)
-               - keyboard_check(vk_left);
-
-// รองรับ A / D ด้วย
-move_input += keyboard_check(ord("D"))
-            - keyboard_check(ord("A"));
-
-// จำกัดค่าไม่ให้เกิน -1 ถึง 1
-move_input = clamp(move_input, -1, 1);
-
-
-// ==========================================
-// 2. HORIZONTAL MOVEMENT
-// ==========================================
-
-hsp = move_input * move_speed;
-
-// หันหน้าตามทิศที่เดิน
-if (move_input != 0)
-{
-    image_xscale = sign(move_input) * 2;
+if (!_frozen) {
+    _kx = (keyboard_check(ord("D")) || keyboard_check(vk_right))
+        - (keyboard_check(ord("A")) || keyboard_check(vk_left));
+    _run = keyboard_check(vk_shift);
+    _jp = keyboard_check_pressed(vk_space) || keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up);
+    _jh = keyboard_check(vk_space) || keyboard_check(ord("W")) || keyboard_check(vk_up);
 }
 
-// ตรวจสอบการชนกำแพงและพื้น
-if (hsp != 0)
-{
-    if (!place_meeting(x + hsp, y, obj_ground_ss))
-    {
-        x += hsp;
-    }
-    else
-    {
-        // เคลื่อนที่จนชิดกำแพง
-        while (!place_meeting(x + sign(hsp), y, obj_ground_ss))
-        {
-            x += sign(hsp);
-        }
-    }
+var _solids = global.ss_solids;
+
+// ---- สถานะพื้น / coyote / buffer ----
+grounded = place_meeting(x, y + 1, _solids);
+if (grounded) coyote = coyote_max;
+else if (coyote > 0) coyote--;
+
+if (_jp) jump_buffer = buffer_max;
+else if (jump_buffer > 0) jump_buffer--;
+
+// ---- แนวนอน ----
+var _target = _kx * (_run ? run_speed : walk_speed);
+var _acc;
+if (_kx != 0) _acc = grounded ? accel_g : accel_a;
+else _acc = grounded ? fric_g : fric_a;
+hsp += clamp(_target - hsp, -_acc, _acc);
+if (_kx != 0) face = _kx;
+
+// ---- แนวตั้ง ----
+vsp = min(vsp + grav, max_fall);
+
+if (jump_buffer > 0 && coyote > 0) {
+    vsp = -jump_speed;
+    jump_buffer = 0;
+    coyote = 0;
+}
+if (!_jh && vsp < -jump_cut) vsp = -jump_cut;
+
+// ---- ชน ----
+move_and_collide(hsp, 0, _solids);
+if (hsp != 0 && place_meeting(x + sign(hsp), y, _solids)) hsp = 0;
+
+move_and_collide(0, vsp, _solids);
+if (vsp != 0 && place_meeting(x, y + sign(vsp), _solids)) vsp = 0;
+
+grounded = place_meeting(x, y + 1, _solids);
+
+// ---- ตกหลุม / โดนหนาม ----
+if (respawn_timer <= 0 && (place_meeting(x, y, obj_hazard_ss) || y > room_height + 64)) {
+    die();
 }
 
+// ---- แอนิเมชัน ----
+var _new = "idle";
+if (!grounded) _new = "jump";
+else if (abs(hsp) > walk_speed + 0.8) _new = "run";
+else if (abs(hsp) > 0.4) _new = "walk";
 
-// ==========================================
-// 3. GRAVITY
-// ==========================================
-
-vsp += gravity;
-
-// จำกัดความเร็วในการตก
-vsp = min(vsp, 12);
-
-
-// ==========================================
-// 4. VERTICAL COLLISION
-// ==========================================
-
-if (vsp != 0)
-{
-    if (place_meeting(x, y + vsp, obj_ground_ss))
-    {
-        // หาตำแหน่งที่แตะพื้นพอดี
-        while (!place_meeting(x, y + sign(vsp), obj_ground_ss))
-        {
-            y += sign(vsp);
-        }
-
-        vsp = 0;
-    }
-    else
-    {
-        y += vsp;
-    }
+if (_new != anim_state) {
+    anim_state = _new;
+    anim_t = 0;
 }
 
-
-// ==========================================
-// 5. CHECK GROUNDED
-// ==========================================
-
-grounded = place_meeting(x, y + 1, obj_ground_ss);
-
-
-// ==========================================
-// 6. ANIMATION
-// ==========================================
-
-if (grounded && move_input != 0)
-{
-    if (sprite_index != spr_pl_ss_walk)
-    {
-        sprite_index = spr_pl_ss_walk;
-        image_index = 0;
-    }
-
-    image_speed = 0.15;
+var _n;
+switch (anim_state) {
+    case "idle": sprite_index = spr_pl_ss_idle; anim_t += 8 / 60;  break;
+    case "walk": sprite_index = spr_pl_ss_walk; anim_t += 10 / 60; break;
+    case "run":  sprite_index = spr_pl_ss_run;  anim_t += 16 / 60; break;
+    case "jump":
+        sprite_index = spr_pl_ss_jump;
+        _n = sprite_get_number(sprite_index);
+        // เฟรมแรก = พุ่งขึ้น, เฟรมท้าย = ตกลง ตามความเร็วแนวตั้ง
+        anim_t = clamp(((vsp + jump_speed) / (jump_speed + max_fall)) * (_n - 1), 0, _n - 1);
+        break;
 }
-else
-{
-    if (sprite_index != spr_pl_ss_idle)
-    {
-        sprite_index = spr_pl_ss_idle;
-        image_index = 0;
-    }
+image_index = floor(anim_t) mod sprite_get_number(sprite_index);
 
-    image_speed = 0.15;
-}
+// ---- กล้อง ----
+scr_camera_ss(x, y - 72, face);
