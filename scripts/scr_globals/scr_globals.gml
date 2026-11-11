@@ -5,7 +5,7 @@ global.god = false;
 global.difficulty = 1;   // 0 = ง่าย, 1 = ปานกลาง, 2 = ยาก
 
 // ลำดับด่าน (ไม่รวม rm_menu)
-   global.levels = [rm_level_1, rm_level_2, rm_level_ss, rm_level_3, rm_end];
+   global.levels = [rm_level_1_the_forest, rm_level_2_the_abandoned_mine, rm_the_final_ss, rm_level_3_the_castle, rm_end];
 
 function level_next_room() {
     for (var _i = 0; _i < array_length(global.levels) - 1; _i++) {
