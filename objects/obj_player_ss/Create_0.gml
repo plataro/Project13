@@ -42,3 +42,5 @@ die = function() {
     vsp = 0;
     respawn_timer = 40;
 }
+
+instance_create_depth(0, 0, -15000, obj_title_card);

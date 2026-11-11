@@ -119,3 +119,5 @@ start_attack = function(_n) {
 	_h.step_data = _d;
 	_h.damage = _d.dmg;
 }
+
+instance_create_depth(0, 0, -15000, obj_title_card);
