@@ -2,11 +2,13 @@
 if (!variable_instance_exists(id, "diff_applied")) {
     diff_applied = true;
     var _df = difficulty_data();
-    hp = max(1, round(hp * _df.enemy_hp));
+    var _tr = tier_data();
+    var _hpm = (object_index == obj_enemy_boss) ? 1 : _tr.hp;   // บอสตั้งเลือดเองใน Creation Code
+    hp = max(1, round(hp * _df.enemy_hp * _hpm));
     max_hp = hp;
     hp_shown = hp;
-    move_speed *= _df.enemy_speed;
-    max_attackers = _df.attackers;
+    move_speed *= _df.enemy_speed * _tr.speed;
+    max_attackers = _df.attackers + _tr.attackers;
 }
 
 if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade) || instance_exists(obj_skilltree)) exit;

@@ -24,10 +24,10 @@ for (var _i = 0; _i < _count; _i++) {
 }
 
 if (_click) {
-    if (point_in_rectangle(_mx, _my, px + 24, py + 20, px + 184, py + 64)) {
+    if (can_buy && point_in_rectangle(_mx, _my, px + 24, py + 20, px + 184, py + 64)) {
         tab = 0;
     }
-    else if (point_in_rectangle(_mx, _my, px + 194, py + 20, px + 354, py + 64)) {
+    else if (can_sell && point_in_rectangle(_mx, _my, px + 194, py + 20, px + 354, py + 64)) {
         tab = 1;
     }
     else if (point_in_rectangle(_mx, _my, px + pw - 164, py + ph - 64, px + pw - 24, py + ph - 20)) {
@@ -37,7 +37,7 @@ if (_click) {
     else if (tab == 1 && point_in_rectangle(_mx, _my, px + 24, py + ph - 64, px + 224, py + ph - 20)) {
         var _total = 0;
         var _kinds = item_kinds();
-        for (var _j = 0; _j < array_length(_kinds); _j++) _total += shop_sell(_kinds[_j], true);
+        for (var _j = 0; _j < array_length(_kinds); _j++) _total += shop_sell(_kinds[_j], true, sell_mul);
         msg = (_total > 0) ? ("ขายทั้งหมดได้ " + string(_total) + " เหรียญ") : "ไม่มีของให้ขาย";
         msg_timer = 120;
     }
@@ -46,7 +46,7 @@ if (_click) {
             var _r = shop_buy(buy_ids[hover_row]);
             msg = (_r == "") ? "ซื้อแล้ว!" : _r;
         } else {
-            var _got = shop_sell(sell_list[hover_row], keyboard_check(vk_shift));
+            var _got = shop_sell(sell_list[hover_row], keyboard_check(vk_shift), sell_mul);
             msg = "ได้รับ " + string(_got) + " เหรียญ";
         }
         msg_timer = 120;

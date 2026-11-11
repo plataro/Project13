@@ -21,6 +21,7 @@ draw_set_valign(fa_middle);
 // แท็บ
 var _tabs = ["ซื้อ", "ขาย"];
 for (var _t = 0; _t < 2; _t++) {
+    if ((_t == 0 && !can_buy) || (_t == 1 && !can_sell)) continue;
     var _tx = px + 24 + _t * 170;
     draw_set_color((tab == _t) ? _gold_col : make_color_rgb(70, 62, 86));
     draw_rectangle(_tx, py + 20, _tx + 160, py + 64, false);
@@ -28,6 +29,11 @@ for (var _t = 0; _t < 2; _t++) {
     draw_set_halign(fa_center);
     draw_text(_tx + 80, py + 42, _tabs[_t]);
 }
+
+// ชื่อร้าน
+draw_set_halign(fa_left);
+draw_set_color(_gold_col);
+draw_text_transformed(px + 24, py + 6, shop_title, 0.6, 0.6, 0);
 
 // เหรียญที่มี
 draw_set_halign(fa_right);
@@ -52,7 +58,7 @@ if (tab == 0) {
         draw_set_halign(fa_right);
         if (!_info.ok) draw_set_color(c_gray);
         else draw_set_color((global.save.gold >= _info.price) ? c_yellow : c_red);
-        draw_text(row_x + row_w - 14, _ry + 28, _info.ok ? (string(_info.price) + " เหรียญ") : _info.why);
+        draw_text(row_x + row_w - 14, _ry + 28, _info.ok ? ((_info.price > 0) ? (string(_info.price) + " เหรียญ") : "สวมใส่") : _info.why);
         draw_set_halign(fa_left);
     }
 } else {
@@ -80,7 +86,7 @@ if (tab == 0) {
 
         draw_set_halign(fa_right);
         draw_set_color(c_yellow);
-        draw_text(row_x + row_w - 14, _ry2 + 28, "+" + string(_item.price) + " เหรียญ");
+        draw_text(row_x + row_w - 14, _ry2 + 28, "+" + string(round(_item.price * sell_mul)) + " เหรียญ");
         draw_set_halign(fa_left);
     }
 

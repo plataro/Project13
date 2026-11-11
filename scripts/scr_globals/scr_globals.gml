@@ -58,6 +58,9 @@ function save_default() {
         items: {},         // ของสะสม เช่น { fang: 2, ore: 1 }
         sp: 0,             // แต้มสกิลที่ยังไม่ได้ใช้
         skills: {},        // สกิลที่ปลดแล้ว
+        weapon: "sword",   // อาวุธที่ถืออยู่ (sword, greatsword, hammer)
+        weapons: {},       // อาวุธที่ซื้อแล้ว (ดาบเริ่มต้นมีอยู่แล้วเสมอ)
+        armor: 0,          // เกราะ 0-2 (ลดดาเมจที่ได้รับ)
         quests: {},        // สถานะเควส
         flags: {}          // ธงเนื้อเรื่อง เช่น mine_done
     };
@@ -95,3 +98,30 @@ global.save = save_default();
 global.snap = "";
 global.snap_room = noone;
 global.village_return = undefined;
+
+// ---------- ระดับความแรงของศัตรูตามด่าน (ไม่ล็อกด่าน แต่ของน้อยจะสู้ยาก) ----------
+function level_tier() {
+    switch (room) {
+        case rm_level_1_the_forest:         return 1;
+        case rm_level_2_the_abandoned_mine: return 2;
+        case rm_level_3_the_castle:         return 3;
+        case rm_boss:                       return 4;
+    }
+    return 1;
+}
+
+// hp = คูณเลือดศัตรูตัวเล็ก, dmg = คูณดาเมจ, speed = คูณความเร็ว, coin = มูลค่าเหรียญที่ดรอปต่อเหรียญ, attackers = บุกพร้อมกันเพิ่ม
+function tier_data(_t = level_tier()) {
+    switch (_t) {
+        case 2:  return { hp: 2.2, dmg: 1,   speed: 1.1,  coin: 3, attackers: 0 };
+        case 3:  return { hp: 3.5, dmg: 1.5, speed: 1.2,  coin: 5, attackers: 1 };
+        case 4:  return { hp: 3.5, dmg: 1.5, speed: 1.2,  coin: 5, attackers: 1 };
+    }
+    return { hp: 1, dmg: 1, speed: 1, coin: 2, attackers: 0 };
+}
+
+// ดาเมจที่ผู้เล่นได้รับจริง: ความยาก x ด่าน แล้วหักเกราะ (ขั้นต่ำ 1)
+function enemy_damage_calc(_base) {
+    var _d = ceil(_base * difficulty_data().enemy_dmg * tier_data().dmg);
+    return max(1, _d - global.save.armor);
+}

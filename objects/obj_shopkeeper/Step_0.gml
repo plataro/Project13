@@ -2,7 +2,8 @@ near = instance_exists(obj_player) && point_distance(x, y, obj_player.x, obj_pla
 
 if (near && keyboard_check_pressed(ord("E"))
     && !instance_exists(obj_shop) && !instance_exists(obj_dialogue) && !instance_exists(obj_fade)) {
-    instance_create_depth(0, 0, -12000, obj_shop);
+    var _sh = instance_create_depth(0, 0, -12000, obj_shop);
+    _sh.setup(shop_type, shop_name);
 }
 
 depth = -y;

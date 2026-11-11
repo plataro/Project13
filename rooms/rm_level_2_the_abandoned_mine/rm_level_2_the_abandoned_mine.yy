@@ -173,6 +173,18 @@
     {
       "name": "inst_3BE93FB8",
       "path": "rooms/rm_level_2_the_abandoned_mine/rm_level_2_the_abandoned_mine.yy"
+    },
+    {
+      "name": "inst_424E617B",
+      "path": "rooms/rm_level_2_the_abandoned_mine/rm_level_2_the_abandoned_mine.yy"
+    },
+    {
+      "name": "inst_4A6F188A",
+      "path": "rooms/rm_level_2_the_abandoned_mine/rm_level_2_the_abandoned_mine.yy"
+    },
+    {
+      "name": "inst_AF6D114C",
+      "path": "rooms/rm_level_2_the_abandoned_mine/rm_level_2_the_abandoned_mine.yy"
     }
   ],
   "isDnd": false,
@@ -1324,6 +1336,87 @@
           "scaleY": 1.0,
           "x": 2720.0,
           "y": 1440.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_424E617B",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_424E617B",
+          "objectId": {
+            "name": "obj_chest",
+            "path": "objects/obj_chest/obj_chest.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 1632.0,
+          "y": 544.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_4A6F188A",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_4A6F188A",
+          "objectId": {
+            "name": "obj_chest",
+            "path": "objects/obj_chest/obj_chest.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 608.0,
+          "y": 1440.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_AF6D114C",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_AF6D114C",
+          "objectId": {
+            "name": "obj_chest",
+            "path": "objects/obj_chest/obj_chest.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 2720.0,
+          "y": 608.0
         }
       ],
       "layers": [],

@@ -2,8 +2,8 @@
 function item_data(_kind) {
     switch (_kind) {
         case "fang":  return { name: "เขี้ยวป่า",    price: 4,  col: c_white,                       spr: -1 };
-        case "ore":   return { name: "แร่เหมือง",     price: 7,  col: make_color_rgb(110, 150, 220), spr: -1 };
-        case "shard": return { name: "เศษคริสตัล",   price: 12, col: make_color_rgb(190, 90, 255),  spr: -1 };
+        case "ore":   return { name: "แร่เหมือง",     price: 9,  col: make_color_rgb(110, 150, 220), spr: -1 };
+        case "shard": return { name: "เศษคริสตัล",   price: 16, col: make_color_rgb(190, 90, 255),  spr: -1 };
     }
     return undefined;
 }
@@ -40,13 +40,14 @@ function pickup_spawn(_x, _y, _kind, _value = 1) {
 
 // ศัตรูตายแล้วดรอปอะไร _obj คือ object_index ของศัตรู
 function spawn_drops(_x, _y, _obj) {
+    var _tr = tier_data();
     var _n = irandom_range(2, 4);   // จำนวนเหรียญ
-    var _v = 3;                      // มูลค่าเหรียญละ
+    var _v = _tr.coin;               // มูลค่าเหรียญละ (ด่านลึกได้มากกว่า)
     var _loot = 0.3;                 // โอกาสดรอปของสะสม
 
     switch (_obj) {
         case obj_enemy_boss:
-            _n = 5; _v = 15; _loot = 1;
+            _n = 5; _v = _tr.coin * 5; _loot = 1;
             break;
         case obj_enemy_dasher:
         case obj_enemy_shooter:
@@ -134,6 +135,10 @@ function draw_hud_money() {
         draw_set_color(make_color_rgb(255, 220, 90));
         draw_text_transformed(932, 96, "[T] สกิล  SP " + string(_s.sp), 0.6, 0.6, 0);
     }
+    // อาวุธ/เกราะ (กด 1-3 สลับอาวุธ)
+    draw_set_halign(fa_right);
+    draw_set_color(c_ltgray);
+    draw_text_transformed(932, 116, "[1-3] " + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  เกราะ " + string(_s.armor)) : ""), 0.6, 0.6, 0);
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_color(c_white);

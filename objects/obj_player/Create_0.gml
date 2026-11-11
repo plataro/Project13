@@ -105,6 +105,7 @@ start_attack = function(_n) {
     face = round(aim / 90) mod 4;
 
     var _d = combo_step_data(_n);
+	_d = weapon_modify_combo(_d, _n);
 	_d = skills_modify_combo(_d, _n);
     state = PState.ATTACK;
     attack_timer = _d.time;

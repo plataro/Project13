@@ -19,7 +19,7 @@ if (!hit_done && instance_exists(obj_player)) {
 
             if (!wall_between(x, y, _gx, _gy) && player_hit_by_circle(_p, _gx, _gy - lift, _c[2])) {
                 var _hp0 = _p.hp;
-                var _dmg = ceil(atk.dmg * difficulty_data().enemy_dmg);   // ★ ดาเมจตามระดับความยาก
+                var _dmg = enemy_damage_calc(atk.dmg);   // ★ ดาเมจตามความยาก x ด่าน - เกราะ
                 _p.take_damage(_dmg, owner.x, owner.y);
                 if (_p.hp < _hp0) {   // กลิ้งหลบอยู่จะไม่เสียเลือด hitbox ยังอยู่ต่อ
                     hit_done = true;
