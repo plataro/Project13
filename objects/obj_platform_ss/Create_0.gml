@@ -5,9 +5,3 @@ range_x = 0;       // ระยะเลื่อนซ้าย-ขวา (px) 
 range_y = 0;       // ระยะเลื่อนขึ้น-ลง
 period = 240;      // เฟรมต่อ 1 รอบ
 t = 0;
-
-carry_riders = function(_dx, _dy) {
-    var _me = id;
-    with (obj_player_ss) { if (carry_by == _me) move_and_collide(_dx, _dy, global.ss_solids); }
-    with (obj_crate_ss)  { if (carry_by == _me) move_and_collide(_dx, _dy, global.ss_solids); }
-}
