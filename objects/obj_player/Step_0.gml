@@ -8,7 +8,7 @@ if (hp <= 0) {
     exit;
 }
 
-if (instance_exists(obj_fade) || instance_exists(obj_dialogue)) {
+if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_shop)) {
     hsp = 0;
     vsp = 0;
     mvx = 0;
