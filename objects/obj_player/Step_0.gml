@@ -1,3 +1,14 @@
+// มาจากประตูอีกฝั่ง: ไปเกิดหน้าประตูที่ชื่อตรงกัน (ทำครั้งเดียวในเฟรมแรก)
+if (arrive_pending) {
+    arrive_pending = false;
+    with (obj_exit) {
+        if (door_id == global.arrive) {
+            other.x = x + spawn_dx;
+            other.y = y + spawn_dy;
+        }
+    }
+}
+
 
 if (hp <= 0) {
     if (!instance_exists(obj_gameover)) instance_create_depth(0, 0, -9000, obj_gameover);

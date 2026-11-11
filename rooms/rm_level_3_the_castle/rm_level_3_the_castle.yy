@@ -657,6 +657,10 @@
     {
       "name": "inst_E5F31BED",
       "path": "rooms/rm_level_3_the_castle/rm_level_3_the_castle.yy"
+    },
+    {
+      "name": "inst_AF1FFE0D",
+      "path": "rooms/rm_level_3_the_castle/rm_level_3_the_castle.yy"
     }
   ],
   "isDnd": false,
@@ -5075,6 +5079,33 @@
           "scaleY": 1.0,
           "x": 352.0,
           "y": 2912.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_AF1FFE0D",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_AF1FFE0D",
+          "objectId": {
+            "name": "obj_exit",
+            "path": "objects/obj_exit/obj_exit.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 176.0,
+          "y": 3088.0
         }
       ],
       "layers": [],

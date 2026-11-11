@@ -223,3 +223,9 @@ ai = function() {
             break;
     }
 }
+
+// มินิบอสที่เคยปราบแล้วจะไม่เกิดใหม่ (ฟาร์มศัตรูทั่วไปได้ แต่บอสไม่กลับมาขวางทาง)
+if (room != rm_boss && flag_get("boss_" + room_get_name(room))) {
+    no_drop = true;
+    instance_destroy();
+}
