@@ -49,7 +49,7 @@ if (place_meeting(x, y, obj_wall)) {
 // ---- เช็กสายตา (แคช) + ความจำ ----
 los_timer--;
 if (los_timer <= 0) {
-    los_timer = 6 + irandom(3);
+        los_timer = (_pdist < 700) ? 2 : 8;
     los_clear = (_pdist < 1200) && los_check();
 }
 if (los_clear && _pdist <= sight_range && _in_zone) alert_timer = 150;

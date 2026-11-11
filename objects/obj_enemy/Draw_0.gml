@@ -1,4 +1,8 @@
-vis = 1;   // ความมืดจัดการโดยหมอกใน obj_player Draw_77 แล้ว
+// ไม่มีเส้นสายตา = ไม่วาดเลย (กันหัวยื่นพ้นกำแพงเข้าโซนสว่าง)
+var _show = los_clear || flash > 0;
+if (!_show && instance_exists(obj_player) && point_distance(x, y, obj_player.x, obj_player.y) < 70) _show = true;
+vis = clamp(vis + (_show ? 0.5 : -0.5), 0, 1);
+if (vis <= 0.01) exit;
 
 var _col = tint;
 if (flash > 0) _col = c_red;
