@@ -403,10 +403,6 @@
       "path": "rooms/rm_the_sanctuary_ss/rm_the_sanctuary_ss.yy"
     },
     {
-      "name": "inst_4729A9FC",
-      "path": "rooms/rm_the_sanctuary_ss/rm_the_sanctuary_ss.yy"
-    },
-    {
       "name": "inst_CA98136E",
       "path": "rooms/rm_the_sanctuary_ss/rm_the_sanctuary_ss.yy"
     },
@@ -3207,33 +3203,6 @@
           "scaleY": 1.0,
           "x": 2080.0,
           "y": 880.0
-        },
-        {
-          "$GMRInstance": "v4",
-          "%Name": "inst_4729A9FC",
-          "colour": 4294967295,
-          "frozen": false,
-          "hasCreationCode": true,
-          "ignore": false,
-          "imageIndex": 0,
-          "imageSpeed": 1.0,
-          "inheritCode": false,
-          "inheritedItemId": null,
-          "inheritItemSettings": false,
-          "isDnd": false,
-          "name": "inst_4729A9FC",
-          "objectId": {
-            "name": "obj_ground_ss",
-            "path": "objects/obj_ground_ss/obj_ground_ss.yy"
-          },
-          "properties": [],
-          "resourceType": "GMRInstance",
-          "resourceVersion": "2.0",
-          "rotation": 0.0,
-          "scaleX": 1.0,
-          "scaleY": 4.0,
-          "x": 896.0,
-          "y": 640.0
         },
         {
           "$GMRInstance": "v4",
