@@ -27,7 +27,7 @@ seen = function(_key) {
 // ---- ป้ายปุ่มตามสถานการณ์ ----
 // key = จำว่าเรียนแล้ว, keys = ป้ายที่โชว์, codes = ปุ่มที่ต้องกด (-2 = ล้อเมาส์), text = คำอธิบาย
 // when = เงื่อนไขที่ทำให้โผล่, timeout = หายเองหลังกี่เฟรม (0 = รอจนกด)
-// ★ slot = ชี้ไปที่ช่องสกิลล่างจอ (0 วิ่ง, 1 คลิก, 2 ค้าง, 3 ยิง, 4 สกิล 2, 5 กลิ้ง, 6 ยา, 7 แผงบัฟ) / -1 = ป้ายบนกลางจอ
+// ★ slot = ชี้ไปที่ช่องสกิลล่างจอ (0 วิ่ง, 1 คลิก, 2 ค้าง, 3 ยิง, 4 สกิล 2, 5 ดาบหมุน, 6 สายฟ้า, 7 ไม้ตาย, 8 กลิ้ง, 9 ยา, 10 แผงบัฟ) / -1 = ป้ายบนกลางจอ
 //   sub = บรรทัดอธิบายเพิ่ม
 //   goal = เงื่อนไขว่า "ผ่านจริง" (ไม่มี = กดปุ่มก็ผ่าน) ยังไม่ผ่าน = ค้างป้ายไว้ / retry = ข้อความย้ำตอนกดแล้วแต่ยังไม่ผ่าน
 // ★ สร้างรายการใหม่ทุกครั้งที่เปลี่ยนภาษา (ข้อความใช้ L())
@@ -48,7 +48,7 @@ build_ctx = function() {
               return _all;
           },
           when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "ctx_atk"); } },
-        { key: "ctx_potion", slot: 6, acts: ["potion"], text: L("ดื่มยาฟื้นเลือด", "Drink a potion"), sub: L("ฟื้น 2 หัวใจ ซื้อเพิ่มได้ที่ร้าน", "Heals 2 hearts. Buy more at shops"), timeout: 0,
+        { key: "ctx_potion", slot: 9, acts: ["potion"], text: L("ดื่มยาฟื้นเลือด", "Drink a potion"), sub: L("ฟื้น 2 หัวใจ ซื้อเพิ่มได้ที่ร้าน", "Heals 2 hearts. Buy more at shops"), timeout: 0,
           when: function() { return instance_exists(obj_player) && obj_player.hp <= obj_player.max_hp - 2 && global.save.potions > 0; } },
         { key: "ctx_skill2", slot: 4, acts: ["shoot2"], text: L("ยิงกระจายสามทิศ", "Triple spread shot"), sub: L("ปลดสกิลแล้ว! คูลดาวน์นานกว่าปุ่ม 1", "Unlocked! Longer cooldown than 1"), timeout: 0,
           when: function() { return global.save.shot_lv >= 2 && instance_exists(obj_player); } },
@@ -56,11 +56,18 @@ build_ctx = function() {
           when: function() { return array_length(variable_struct_get_names(global.save.weapons)) > 0 && instance_exists(obj_player); } },
         { key: "ctx_charge", slot: 2, acts: ["charge"], text: L("ชาร์จค้อน", "Charge hammer"), sub: L("ค้างจนเกจเต็มแล้วปล่อย ทุ่มลงพื้นรอบตัว", "Hold until full, release to slam around you"), timeout: 0,
           when: function() { return global.save.weapon == "hammer" && instance_exists(obj_player); } },
+        // ★ สกิลใหม่จากต้นไม้สกิล: ชี้ช่องของมันตอนปลดได้
+        { key: "ctx_skill3", slot: 5, acts: ["skill3"], text: L("ดาบพายุหมุน", "Blade Whirl"), sub: L("หมุนพุ่งไปทางที่เล็ง ฟันรอบตัวหลายรอบ", "Spin-dash toward your aim, hitting all around"), timeout: 0,
+          when: function() { return skill_has("s1") && instance_exists(obj_player); } },
+        { key: "ctx_skill4", slot: 6, acts: ["skill4"], text: L("สายฟ้าลูกโซ่", "Chain Lightning"), sub: L("ผ่าศัตรูทางที่เล็งแล้วกระโดดต่อ / ใช้ยิงเป้าปริศนาได้", "Strikes toward your aim and jumps / hits puzzle targets"), timeout: 0,
+          when: function() { return skill_has("m1") && instance_exists(obj_player); } },
+        { key: "ctx_ult", slot: 7, acts: ["ult"], text: L("ท่าไม้ตายพร้อมแล้ว!", "Ultimate ready!"), sub: L("ตีโดนศัตรูเพื่อเติมเกจ เต็มแล้วกดปล่อยพลังรอบตัว", "Hit foes to fill it, then unleash a blast around you"), timeout: 0,
+          when: function() { return skill_has("m2") && variable_global_exists("ult_charge") && global.ult_charge >= 100 && instance_exists(obj_player); } },
         { key: "ctx_tree", acts: ["tree"], text: L("เปิดต้นไม้สกิล (ใช้แต้ม SP อัปพลัง)", "Open the skill tree (spend SP to power up)"), timeout: 0,
           when: function() { return flag_get("tree_unlocked") && instance_exists(obj_player); } },
         { key: "ctx_status", acts: ["status"], text: L("ดูสถานะ / สวมเครื่องประดับ", "Status / equip accessories"), timeout: 0,
           when: function() { return room == rm_the_village && instance_exists(obj_player); } },
-        { key: "ctx_buff", slot: 7, acts: ["buff_use"], text: L("ใช้ไอเท็มบัฟ", "Use buff item"), sub: L("กด V เพื่อเปลี่ยนชนิดบัฟ", "Press V to switch buff type"), timeout: 0,
+        { key: "ctx_buff", slot: 10, acts: ["buff_use"], text: L("ใช้ไอเท็มบัฟ", "Use buff item"), sub: L("กด V เพื่อเปลี่ยนชนิดบัฟ", "Press V to switch buff type"), timeout: 0,
           when: function() {
               var _bl = buff_list();
               for (var _i = 0; _i < array_length(_bl); _i++) if (variable_struct_exists(global.save.buff_items, _bl[_i]) && global.save.buff_items[$ _bl[_i]] > 0) return instance_exists(obj_player);

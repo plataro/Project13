@@ -176,6 +176,8 @@ if (!is_undefined(step_data)) {
             }
 
             // ===== ท่า 1-2: ฟันโค้ง =====
+            case "ult": break;   // ★ ไม้ตาย: เอฟเฟกต์วาดที่ obj_player (Draw End)
+
             default: {
                 var _spr = asset_get_index("spr_fx_slash");
                 if (_spr != -1 && sprite_exists(_spr)) {

@@ -56,6 +56,16 @@ if (roll_buffer > 0) roll_buffer--;
 if (attack_cd > 0) attack_cd--;
 if (shot1_timer > 0) shot1_timer--;
 if (skill2_timer > 0) skill2_timer--;
+if (skill3_timer > 0) skill3_timer--;   // ★ ดาบพายุหมุน
+if (skill4_timer > 0) skill4_timer--;   // ★ สายฟ้า
+if (ult_fx > 0) {
+    ult_fx--;
+    if (ult_fx == 42) { fx_hitstop(6); fx_spark(x, y - 30, 0, 40, make_color_rgb(255, 230, 150), 180); }   // ★ จังหวะระเบิด
+}
+for (var _bi2 = array_length(bolts) - 1; _bi2 >= 0; _bi2--) {
+    bolts[_bi2].life--;
+    if (bolts[_bi2].life <= 0) array_delete(bolts, _bi2, 1);
+}
 if (input_pressed("potion")) player_use_potion();
 if (input_pressed("status")) status_toggle();   // ★ หน้าสถานะ
 
@@ -244,6 +254,26 @@ switch (state) {
 			}
 
 			skill2_timer = skill2_cooldown;
+		}
+
+		// ★ ท่าไม้ตาย (เกจเต็ม)
+		else if (input_pressed("ult") && ult_unlocked && global.ult_charge >= 100) {
+			cast_ult();
+		}
+
+		// ★ สกิล 3: ดาบพายุหมุน
+		else if (input_pressed("skill3") && skill3_unlocked && skill3_timer <= 0) {
+			start_whirl();
+		}
+
+		// ★ สกิล 4: สายฟ้าลูกโซ่
+		else if (input_pressed("skill4") && skill4_unlocked && skill4_timer <= 0) {
+			cast_bolt();
+		}
+
+		// กดสกิลที่ยังไม่ปลด / ยังไม่พร้อม = บอกเบา ๆ
+		else if (input_pressed("ult") && ult_unlocked) {
+			float_text(x, y - 110, L("เกจไม้ตายยังไม่เต็ม", "Ultimate not ready"), c_gray, 0.7);
 		}
 
         break;

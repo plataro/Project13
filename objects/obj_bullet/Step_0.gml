@@ -44,6 +44,22 @@ if (_target != noone) {
     var _hr = player_hit(damage);
     _target.take_damage(_hr[0], direction, _hr[1], "bullet");
     player_on_hit(_target);
+    // ★ ไฟบรรลัย (สกิล a6): ระเบิดโดนศัตรูรอบ ๆ ครึ่งดาเมจ
+    if (skill_has("a6")) {
+        var _ex = _target.x;
+        var _ey = _target.y;
+        var _er = 70 + 20 * size;
+        var _edmg = max(1, damage * 0.5);
+        var _dir0 = direction;
+        with (obj_enemy) {
+            if (id != _target && hp > 0 && point_distance(x, y, _ex, _ey) < _er && !wall_between(_ex, _ey, x, y)) {
+                var _hr2 = player_hit(_edmg);
+                take_damage(_hr2[0], point_direction(_ex, _ey, x, y), _hr2[1], "bullet");
+            }
+        }
+        fx_spark(_ex, _ey - 40, _dir0, 18, make_color_rgb(255, 150, 50), 180);
+        fx_shake(2);
+    }
     if (pierce > 0) {
         pierce--;
         array_push(hit_ids, _target);

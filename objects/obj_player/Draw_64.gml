@@ -11,8 +11,8 @@ if (!variable_instance_exists(id, "hud_hp")) {
     hud_prev_hp = hp;
     hud_hurt_t = 0;
     hud_parts = [];         // พาร์ติเคิลสีแดงจากปลายหลอด
-    hud_pop = array_create(7, 0);
-    hud_prev_cd = array_create(7, 0);
+    hud_pop = array_create(HUD_SLOTS, 0);
+    hud_prev_cd = array_create(HUD_SLOTS, 0);
 }
 
 var _hp = max(hp, 0);
@@ -135,9 +135,9 @@ if (!_ui_busy) draw_combo_hud();
 // =====================================================================
 if (!_ui_busy) {
     var _ham = (global.save.weapon == "hammer");
-    var _sz = 48;
-    var _gap = 12;
-    var _n = 7;   // ★ ช่องวิ่ง (Shift) ซ้ายสุด
+    var _sz = HUD_SZ;
+    var _gap = HUD_GAP;
+    var _n = HUD_SLOTS;   // ★ ช่องวิ่ง (Shift) ซ้ายสุด ... ยา ขวาสุด
     var _x0 = 480 - (_n * _sz + (_n - 1) * _gap) / 2;
     var _y0 = 540 - _sz - 26;
 
@@ -155,6 +155,9 @@ if (!_ui_busy) {
         [_lab_hold,  "charge", 0, !_ham, "", state == PState.CHARGE],
         [input_label("shoot1"), "fire", _s1_cd, false, string(shot1_ammo), false],
         [input_label("shoot2"), "fire3", skill2_unlocked ? skill2_timer / skill2_cooldown : 0, !skill2_unlocked, "", false],
+        [input_label("skill3"), "whirl", skill3_unlocked ? skill3_timer / max(1, skill3_cooldown) : 0, !skill3_unlocked, "", skill3_unlocked && skill3_timer > skill3_cooldown - 40],
+        [input_label("skill4"), "bolt", skill4_unlocked ? skill4_timer / max(1, skill4_cooldown) : 0, !skill4_unlocked, "", array_length(bolts) > 0],
+        [input_label("ult"), "ult", ult_unlocked ? 1 - global.ult_charge / 100 : 0, !ult_unlocked, (ult_unlocked && global.ult_charge < 100) ? string(floor(global.ult_charge)) + "%" : "", ult_unlocked && global.ult_charge >= 100],
         [input_label("roll"), "roll", (roll_cd_timer > 0) ? roll_cd_timer / max(1, roll_cooldown) : 0, false, "", state == PState.ROLL],
         [input_label("potion"), "potion", potion_cd_frac(), global.save.potions <= 0, string(global.save.potions), false]
     ];
@@ -165,6 +168,39 @@ if (!_ui_busy) {
         hud_prev_cd[_i] = _sl[2];
         if (hud_pop[_i] > 0) hud_pop[_i] = max(0, hud_pop[_i] - 0.08);
         ui_slot(_x0 + _i * (_sz + _gap), _y0, _sz, _sl[0], _sl[1], _sl[2], hud_pop[_i], _sl[3], _sl[4], _sl[5]);
+        // ★ เลเวลของช่อง (อัปจากต้นไม้สกิล/หีบพลัง) ป้ายเล็กมุมซ้ายบน
+        if (!_sl[3]) {
+            var _lvks = ["run", "attack", "", "shoot1", "shoot2", "skill3", "skill4", "ult", "roll", "potion"];
+            var _lvk = _lvks[_i];
+            if (_lvk != "") {
+                var _lv = skill_slot_level(_lvk);
+                if (_lv > 1) {
+                    var _lx = _x0 + _i * (_sz + _gap) - 4;
+                    var _ly = _y0 - 7;
+                    var _lt = "Lv" + string(_lv);
+                    var _lw = string_width(_lt) * 0.36 + 8;
+                    draw_set_color(make_color_rgb(40, 30, 14));
+                    draw_rectangle(_lx, _ly, _lx + _lw, _ly + 13, false);
+                    draw_set_color(UI_GOLD);
+                    draw_rectangle(_lx, _ly, _lx + _lw, _ly + 13, true);
+                    draw_set_valign(fa_middle);
+                    ui_text_bold(_lx + 4, _ly + 7, _lt, 0.36, make_color_rgb(255, 225, 120), false);
+                    draw_set_valign(fa_top);
+                }
+            }
+        }
+    }
+
+    // ★ ไม้ตายเต็ม: ช่องเรืองทอง
+    if (ult_unlocked && global.ult_charge >= 100) {
+        var _ux = _x0 + 7 * (_sz + _gap);
+        var _ug = 0.5 + 0.5 * sin(current_time / 120);
+        gpu_set_blendmode(bm_add);
+        draw_set_alpha(0.25 + 0.3 * _ug);
+        draw_set_color(make_color_rgb(255, 200, 90));
+        draw_rectangle(_ux - 4, _y0 - 4, _ux + _sz + 4, _y0 + _sz + 4, false);
+        gpu_set_blendmode(bm_normal);
+        draw_set_alpha(1);
     }
 
     // เกจชาร์จค้อนบนช่อง "ค้าง"

@@ -31,6 +31,9 @@ function input_kb_defaults() {
         roll:      [vk_space],          // กลิ้ง (มุมบน) / กระโดด (ด้านข้าง)
         shoot1:    [ord("1")],
         shoot2:    [ord("2")],
+        skill3:    [ord("3")],          // ★ ดาบพายุหมุน
+        skill4:    [ord("4")],          // ★ สายฟ้าลูกโซ่
+        ult:       [ord("C")],          // ★ ท่าไม้ตาย
         potion:    [ord("Q")],
         interact:  [ord("E")],
         buff_use:  [ord("F")],
@@ -45,11 +48,14 @@ function input_kb_defaults() {
 function input_pad_defaults() {
     return {
         left: -1, right: -1, up: -1, down: -1,   // เดินด้วยสติ๊กซ้าย (ปุ่มลูกศรบนจอยใช้เป็นปุ่มลัดแทน)
-        run: gp_shoulderl,       // LB
+        run: gp_stickl,          // L3 (กดสติ๊กซ้าย) ★ ย้ายจาก LB ให้สกิล 3
         attack: gp_face3,        // X
         roll: gp_face1,          // A
         shoot1: gp_shoulderr,    // RB
         shoot2: gp_shoulderrb,   // RT
+        skill3: gp_shoulderl,    // LB ★ ดาบพายุหมุน
+        skill4: gp_padl,         // ลูกศรซ้าย ★ สายฟ้า
+        ult: gp_stickr,          // R3 ★ ท่าไม้ตาย
         potion: gp_face4,        // Y
         interact: gp_face2,      // B
         buff_use: gp_shoulderlb, // LT
@@ -65,7 +71,7 @@ global.bind_pad = input_pad_defaults();
 
 // รายการที่ผู้เล่นตั้งปุ่มเองได้ (ลำดับในหน้าตั้งค่าปุ่ม)
 function input_rebind_list() {
-    return ["attack", "roll", "run", "shoot1", "shoot2", "potion", "interact", "buff_use", "buff_next", "weapon", "tree", "status", "pause"];
+    return ["attack", "roll", "run", "shoot1", "shoot2", "skill3", "skill4", "ult", "potion", "interact", "buff_use", "buff_next", "weapon", "tree", "status", "pause"];
 }
 function input_action_name(_a) {
     switch (_a) {
@@ -74,6 +80,9 @@ function input_action_name(_a) {
         case "run":       return L("วิ่ง", "Run");
         case "shoot1":    return L("ยิงลูกไฟ", "Fireball");
         case "shoot2":    return L("ยิงกระจาย", "Spread shot");
+        case "skill3":    return L("ดาบพายุหมุน", "Blade Whirl");
+        case "skill4":    return L("สายฟ้าลูกโซ่", "Chain Lightning");
+        case "ult":       return L("ท่าไม้ตาย", "Ultimate");
         case "potion":    return L("ดื่มยา", "Potion");
         case "interact":  return L("คุย / เปิด / ใช้", "Interact");
         case "buff_use":  return L("ใช้บัฟ", "Use buff");
@@ -304,7 +313,7 @@ function input_label(_act) {
 // ---------------------------------------------------------------------
 function input_save() {
     ini_open("settings.ini");
-    ini_write_real("keys", "ver", 2);
+    ini_write_real("keys", "ver", 3);
     var _l = input_rebind_list();
     for (var _i = 0; _i < array_length(_l); _i++) {
         ini_write_real("keys", _l[_i], global.bind_kb[$ _l[_i]][0]);
@@ -321,6 +330,7 @@ function input_load() {
     for (var _i = 0; _i < array_length(_l); _i++) {
         var _a = _l[_i];
         if (_a == "status" && _ver < 2) continue;
+        if (_a == "run" && _ver < 3) { if (ini_key_exists("keys", _a)) global.bind_kb[$ _a][0] = ini_read_real("keys", _a, global.bind_kb[$ _a][0]); continue; }   // ★ ver 3: จอยวิ่งย้ายไป L3
         if (ini_key_exists("keys", _a)) global.bind_kb[$ _a][0] = ini_read_real("keys", _a, global.bind_kb[$ _a][0]);
         if (ini_key_exists("pad", _a)) global.bind_pad[$ _a] = ini_read_real("pad", _a, global.bind_pad[$ _a]);
     }

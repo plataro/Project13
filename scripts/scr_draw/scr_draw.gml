@@ -113,10 +113,13 @@ function ui_slot(_x, _y, _sz, _key, _icon, _cd, _pop, _locked, _count, _active) 
     // ปุ่ม
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
+    draw_set_font(fnt_dialog);
+    var _ks = ui_fit(_key, 0.42, _sz + 4);   // ★ ชื่อปุ่มยาว (เช่นปุ่มลูกศรจอย) ย่อให้พอดี
+    var _kw = max(15, string_width(_key) * _ks / 2 + 4);
     draw_set_color(c_black);
-    draw_rectangle(_cx - 15, _y2 - 2, _cx + 15, _y2 + 13, false);
+    draw_rectangle(_cx - _kw, _y2 - 2, _cx + _kw, _y2 + 13, false);
     draw_set_color(_locked ? UI_MUTED : UI_GOLD);
-    draw_text_transformed(_cx, _y2 + 5, _key, 0.42, 0.42, 0);
+    draw_text_transformed(_cx, _y2 + 5, _key, _ks, _ks, 0);
     // จำนวน
     if (_count != "") {
         draw_set_halign(fa_right);
@@ -234,6 +237,34 @@ function ui_icon(_kind, _x, _y, _r, _c) {
             draw_rectangle(_x - _r * 0.2, _y - _r * 0.9, _x + _r * 0.2, _y - _r * 0.45, false);
             draw_circle(_x, _y + _r * 0.2, _r * 0.62, false);
             break;
+        case "whirl":   // ★ ดาบพายุหมุน: ดาบ 3 เล่มวนเป็นวง
+            for (var _wi = 0; _wi < 3; _wi++) {
+                var _wa = 90 + _wi * 120;
+                draw_line_width(_x + lengthdir_x(_r * 0.25, _wa), _y + lengthdir_y(_r * 0.25, _wa),
+                                _x + lengthdir_x(_r * 0.95, _wa + 30), _y + lengthdir_y(_r * 0.95, _wa + 30), 3);
+            }
+            draw_circle(_x, _y, _r * 0.95, true);
+            draw_circle(_x, _y, _r * 0.22, false);
+            break;
+        case "bolt":    // ★ สายฟ้า
+            draw_triangle(_x + _r * 0.25, _y - _r, _x - _r * 0.55, _y + _r * 0.15, _x + _r * 0.05, _y + _r * 0.15, false);
+            draw_triangle(_x - _r * 0.25, _y + _r, _x + _r * 0.55, _y - _r * 0.15, _x - _r * 0.05, _y - _r * 0.15, false);
+            break;
+        case "ult":     // ★ ไม้ตาย: ดาวแปดแฉกในวงแหวน
+            for (var _ui = 0; _ui < 8; _ui++) {
+                var _ua = _ui * 45 + 22.5;
+                var _ur = (_ui mod 2 == 0) ? _r : _r * 0.6;
+                draw_triangle(_x, _y, _x + lengthdir_x(_ur, _ua), _y + lengthdir_y(_ur, _ua),
+                              _x + lengthdir_x(_r * 0.3, _ua + 22.5), _y + lengthdir_y(_r * 0.3, _ua + 22.5), false);
+                draw_triangle(_x, _y, _x + lengthdir_x(_ur, _ua), _y + lengthdir_y(_ur, _ua),
+                              _x + lengthdir_x(_r * 0.3, _ua - 22.5), _y + lengthdir_y(_r * 0.3, _ua - 22.5), false);
+            }
+            break;
+        case "body":    // ★ ร่างกาย: หัวใจ
+            draw_circle(_x - _r * 0.4, _y - _r * 0.2, _r * 0.48, false);
+            draw_circle(_x + _r * 0.4, _y - _r * 0.2, _r * 0.48, false);
+            draw_triangle(_x - _r * 0.86, _y, _x + _r * 0.86, _y, _x, _y + _r * 0.9, false);
+            break;
     }
 }
 
@@ -331,13 +362,17 @@ function draw_loot_feed(_ytop) {
 
 // ★ ตำแหน่งช่องสกิลล่างจอ (ต้องตรงกับ obj_player Draw_64: ช่อง 48 ห่าง 12 จำนวน 7)
 //   0 วิ่ง (Shift), 1 คลิก, 2 ค้าง, 3 ยิง, 4 สกิล 2, 5 กลิ้ง, 6 ยา, 7 แผงบัฟด้านขวา
+// ★ ช่องสกิล 10 ช่อง: 0 วิ่ง, 1 คลิก, 2 ค้าง, 3 ยิง, 4 สกิล 2, 5 ดาบหมุน, 6 สายฟ้า, 7 ไม้ตาย, 8 กลิ้ง, 9 ยา / 10 = แผงบัฟ
+#macro HUD_SLOTS 10
+#macro HUD_SZ 44
+#macro HUD_GAP 8
 function hud_slot_rect(_i) {
-    var _sz = 48;
-    var _gap = 12;
-    var _x0 = 480 - (7 * _sz + 6 * _gap) / 2;
+    var _sz = HUD_SZ;
+    var _gap = HUD_GAP;
+    var _x0 = 480 - (HUD_SLOTS * _sz + (HUD_SLOTS - 1) * _gap) / 2;
     var _y0 = 540 - _sz - 26;
-    if (_i == 7) {
-        var _fx = _x0 + 7 * (_sz + _gap) + 8;
+    if (_i == HUD_SLOTS) {
+        var _fx = _x0 + HUD_SLOTS * (_sz + _gap) + 8;
         return [_fx, _y0 + 4, _fx + 150, _y0 + _sz - 4];
     }
     var _x = _x0 + _i * (_sz + _gap);

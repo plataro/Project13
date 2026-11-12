@@ -63,9 +63,9 @@ if (screen == 3) {
     ui_panel(190, 30, 770, _py2b);
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
-    ui_text_bold(480, 54, L("ตั้งค่าปุ่ม", "Controls"), 0.75, UI_GOLD);
-    ui_text_bold(560, 80, L("คีย์บอร์ด", "Keyboard"), 0.45, UI_GOLD, false);
-    ui_text_bold(690, 80, L("จอย", "Gamepad"), 0.45, UI_GOLD, false);
+    ui_text_bold(480, 48, L("ตั้งค่าปุ่ม", "Controls"), 0.7, UI_GOLD);
+    ui_text_bold(560, 76, L("คีย์บอร์ด", "Keyboard"), 0.45, UI_GOLD, false);
+    ui_text_bold(690, 76, L("จอย", "Gamepad"), 0.45, UI_GOLD, false);
     for (var _i3 = 0; _i3 < _n3; _i3++) {
         var _y3 = row_y(_i3);
         var _on3 = (_i3 == sel);

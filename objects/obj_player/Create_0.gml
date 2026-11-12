@@ -76,6 +76,14 @@ shot1_reload_timer = 0;
 skill2_cooldown = 150;
 skill2_timer = 0;
 
+// ---- ★ สกิล 3: ดาบพายุหมุน / สกิล 4: สายฟ้าลูกโซ่ / ท่าไม้ตาย (ค่าจริงตั้งใน player_apply_skills) ----
+skill3_unlocked = false; skill3_spins = 3; skill3_rad = 92; skill3_cooldown = 270; skill3_timer = 0;
+skill4_unlocked = false; skill4_jumps = 3; skill4_dmg = 2;  skill4_cooldown = 300; skill4_timer = 0;
+ult_unlocked = false; ult_gain = 5; ult_dmg = 8; ult_rad = 240;
+ult_fx = 0;          // เวลาเอฟเฟกต์ไม้ตาย (นับถอยหลัง)
+bolts = [];          // เส้นสายฟ้าที่กำลังวาด
+if (!variable_global_exists("ult_charge")) global.ult_charge = 0;   // เกจไม้ตาย 0-100 (ติดตัวข้ามห้อง)
+
 max_hp = global.max_hp;
 hp = global.player_hp;
 invuln_time = 90;          // ★ อมตะหลังโดนตี 1.5 วิ (เดิม 1 วิ)
@@ -212,6 +220,218 @@ update_camera = function(_zoom) {
 
     var _shk = global.shake;
     camera_set_view_pos(_cam, _cam_x + round(random_range(-_shk, _shk)), _cam_y + round(random_range(-_shk, _shk)));
+}
+
+// =====================================================================
+// ★ สกิล 3: ดาบพายุหมุน — หมุนตัวพุ่งไปทางที่เล็ง ฟันรอบตัวหลายรอบ (แต่ละรอบโดนได้ 1 ครั้ง)
+// =====================================================================
+start_whirl = function() {
+    skill3_timer = skill3_cooldown;
+    combo = 0;
+    combo_window = 0;
+    combo_buffer = false;
+    charge_hold = 0;
+    var _per = 9;
+    state = PState.ATTACK;
+    attack_timer = 8 + skill3_spins * _per;
+    attack_total = attack_timer;
+    lunge_dir = aim;
+    lunge_timer = attack_timer - 6;
+    lunge_speed = 4.2;
+    dodge_timer = max(dodge_timer, 10);   // หลบได้แวบแรกตอนเริ่มหมุน
+    for (var _i = 0; _i < skill3_spins; _i++) {
+        var _h = instance_create_depth(x, y, depth, obj_hitbox);
+        _h.owner = id;
+        _h.image_angle = aim + _i * 120;
+        _h.lift = aim_height;
+        _h.step_data = { kind: "spin", time: 0, active_from: 4 + _i * _per, active_to: 8 + _i * _per, dmg: 1, kb: 9, radial: true,
+                         lunge_speed: 0, lunge_frames: 0, circles: [ [0, 0, skill3_rad] ] };
+        _h.damage = 1;
+    }
+    fx_dust(x, y - 2, 6, make_color_rgb(200, 190, 170));
+    fx_spark(x, y - 30, aim, 8, make_color_rgb(200, 230, 255), 180);
+}
+
+// =====================================================================
+// ★ สกิล 4: สายฟ้าลูกโซ่ — ผ่าเป้าแรกที่อยู่ทางที่เล็ง แล้วกระโดดไปตัวใกล้สุดต่อไปเรื่อย ๆ
+//   โดนเป้าปริศนาแบบยิง (obj_target mode "shot") ได้ด้วย
+// =====================================================================
+cast_bolt = function() {
+    var _cands = [];   // [id, x, y(จุดวาด), เป็นเป้า?]
+    with (obj_enemy) if (hp > 0) array_push(_cands, [id, x, y - ((object_index == obj_enemy_boss) ? 90 : 40), false]);
+    with (obj_target) if (!hit && mode != "sword") array_push(_cands, [id, x, y - 48, true]);
+
+    // เป้าแรก: อยู่ในกรวยทางที่เล็ง ใกล้ + ตรงแนวที่สุด
+    var _first = -1;
+    var _bs = 1000000;
+    for (var _i = 0; _i < array_length(_cands); _i++) {
+        var _c = _cands[_i];
+        if (!instance_exists(_c[0])) continue;
+        var _d = point_distance(x, y, _c[0].x, _c[0].y);
+        var _ad = abs(angle_difference(point_direction(x, y, _c[0].x, _c[0].y), aim));
+        if (_d < 430 && _ad < 55 && !wall_between(x, y, _c[0].x, _c[0].y)) {
+            var _sc = _d + _ad * 4;
+            if (_sc < _bs) { _bs = _sc; _first = _i; }
+        }
+    }
+
+    var _sx = x + lengthdir_x(14, aim);
+    var _sy = y - aim_height - 30;
+    if (_first < 0) {   // ไม่มีเป้า: ฟ้าแลบไปข้างหน้าเฉย ๆ คูลดาวน์สั้น
+        array_push(bolts, { x1: _sx, y1: _sy, x2: _sx + lengthdir_x(200, aim), y2: _sy + lengthdir_y(200, aim), life: 14 });
+        skill4_timer = 40;
+        return;
+    }
+    skill4_timer = skill4_cooldown;
+
+    var _used = [];
+    var _cur = _first;
+    var _px = _sx, _py = _sy;
+    for (var _n = 0; _n < skill4_jumps && _cur >= 0; _n++) {
+        var _c2 = _cands[_cur];
+        array_push(_used, _cur);
+        var _o = _c2[0];
+        if (instance_exists(_o)) {
+            var _tx = _o.x;
+            var _ty = _c2[2];
+            array_push(bolts, { x1: _px, y1: _py, x2: _tx, y2: _ty, life: 20 + _n * 2 });
+            if (_c2[3]) {
+                with (_o) on_hit();
+                with (obj_player) { shot1_reload_timer = 0; shot1_ammo = shot1_max; shot1_timer = 0; skill4_timer = min(skill4_timer, 20); }   // ★ เป้าปริศนา = ใช้ต่อได้ทันที
+            } else {
+                var _hr = player_hit(skill4_dmg);
+                var _dir = point_direction(_px, _py, _tx, _ty);
+                with (_o) take_damage(_hr[0], _dir, _hr[1], "bullet");   // เวท = นับแบบกระสุน (บอสตั้งเกราะกันได้)
+                player_on_hit(_o);
+            }
+            fx_spark(_tx, _ty, 90, 8, make_color_rgb(170, 220, 255), 180);
+            _px = _tx;
+            _py = _ty;
+        }
+        // หาตัวถัดไปที่ใกล้ที่สุด (ยังไม่โดน)
+        var _next = -1;
+        var _nd = 230;
+        for (var _j = 0; _j < array_length(_cands); _j++) {
+            if (array_contains(_used, _j) || !instance_exists(_cands[_j][0])) continue;
+            var _cj = _cands[_j][0];
+            if (!instance_exists(_o)) continue;
+            var _dd = point_distance(_o.x, _o.y, _cj.x, _cj.y);
+            if (_dd < _nd && !wall_between(_o.x, _o.y, _cj.x, _cj.y)) { _nd = _dd; _next = _j; }
+        }
+        _cur = _next;
+    }
+    fx_shake(2);
+}
+
+// =====================================================================
+// ★ ท่าไม้ตาย: รวมพลังแป๊บนึง (อมตะ) แล้วระเบิดแสงรอบตัววงใหญ่
+// =====================================================================
+cast_ult = function() {
+    global.ult_charge = 0;
+    combo = 0;
+    combo_window = 0;
+    combo_buffer = false;
+    charge_hold = 0;
+    state = PState.ATTACK;
+    attack_timer = 46;
+    attack_total = 46;
+    lunge_timer = 0;
+    lunge_speed = 0;
+    mvx = 0;
+    mvy = 0;
+    invuln_timer = max(invuln_timer, 70);
+    ult_fx = 60;
+    var _h = instance_create_depth(x, y, depth, obj_hitbox);
+    _h.owner = id;
+    _h.image_angle = aim;
+    _h.lift = aim_height;
+    _h.step_data = { kind: "ult", shake: 12, time: 0, active_from: 18, active_to: 22, dmg: ult_dmg, kb: 34, radial: true,
+                     lunge_speed: 0, lunge_frames: 0, circles: [ [0, 0, ult_rad] ] };
+    _h.damage = ult_dmg;
+    float_text(x, y - 130, L("ไม้ตาย!", "ULTIMATE!"), make_color_rgb(255, 220, 120), 1.4);
+}
+
+// ★ วาดเอฟเฟกต์สายฟ้า / ไม้ตาย (เรียกจาก Draw End หลังหมอก)
+draw_skill_fx = function() {
+    // =====================================================================
+    // ★ สายฟ้าลูกโซ่ (วาดหลังหมอก เห็นชัดเสมอ) — เส้นหยักสุ่มใหม่ทุกเฟรม = แลบ ๆ
+    // =====================================================================
+    if (array_length(bolts) > 0) {
+        gpu_set_blendmode(bm_add);
+        for (var _bi = 0; _bi < array_length(bolts); _bi++) {
+            var _bo = bolts[_bi];
+            var _ba = clamp(_bo.life / 12, 0, 1);
+            var _bd = point_distance(_bo.x1, _bo.y1, _bo.x2, _bo.y2);
+            var _bang = point_direction(_bo.x1, _bo.y1, _bo.x2, _bo.y2);
+            var _seg = max(3, ceil(_bd / 26));
+            var _lx = _bo.x1, _ly = _bo.y1;
+            for (var _si = 1; _si <= _seg; _si++) {
+                var _k = _si / _seg;
+                var _off = (_si == _seg) ? 0 : random_range(-12, 12);
+                var _nx = lerp(_bo.x1, _bo.x2, _k) + lengthdir_x(_off, _bang + 90);
+                var _ny = lerp(_bo.y1, _bo.y2, _k) + lengthdir_y(_off, _bang + 90);
+                draw_set_alpha(0.45 * _ba);
+                draw_set_color(make_color_rgb(90, 150, 255));
+                draw_line_width(_lx, _ly, _nx, _ny, 7);
+                draw_set_alpha(0.95 * _ba);
+                draw_set_color(make_color_rgb(200, 235, 255));
+                draw_line_width(_lx, _ly, _nx, _ny, 2);
+                _lx = _nx;
+                _ly = _ny;
+            }
+            draw_set_alpha(0.5 * _ba);
+            draw_set_color(make_color_rgb(150, 200, 255));
+            draw_circle(_bo.x2, _bo.y2, 14 + 6 * (1 - _ba), false);
+        }
+        gpu_set_blendmode(bm_normal);
+        draw_set_alpha(1);
+    }
+
+    // =====================================================================
+    // ★ ท่าไม้ตาย: ช่วงรวมพลัง (แสงดูดเข้า) -> ระเบิดวงแหวนทองขยายออก
+    // =====================================================================
+    if (ult_fx > 0) {
+        var _ut = 60 - ult_fx;            // 0..60
+        var _ucx = x;
+        var _ucy = y - aim_height;
+        gpu_set_blendmode(bm_add);
+        if (_ut < 18) {
+            var _gk = _ut / 18;
+            draw_set_alpha(0.25 + 0.5 * _gk);
+            draw_set_color(make_color_rgb(255, 210, 120));
+            draw_circle(_ucx, _ucy - 20, 10 + 26 * _gk, false);
+            draw_set_alpha(0.6 * _gk);
+            draw_circle(_ucx, _ucy, ult_rad * (1 - _gk) + 20, true);
+            draw_circle(_ucx, _ucy, ult_rad * (1 - _gk) + 22, true);
+            for (var _ri = 0; _ri < 10; _ri++) {   // แสงพุ่งเข้าหาตัว
+                var _ra = _ri * 36 + current_time / 6;
+                var _rr = ult_rad * (1 - _gk);
+                draw_line_width(_ucx + lengthdir_x(_rr, _ra), _ucy + lengthdir_y(_rr, _ra),
+                                _ucx + lengthdir_x(_rr * 0.6, _ra), _ucy + lengthdir_y(_rr * 0.6, _ra), 2);
+            }
+        } else {
+            var _ek = clamp((_ut - 18) / 24, 0, 1);
+            var _ee = 1 - power(1 - _ek, 3);
+            var _rr2 = ult_rad * _ee;
+            draw_set_alpha(0.35 * (1 - _ek));
+            draw_set_color(make_color_rgb(255, 230, 160));
+            draw_circle(_ucx, _ucy, _rr2, false);
+            draw_set_alpha(0.9 * (1 - _ek));
+            draw_set_color(c_white);
+            for (var _w = 0; _w < 4; _w++) draw_circle(_ucx, _ucy, _rr2 - _w, true);
+            draw_set_color(make_color_rgb(255, 200, 90));
+            for (var _w2 = 0; _w2 < 3; _w2++) draw_circle(_ucx, _ucy, _rr2 * 0.7 - _w2, true);
+            for (var _ri2 = 0; _ri2 < 16; _ri2++) {   // รังสีพุ่งออก
+                var _ra2 = _ri2 * 22.5;
+                draw_set_alpha(0.7 * (1 - _ek));
+                draw_line_width(_ucx + lengthdir_x(_rr2 * 0.3, _ra2), _ucy + lengthdir_y(_rr2 * 0.3, _ra2),
+                                _ucx + lengthdir_x(_rr2 * 1.05, _ra2), _ucy + lengthdir_y(_rr2 * 1.05, _ra2), 3);
+            }
+        }
+        gpu_set_blendmode(bm_normal);
+        draw_set_alpha(1);
+        draw_set_color(c_white);
+    }
 }
 
 player_apply_skills();

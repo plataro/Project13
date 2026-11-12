@@ -27,7 +27,9 @@ function weapon_equip(_id) {
 
 // จำนวนท่าในคอมโบของอาวุธที่ถืออยู่
 function weapon_combo_max() {
-    return weapon_data(global.save.weapon).combo;
+    var _c = weapon_data(global.save.weapon).combo;
+    if (global.save.weapon != "hammer" && skill_has("b5")) _c += 2;   // ★ ระบำหกกระบวน: คอมโบ 6 ท่า
+    return _c;
 }
 
 // ปรับท่าฟันตามอาวุธ (เรียกก่อน skills_modify_combo)

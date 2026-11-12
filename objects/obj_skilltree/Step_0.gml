@@ -24,9 +24,9 @@ for (var _i = 0; _i < array_length(nodes); _i++) {
 // ★ จอย / ลูกศร: เลื่อนตามสาย (ซ้าย/ขวา) และขั้น (ขึ้น/ลง), A ปลด
 var _nav = false;
 if (input_ui_left())  { pad_b = max(0, pad_b - 1); _nav = true; }
-if (input_ui_right()) { pad_b = min(2, pad_b + 1); _nav = true; }
+if (input_ui_right()) { pad_b = min(3, pad_b + 1); _nav = true; }
 if (input_ui_up())    { pad_t = max(0, pad_t - 1); _nav = true; }
-if (input_ui_down())  { pad_t = min(4, pad_t + 1); _nav = true; }
+if (input_ui_down())  { pad_t = min(5, pad_t + 1); _nav = true; }
 if (_nav) pad_on = true;
 if (global.input_dev == "kb" && (abs(_mx - pad_mx) + abs(_my - pad_my) > 4)) pad_on = false;   // ขยับเมาส์ = กลับไปใช้เมาส์
 pad_mx = _mx;

@@ -94,6 +94,14 @@ function wall_between(_x1, _y1, _x2, _y2) {
 
 // ข้อมูลท่าฟันของผู้เล่นแต่ละท่า
 function combo_step_data(_n) {
+    // ★ ท่าสุดท้ายของคอมโบ = ฟาดรอบตัวเสมอ (คอมโบ 6 ท่า = วงใหญ่ + แรงกว่า)
+    var _max = weapon_combo_max();
+    if (_n >= _max && _n != 9 && _n != 99) {
+        if (_max >= 6) return { kind: "spin", time: 28, active_from: 6, active_to: 15, dmg: 3, kb: 24, radial: true,
+                                lunge_speed: 0, lunge_frames: 0, shake: 4,
+                                circles: [ [0, 0, 124] ] };
+        return combo_step_data(99);
+    }
     switch (_n) {
         case 1:   // ฟันตรง เร็ว
             return { kind: "slash", time: 14, active_from: 3, active_to: 8, dmg: 1, kb: 8, radial: false,
@@ -107,6 +115,14 @@ function combo_step_data(_n) {
             return { kind: "thrust", time: 18, active_from: 4, active_to: 12, dmg: 1, kb: 10, radial: false,
                      lunge_speed: 7, lunge_frames: 8,
                      circles: [ [50, 0, 26], [90, 0, 26], [130, 0, 26] ] };
+        case 4:   // ★ (คอมโบ 6) ฟันเฉียงสวนกลับ กว้างกว่าท่า 2
+            return { kind: "slash", time: 16, active_from: 4, active_to: 10, dmg: 1, kb: 10, radial: false,
+                     lunge_speed: 3, lunge_frames: 5,
+                     circles: [ [34, 50, 30], [62, 10, 36], [48, -40, 32] ] };
+        case 5:   // ★ (คอมโบ 6) แทงคู่พุ่งไกล
+            return { kind: "thrust", time: 20, active_from: 5, active_to: 13, dmg: 2, kb: 12, radial: false,
+                     lunge_speed: 8, lunge_frames: 9,
+                     circles: [ [50, 0, 30], [96, 0, 30], [142, 0, 28] ] };
         default:  // ท่าจบ ฟาดรอบตัว
             return { kind: "spin", time: 26, active_from: 6, active_to: 14, dmg: 2, kb: 18, radial: true,
                      lunge_speed: 0, lunge_frames: 0,

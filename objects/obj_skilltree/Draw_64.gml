@@ -26,14 +26,21 @@ draw_line(px + 20, py + 42, px + pw - 20, py + 42);
 
 // หัวแต่ละสาย (ไอคอน + ชื่อ) และเส้นแนวตั้งจาง ๆ
 draw_set_halign(fa_center);
-for (var _b = 0; _b < 3; _b++) {
+for (var _b = 0; _b < 4; _b++) {
     var _bx = col_x[_b];
     draw_set_alpha(0.12 * _ok);
     draw_set_color(branch_col[_b]);
-    draw_rectangle(_bx - node_w / 2 - 8, py + 54, _bx + node_w / 2 + 8, row_y0 + 4 * row_gap + node_h + 8, false);
+    draw_rectangle(_bx - node_w / 2 - 8, py + 52, _bx + node_w / 2 + 8, row_y0 + 5 * row_gap + node_h + 8, false);
     draw_set_alpha(_ok);
-    ui_icon(branch_icon[_b], _bx - string_width(branch_names()[_b]) * 0.28 - 16, py + 68, 8, branch_col[_b]);
-    ui_text_bold(_bx + 6, py + 68, branch_names()[_b], 0.55, branch_col[_b]);
+    var _bn = branch_names()[_b];
+    var _bs = ui_fit(_bn, 0.52, node_w - 40);
+    ui_icon(branch_icon[_b], _bx - string_width(_bn) * _bs / 2 - 14, py + 64, 8, branch_col[_b]);
+    ui_text_bold(_bx + 4, py + 64, _bn, _bs, branch_col[_b]);
+    // ★ ขั้นที่อัปแล้วของสายนี้ (n/6) + สายนี้อัปช่องไหน
+    var _got = 0;
+    for (var _ni = 0; _ni < array_length(nodes); _ni++) if (nodes[_ni].branch == _b && skill_has(nodes[_ni].key)) _got++;
+    var _bl = branch_subs()[_b] + "  " + string(_got) + "/6";
+    ui_text(_bx, py + 84, _bl, ui_fit(_bl, 0.38, node_w), (_got >= 6) ? UI_GOLD : UI_MUTED);
 }
 
 // เส้นเชื่อม (ปลดแล้ว = ทองมีแสงวิ่ง)
@@ -85,9 +92,9 @@ for (var _j = 0; _j < array_length(nodes); _j++) {
     draw_set_color(_has ? _bc : merge_color(_bc, c_black, 0.6));
     draw_rectangle(_rc[0] + 1, _rc[1] + 1, _rc[0] + 4, _rc[3] - 1, false);
 
-    ui_text_bold(_cx2, _rc[1] + 14, _nn.name, ui_fit(_nn.name, 0.48, node_w - 14), (_has || _avail) ? UI_TEXT : make_color_rgb(110, 105, 120), false);
+    ui_text_bold(_cx2, _rc[1] + 13, _nn.name, ui_fit(_nn.name, 0.46, node_w - 22), (_has || _avail) ? UI_TEXT : make_color_rgb(110, 105, 120), false);
     var _cc = _has ? UI_GOLD : (_afford ? make_color_rgb(255, 220, 90) : make_color_rgb(110, 105, 120));
-    ui_text(_cx2, _rc[1] + 31, _has ? L("ปลดแล้ว", "Unlocked") : (string(_nn.cost) + " SP"), 0.4, _cc);
+    ui_text(_cx2, _rc[1] + 29, _has ? L("ปลดแล้ว", "Unlocked") : (string(_nn.cost) + " SP"), 0.4, _cc);
     if (!_has && !_avail) {   // ล็อก
         draw_set_color(make_color_rgb(90, 85, 100));
         draw_rectangle(_rc[2] - 16, _rc[1] + 8, _rc[2] - 8, _rc[1] + 15, false);

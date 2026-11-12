@@ -1,5 +1,12 @@
-// หลอดเลือดบอส (แสดงเมื่อกำลังสู้ หรือเลือดไม่เต็ม)
-if (alert_timer <= 0 && state == "chase" && hp >= max_hp) exit;
+// หลอดเลือดบอส: ขึ้นหลังคัทซีนเปิดตัวเท่านั้น และเฉพาะตอนผู้เล่นอยู่ในห้องบอส
+// ★ แก้บัค: เดิมหลอดขึ้นตั้งแต่บอสเห็นผู้เล่น (ก่อนคัทซีน) และไม่หายตอนวิ่งหนีออกไปไกล
+var _in_arena = instance_exists(obj_player)
+    && point_in_rectangle(obj_player.x, obj_player.y, arena[0] - 96, arena[1] - 96, arena[2] + 96, arena[3] + 96);
+if (!intro_done || !_in_arena) {
+    bar_in = 0;          // กลับเข้าห้องใหม่ = หลอดเล่นแอนิเมชันเปิดอีกรอบ
+    bar_sparks = [];
+    exit;
+}
 if (instance_exists(obj_dialogue) || instance_exists(obj_cutscene)) exit;   // ★ ไม่ทับกล่องไดอาล็อก
 if (!is_undefined(global.boss_intro)) exit;   // ★ ระหว่างเปิดตัว ยังไม่โชว์หลอด
 

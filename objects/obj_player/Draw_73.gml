@@ -1,12 +1,12 @@
 // ===== หมอกมืดนอกสายตา (obj_player > Post Draw = Draw_77.gml) =====
-if (!fog_room()) exit;
-if (instance_exists(obj_gameover)) exit;
+if (!fog_room()) { draw_skill_fx(); exit; }   // ★ เอฟเฟกต์สกิลวาดเสมอ
+if (instance_exists(obj_gameover)) { draw_skill_fx(); exit; }
 
 var _fog_dark = 0.88;     // ★ ความมืดของโซนที่มองไม่เห็น (0-1)
 // ★ ตอนเปิดตัวบอส: หมอกจางลงตามจังหวะกล้อง จะได้เห็นบอสแม้อยู่นอกสายตา
 if (!is_undefined(global.boss_intro)) _fog_dark *= 1 - global.boss_intro.k;
 with (obj_boss_death) _fog_dark *= 1 - 0.8 * clamp(min(t / 30, (t_end - t) / 40), 0, 1);   // ★ ตอนบอสตาย หมอกจาง เห็นเอฟเฟกต์ชัด
-if (_fog_dark <= 0.01) exit;
+if (_fog_dark <= 0.01) { draw_skill_fx(); exit; }
 var _rays = 256;          // ★ จำนวนเรย์ (เยอะขึ้น = ขอบเนียนขึ้น)
 var _radius = FOG_RADIUS; // ★ ระยะมองไกลสุด (แก้ที่ scr_combat)
 var _soft = 48;           // ★ ความกว้างขอบนุ่ม (px)
@@ -143,3 +143,5 @@ with (obj_enemy) {
     }
     enemy_draw_hpbar();   // ★ หลอดเลือดอยู่หน้าตัวศัตรูเสมอ
 }
+
+draw_skill_fx();   // ★ สายฟ้า / ไม้ตาย (อยู่บนหมอก)

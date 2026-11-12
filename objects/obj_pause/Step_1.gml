@@ -94,7 +94,7 @@ for (var _i = 0; _i < _n; _i++) {
     var _y = row_y(_i);
     var _hx1 = (screen == 3) ? 200 : 320;
     var _hx2 = (screen == 3) ? 760 : 640;
-    var _hh = (screen == 3) ? 22 : 32;
+    var _hh = (screen == 3) ? 18 : 32;
     if (_mx > _hx1 && _mx < _hx2 && _my > _y - 4 && _my < _y + _hh) {
         if (_moved) sel = _i;
         if (_click) _hit = _i;

@@ -95,6 +95,14 @@ function combo_add(_dmg, _hit = true) {
         if (_c.t > 0) _c.dmg += max(0, round(_dmg));
         return;
     }
+    // ★ ตีโดน = เติมเกจไม้ตาย (ยกเว้นตอนกำลังปล่อยไม้ตายอยู่)
+    if (variable_global_exists("ult_charge") && instance_exists(obj_player)) {
+        with (obj_player) if (ult_unlocked && ult_fx <= 0) {
+            var _was = global.ult_charge;
+            global.ult_charge = min(100, global.ult_charge + ult_gain);
+            if (_was < 100 && global.ult_charge >= 100) float_text(x, y - 120, L("ไม้ตายพร้อม! [", "Ultimate ready! [") + input_label("ult") + "]", make_color_rgb(255, 220, 120), 1.1);
+        }
+    }
     if (_c.t <= 0) { _c.n = 0; _c.dmg = 0; }   // คอมโบใหม่
     _c.n++;
     _c.pop = 1;
