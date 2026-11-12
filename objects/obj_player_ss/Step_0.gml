@@ -37,8 +37,114 @@ if (!_frozen) {
     _jh = keyboard_check(vk_space) || keyboard_check(ord("W")) || keyboard_check(vk_up);
 }
 
+if (atk_cd > 0) atk_cd--;
+if (shot_cd > 0) shot_cd--;
+
+// =====================================================================
+// ★ บันไดเฉียง: ยืนที่ปลายบันไดแล้วกด W
+// =====================================================================
+if (!_frozen && on_stairs == noone && (keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up))) {
+    var _me = id;
+    with (obj_stairs_ss) {
+        if (_me.on_stairs != noone) continue;
+        var _tx = x + dir * run;
+        var _ty = y - rise;
+        if (abs(_me.x - x) < 28 && abs(_me.y - y) < 12) { _me.on_stairs = id; _me.stair_s = 0; }
+        else if (abs(_me.x - _tx) < 28 && abs(_me.y - _ty) < 12) { _me.on_stairs = id; _me.stair_s = 1; }
+    }
+    if (on_stairs != noone) {
+        _jp = false;
+        jump_buffer = 0;
+        hsp = 0;
+        vsp = 0;
+    }
+}
+
+if (on_stairs != noone) {
+    if (!instance_exists(on_stairs)) {
+        on_stairs = noone;
+    } else {
+        var _st = on_stairs;
+        var _spd = (_run ? run_speed : walk_speed) * 0.75;
+        var _ds = _kx * _st.dir * _spd / _st.run;
+        stair_s += _ds;
+        if (_kx != 0) face = _kx;
+        var _leave = false;
+        // ★ ออกจากบันไดเฉพาะตอน "เดินเลยปลาย" (เดิมยืนที่ปลายแล้วหลุดออกทันทีในเฟรมที่กด W)
+        if (stair_s <= 0) { stair_s = 0; if (_ds < 0) _leave = true; }
+        if (stair_s >= 1) { stair_s = 1; if (_ds > 0) _leave = true; }
+        x = round(lerp(_st.x, _st.x + _st.dir * _st.run, stair_s));
+        y = round(lerp(_st.y, _st.y - _st.rise, stair_s));
+        hsp = 0;
+        vsp = 0;
+        hrem = 0;
+        vrem = 0;
+        if (!_frozen && (keyboard_check_pressed(ord("S")) || keyboard_check_pressed(vk_down))) _leave = true;   // ลงกลางบันได = ตกลงไป
+        if (!_frozen && keyboard_check_pressed(vk_space)) { _leave = true; vsp = -jump_speed * 0.8; }
+        if (_leave) on_stairs = noone;
+
+        // แอนิเมชันเดิน + กล้อง แล้วจบ (บนบันไดไม่ใช้ฟิสิกส์ปกติ)
+        sprite_index = (_kx != 0) ? spr_pl_ss_walk : spr_pl_ss_idle;
+        anim_t += ((_kx != 0) ? 10 : 8) / 60;
+        image_index = floor(anim_t) mod sprite_get_number(sprite_index);
+        scr_camera_ss(x, y - 72, face);
+        exit;
+    }
+}
+
+// =====================================================================
+// ★ ดาบ (คลิกซ้าย ต้องหยิบดาบแล้ว) / ยิง (ปุ่ม 1 ไปทางเมาส์ ยกเว้นในวิหาร)
+// =====================================================================
+if (!_frozen && flag_get("sword") && mouse_check_button_pressed(mb_left) && atk_cd <= 0) {
+    atk_t = 16;
+    atk_cd = 22;
+    atk_id++;
+    face = (mouse_x >= x) ? 1 : -1;
+}
+if (atk_t > 0) {
+    atk_t--;
+    if (atk_t <= 12 && atk_t >= 6) {
+        var _ax1 = (face > 0) ? x + 4 : x - 80;
+        var _ax2 = _ax1 + 76;
+        var _ay1 = y - 84;
+        var _ay2 = y - 4;
+        var _sid = atk_id;
+        with (obj_breakable_ss) {
+            if (last_swing != _sid && rectangle_in_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, _ax1, _ay1, _ax2, _ay2) > 0) {
+                last_swing = _sid;
+                hit();
+            }
+        }
+        with (obj_lever_ss) {
+            if (last_swing != _sid && point_in_rectangle(x, y - 30, _ax1 - 10, _ay1, _ax2 + 10, _ay2 + 10)) {
+                last_swing = _sid;
+                hit();
+            }
+        }
+        with (obj_target) {
+            if (!hit && tink_id != _sid && point_in_rectangle(x, y - 48, _ax1, _ay1, _ax2, _ay2)) {
+                tink_id = _sid;
+                float_text(x, y - 90, "ฟันไม่ได้ ต้องยิง! [1]", c_orange, 0.9);
+            }
+        }
+    }
+}
+if (!_frozen && room != rm_the_sanctuary_ss && keyboard_check_pressed(ord("1")) && shot_cd <= 0) {
+    var _sa = point_direction(x, y - 40, mouse_x, mouse_y);
+    var _b = instance_create_depth(x + lengthdir_x(20, _sa), y - 40 + lengthdir_y(20, _sa), depth - 1, obj_bullet_ss);
+    _b.direction = _sa;
+    _b.image_angle = _sa;
+    _b.speed = 11;
+    shot_cd = 26;
+    face = (mouse_x >= x) ? 1 : -1;
+}
+
 // ---- สถานะพื้น / coyote / buffer ----
 grounded = place_meeting(x, y + 1, _solids);
+if (on_plat > 0) {   // ★ ยืนบนแท่นเลื่อน = นับว่าอยู่บนพื้น
+    grounded = true;
+    on_plat--;
+}
 if (grounded) coyote = coyote_max;
 else if (coyote > 0) coyote--;
 
@@ -47,11 +153,12 @@ else if (jump_buffer > 0) jump_buffer--;
 
 // ---- แนวนอน ----
 var _target = _kx * (_run ? run_speed : walk_speed);
+if (atk_t > 0) _target *= 0.4;   // ฟันอยู่ เดินช้าลง
 var _acc;
 if (_kx != 0) _acc = grounded ? accel_g : accel_a;
 else _acc = grounded ? fric_g : fric_a;
 hsp += clamp(_target - hsp, -_acc, _acc);
-if (_kx != 0) face = _kx;
+if (_kx != 0 && atk_t <= 0) face = _kx;
 
 // ---- แนวตั้ง ----
 vsp = min(vsp + grav, max_fall);
@@ -61,6 +168,7 @@ if (jump_buffer > 0 && coyote > 0) {
     vrem = 0;
     jump_buffer = 0;
     coyote = 0;
+    on_plat = 0;
 }
 if (!_jh && vsp < -jump_cut) vsp = -jump_cut;
 

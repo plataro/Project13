@@ -11,6 +11,7 @@ if (_p != noone) _near = point_distance(x, y, _p.x, _p.y) < radius;
 if (instance_exists(obj_dialogue) || instance_exists(obj_cutscene) || instance_exists(obj_fade)) _near = false;
 if (hide_flag != "" && flag_get(hide_flag)) _near = false;
 if (req != "" && !variable_struct_exists(global.story_seen, req)) _near = false;
+if (need_flag != "" && !flag_get(need_flag)) _near = false;
 
 // ต้องกดครบทุกปุ่มที่โชว์ ปุ่มที่กดแล้วจะเปลี่ยนเป็นสีเขียว (เก็บใน items[i].g[j])
 if (_near && !done && a > 0.6) {

@@ -6,4 +6,6 @@ channel = 0;
 open = false;
 close_y = y;
 open_y = y - sprite_height;
+open_down = false;        // ★ true = เปิดโดยจมลงพื้น (ตั้งใน Creation Code) แทนการยกขึ้นเพดาน
+inited = false;
 move_spd = 6;

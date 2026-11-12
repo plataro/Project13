@@ -10,7 +10,7 @@ var _me = id;
 
 with (obj_player_ss) {
     carry_by = noone;
-    if (vsp >= 0
+    if (on_stairs == noone && vsp >= 0
         && bbox_right > _me.bbox_left && bbox_left < _me.bbox_right
         && bbox_bottom >= _me.bbox_top - 5 && bbox_bottom <= _me.bbox_top + 4) {
         carry_by = _me;
@@ -33,6 +33,9 @@ y = _ny;
 // 3) ให้คนบนแท่นเท้าติดผิวแท่นพอดี แล้วพาไปด้านข้างด้วย
 with (obj_player_ss) {
     if (carry_by == _me) {
+        on_plat = 3;      // ★ บอกผู้เล่นว่ายืนบนแท่น (กระโดดได้)
+        vsp = 0;
+        vrem = 0;
         y += _me.bbox_top - 1 - bbox_bottom;
         if (_dx != 0) move_and_collide(_dx, 0, global.ss_solids);
     }

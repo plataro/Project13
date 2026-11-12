@@ -1,6 +1,18 @@
+if (!inited) {
+    inited = true;
+    close_y = y;
+    open_y = open_down ? y + sprite_height : y - sprite_height;
+}
 open = false;
 with (obj_plate_ss) {
     if (channel == other.channel && pressed) other.open = true;
+}
+// ★ เปิดได้ด้วยเป้ายิง หรือคันโยก ช่องเดียวกันด้วย
+with (obj_target) {
+    if (channel == other.channel && hit) other.open = true;
+}
+with (obj_lever_ss) {
+    if (channel == other.channel && on) other.open = true;
 }
 
 var _ty = open ? open_y : close_y;

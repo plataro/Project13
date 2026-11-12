@@ -1,5 +1,5 @@
 // กระเบื้องที่ตัวละครยืน/ชนได้ (เพิ่มประตู/ลังตรงนี้ทีหลัง)
-global.ss_solids = [obj_ground_ss, obj_gate_ss, obj_crate_ss, obj_platform_ss];
+global.ss_solids = [obj_ground_ss, obj_gate_ss, obj_crate_ss, obj_platform_ss, obj_breakable_ss];
 global.ss_cam_ready = false;
 
 mask_index = spr_mask_ss;
@@ -26,6 +26,19 @@ buffer_max = 6;        // กดกระโดดก่อนลงพื้น
 coyote = 0;
 jump_buffer = 0;
 grounded = false;
+
+// ★ ยืนบนแท่นเลื่อน: แท่นตั้งค่านี้ทุกเฟรม = นับว่ายืนบนพื้นเสมอ (กระโดดได้แน่นอน)
+on_plat = 0;
+
+// ★ บันได
+on_stairs = noone;
+stair_s = 0;
+
+// ★ ดาบ / ยิง
+atk_t = 0;
+atk_cd = 0;
+atk_id = 0;
+shot_cd = 0;
 
 anim_state = "idle";
 anim_t = 0;
