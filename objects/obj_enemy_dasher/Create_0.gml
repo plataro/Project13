@@ -8,11 +8,21 @@ ring_dist = 240;
 attack_token_cd = 150;
 engage_range = 300;      // พุ่งจากระยะไกล = นับช่วงรอตั้งแต่ผู้เล่นเข้าระยะพุ่ง   // พุ่งเสร็จพักนานกว่าตัวอื่น
 
+hold_vs_attack = true;   // ★ ไม่พุ่งตอนผู้เล่นยังติดท่าฟัน
+
 ai = function() {
     if (run_attack()) exit;
 
     var _d = dist_to_player();
     if (_d > sight_range) exit;
+
+    // ★ เพิ่งโดนตี: ถอยออกห่างก่อน แล้วค่อยตั้งท่าพุ่งใหม่ (เห็นสัญญาณเตือนครบ)
+    if (hit_recover > 0) {
+        var _away = dir_to_player() + 180;
+        hsp = lengthdir_x(move_speed * 1.1, _away);
+        vsp = lengthdir_y(move_speed * 1.1, _away);
+        exit;
+    }
 
     if (token_cd > 0) token_cd--;
     try_get_token();

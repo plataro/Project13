@@ -173,8 +173,10 @@ engage = function() {
 
 // ออกท่าได้หรือยัง (ทุก AI เช็กก่อนเริ่มท่า)
 can_attack = function() {
-    return engage_grace <= 0;
+    return engage_grace <= 0 && hit_recover <= 0;
 }
+hit_recover = 0;          // ★ โดนตีแล้วยังออกท่าไม่ได้กี่เฟรม (ตอนนี้ใช้กับ Dasher)
+hold_vs_attack = false;   // ★ true = ถ้าผู้เล่นกำลังฟันอยู่ จะหยุดนับ windup ไว้ก่อนช่วงล็อก (มีเวลาหลบหลังจบคอมโบ)
 
 // เริ่มท่าโจมตี _name (ดูข้อมูลที่ enemy_attack_data)
 begin_attack = function(_name) {
@@ -194,7 +196,11 @@ run_attack = function() {
         case "windup":
             // เล็งล่วงหน้าตามผู้เล่น จนเหลือ lock เฟรมสุดท้ายถึงล็อกทิศ
             if (atk_timer > atk_cur.lock) atk_dir = aim_at_player(atk_cur.lead);
-            atk_timer--;
+            // ★ ผู้เล่นยังฟันค้างอยู่ (หลบไม่ได้) = รอที่ก่อนช่วงล็อก ไม่พุ่งใส่ตอนผู้เล่นติดท่า
+            var _hold = hold_vs_attack && instance_exists(obj_player)
+                && (obj_player.state == PState.ATTACK || obj_player.state == PState.CHARGE)
+                && atk_timer <= atk_cur.lock + 14;
+            if (!_hold) atk_timer--;
             if (atk_timer <= 0) {
                 telegraph = false;
                 atk_state = "active";
@@ -307,4 +313,7 @@ take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
         atk_cur = undefined;
         telegraph = false;
     }
+    // ★ Dasher: โดนตีแล้วเซถอยและออกท่าใหม่ไม่ได้สักพัก (เดิมโดนขัดแล้วตั้งท่าใหม่ทันทีทุกเฟรม
+    //   พอผู้เล่นหยุดตี มันพุ่งใส่ทันทีตอนผู้เล่นยังติดท่าฟันอยู่)
+    if (object_index == obj_enemy_dasher && atk_state != "active") hit_recover = max(hit_recover, 40);
 }

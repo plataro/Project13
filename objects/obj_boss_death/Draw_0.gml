@@ -3,8 +3,8 @@ var _k = min(1, t / t_burst);
 
 // ---- ลำแสงหมุนพุ่งออกจากตัว (ก่อนระเบิด) ----
 if (t < t_burst + 10) {
-    var _n = 10;
-    var _len = 80 + 520 * _k;
+    var _n = is_final ? 18 : 10;
+    var _len = (80 + 520 * _k) * (is_final ? 1.4 : 1);
     var _a0 = t * 1.2;
     gpu_set_blendmode(bm_add);
     for (var _i = 0; _i < _n; _i++) {
@@ -64,6 +64,30 @@ if (t >= t_burst && ring < 1400) {
     draw_set_color(c_white);
     var _r2 = ring * 0.7;
     for (var _w3 = 0; _w3 < 3; _w3++) draw_circle(x, _cy, _r2 + _w3, true);
+    draw_set_alpha(1);
+}
+
+// ---- ★ คลื่นกระแทกหลายวง ----
+for (var _rr = 0; _rr < array_length(rings); _rr++) {
+    var _rg = rings[_rr];
+    if (_rg.r <= 0) continue;
+    draw_set_alpha(clamp(_rg.a, 0, 1));
+    draw_set_color(make_color_rgb(255, 210, 150));
+    for (var _w4 = 0; _w4 < 3; _w4++) draw_ellipse(x - _rg.r - _w4, y - _rg.r * 0.5 - _w4, x + _rg.r + _w4, y + _rg.r * 0.5 + _w4, true);
+}
+draw_set_alpha(1);
+
+// ---- ★ เสาแสงพุ่งขึ้นฟ้า (บอสสุดท้าย) ----
+if (pillar > 0) {
+    var _pw = 30 + 50 * pillar + sin(t / 3) * 6;
+    gpu_set_blendmode(bm_add);
+    draw_set_alpha(0.5 * pillar);
+    draw_set_color(make_color_rgb(255, 190, 110));
+    draw_rectangle(x - _pw, y - 2000, x + _pw, y, false);
+    draw_set_alpha(0.7 * pillar);
+    draw_set_color(c_white);
+    draw_rectangle(x - _pw * 0.35, y - 2000, x + _pw * 0.35, y, false);
+    gpu_set_blendmode(bm_normal);
     draw_set_alpha(1);
 }
 

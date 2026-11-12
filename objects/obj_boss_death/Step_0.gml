@@ -1,5 +1,33 @@
+if (!inited) {
+    inited = true;
+    if (is_final) {
+        t_burst = 280;                 // ดิ้นนานกว่า
+        mini_bursts = [100, 190];      // ระเบิดกลางทาง 2 ครั้งก่อนระเบิดใหญ่
+        t_text = t_burst + 70;
+        t_fade = t_text + 170;         // ★ ข้อความ "ชัยชนะ" ค้างแล้วค่อย ๆ เฟดดำ
+        t_end = t_fade + 130;
+    } else {
+        t_text = t_burst + 30;
+        t_fade = -1;
+    }
+}
 t++;
 var _cy = y - body_h * 0.5;
+
+// ---- ★ บอสสุดท้าย: ระเบิดกลางทาง + เสาแสง + พื้นสั่นตลอด ----
+if (is_final && t < t_burst) {
+    for (var _m = 0; _m < array_length(mini_bursts); _m++) {
+        if (t == mini_bursts[_m]) {
+            gui_flash = 0.55;
+            fx_shake(9);
+            fx_hitstop(8);
+            array_push(rings, { r: 10, spd: 16, a: 0.8 });
+            fx_spark(x, _cy, 0, 30, c_white, 180);
+        }
+    }
+    if (t > t_burst - 90) pillar = min(1, pillar + 1 / 60);
+    if (t mod 6 == 0) fx_shake(1 + 2 * (t / t_burst));
+}
 
 // ---- ช่วงดิ้น ----
 if (t < t_burst) {
@@ -19,8 +47,18 @@ if (t < t_burst) {
 // ---- ระเบิดใหญ่ ----
 if (t == t_burst) {
     gui_flash = 1;
-    fx_shake(16);
-    fx_hitstop(14);
+    fx_shake(is_final ? 24 : 16);
+    fx_hitstop(is_final ? 24 : 14);
+    array_push(rings, { r: 10, spd: 26, a: 1 });
+    if (is_final) {
+        array_push(rings, { r: -120, spd: 20, a: 1 });   // วงตามหลัง
+        array_push(rings, { r: -260, spd: 15, a: 1 });
+        repeat (40) {
+            var _a2 = random(360);
+            var _s2b = random_range(5, 16);
+            array_push(shards, { x: x, y: _cy, vx: lengthdir_x(_s2b, _a2), vy: lengthdir_y(_s2b, _a2) - 4, rot: random(360), vr: random_range(-14, 14), s: random_range(5, 12), l: irandom_range(80, 140) });
+        }
+    }
     fx_spark(x, _cy, 0, 60, c_white, 180);
     fx_spark(x, _cy, 0, 40, c_orange, 180);
     repeat (40) {
@@ -30,6 +68,24 @@ if (t == t_burst) {
     }
 }
 if (t >= t_burst) ring += max(2, (t_burst + 60 - t) * 0.5);
+for (var _ri = array_length(rings) - 1; _ri >= 0; _ri--) {
+    var _rg = rings[_ri];
+    _rg.r += _rg.spd;
+    _rg.spd = max(3, _rg.spd * 0.96);
+    if (_rg.r > 0) _rg.a -= 0.012;
+    if (_rg.a <= 0) array_delete(rings, _ri, 1);
+}
+if (is_final && t >= t_burst) pillar = max(0, pillar - 1 / 40);
+
+// ---- ★ บอสสุดท้าย: เฟดดำแล้วไปฉากจบ ----
+if (t_fade > 0 && t >= t_fade) {
+    black = min(1, (t - t_fade) / 120);
+    if (t >= t_end && !instance_exists(obj_fade)) {
+        var _f = instance_create_depth(0, 0, -10000, obj_fade);
+        _f.target_room = rm_end;
+        _f.alpha = 1;   // มืดอยู่แล้ว ไปห้องจบเลย แล้วค่อยสว่างขึ้น
+    }
+}
 
 // ---- ถ่านไฟ ----
 if (t > t_burst && t < t_end - 40 && t mod 2 == 0) {
@@ -50,4 +106,4 @@ for (var _e = array_length(embers) - 1; _e >= 0; _e--) {
 }
 gui_flash = max(0, gui_flash - 0.025);
 
-if (t >= t_end) instance_destroy();
+if (t >= t_end && t_fade <= 0) instance_destroy();

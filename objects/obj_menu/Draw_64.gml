@@ -34,12 +34,7 @@ if (screen == 1 || screen == 2) {
         ];
     } else {
         ui_text_bold(480, 74, "เครดิต", 0.95, UI_GOLD);
-        _lines = [
-            ["โค้ดและระบบเกม", "[ใส่ชื่อ]"],
-            ["ภาพและเนื้อเรื่อง", "[ใส่ชื่อ]"],
-            ["เสียงและเพลง", "[ใส่ชื่อและแหล่งที่มา]"],
-            ["ฟอนต์", "Mitr (Cadson Demak, SIL OFL)"]
-        ];
+        _lines = credits_lines();   // ★ แก้รายชื่อที่ scr_globals (ใช้ร่วมกับหน้าจบเกม)
     }
     for (var _l = 0; _l < array_length(_lines); _l++) {
         var _ly = 124 + _l * 38;

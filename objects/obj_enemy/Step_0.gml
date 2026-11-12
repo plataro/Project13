@@ -1,3 +1,5 @@
+if (hit_recover > 0) hit_recover--;
+
 // ★ ปรับตามระดับความยากครั้งเดียวตอนเกิด (ศัตรูลูกที่ตั้งค่าเลือดเองก็ถูกปรับด้วย)
 if (!variable_instance_exists(id, "diff_applied")) {
     diff_applied = true;

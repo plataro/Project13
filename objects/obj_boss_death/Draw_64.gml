@@ -14,7 +14,7 @@ if (gui_flash > 0) {
 draw_set_alpha(1);
 
 // ---- ข้อความ "ปราบแล้ว" ----
-var _ta = clamp(min((t - t_burst - 30) / 20, (t_end - t) / 30), 0, 1);
+var _ta = is_final ? clamp((t - t_text) / 30, 0, 1) : clamp(min((t - t_text) / 20, (t_end - t) / 30), 0, 1);
 if (_ta > 0) {
     draw_set_font(fnt_dialog);
     draw_set_halign(fa_center);
@@ -40,3 +40,11 @@ if (_ta > 0) {
     draw_set_valign(fa_top);
 }
 draw_set_color(c_white);
+
+// ★ บอสสุดท้าย: ค่อย ๆ มืดลงทั้งจอ (ข้อความ "ชัยชนะ" จมหายไปกับความมืด) แล้วไปคัทซีนจบ
+if (black > 0) {
+    draw_set_alpha(black);
+    draw_set_color(c_black);
+    draw_rectangle(0, 0, 960, 540, false);
+    draw_set_alpha(1);
+}
