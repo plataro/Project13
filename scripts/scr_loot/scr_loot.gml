@@ -93,8 +93,19 @@ function player_use_potion() {
     var _s = global.save;
     if (hp <= 0 || hp >= max_hp || _s.potions <= 0) return false;
     if (variable_instance_exists(id, "last_potion") && current_time - last_potion < 600) return false;
+    // ★ สู้บอสอยู่: ดื่มได้ทุก 4 วิ (กันยืนแลกเลือดแล้วกินยารัว ๆ)
+    var _boss_fight = false;
+    with (obj_enemy_boss) if (alert_timer > 0 || state != "chase" || hp < max_hp) _boss_fight = true;
+    if (_boss_fight && variable_instance_exists(id, "last_potion") && current_time - last_potion < 4000) {
+        float_text(x, y - 110, L("ยังดื่มไม่ได้", "Can't drink yet"), c_gray, 0.8);
+        return false;
+    }
 
     last_potion = current_time;
+    // ★ ดื่มยาใช้เวลา: ฟัน/กลิ้งไม่ได้แป๊บหนึ่ง (ต้องหาจังหวะปลอดภัยก่อนดื่ม)
+    if (variable_instance_exists(id, "attack_cd")) attack_cd = max(attack_cd, 30);
+    if (variable_instance_exists(id, "roll_cd_timer")) roll_cd_timer = max(roll_cd_timer, 30);
+    if (variable_instance_exists(id, "mvx")) { mvx *= 0.3; mvy *= 0.3; }
     _s.potions--;
     var _heal = variable_instance_exists(id, "potion_heal") ? potion_heal : 2;
     hp = min(max_hp, hp + _heal);

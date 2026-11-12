@@ -167,7 +167,51 @@ take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
         far_timer += 25;
         engage_grace = 0;
     }
+
+    // =====================================================================
+    // ★ บังคับให้เรียนรู้ "หลบ แล้วสวน" (เดิมยืนฟันรัว + กินยาก็ผ่าน)
+    //   - ช่วงบอสเพิ่งออกท่าเสร็จ / มึน = ช่องสวน: ฟันเข้าแรงขึ้น x1.4
+    //   - ช่วงอื่น (บอสพร้อมสู้) = บอสตั้งรับ: ฟันเข้าแค่ x0.6
+    //   - ยืนฟันใส่ตอนบอสพร้อมสู้ 4 ครั้งติด = บอสสวนกลับทันที (ต้องหลบ)
+    // =====================================================================
+    if (_src != "bullet" && shield <= 0) {
+        var _open = (atk_state == "recover") || (state == "recover") || (state == "stunned");
+        if (_open) {
+            _dmg = max(1, round(_dmg * 1.4));
+            if (!counter_shown) {
+                counter_shown = true;
+                float_text(x, y - 170, L("สวน!", "Counter!"), make_color_rgb(255, 220, 90), 1.2);
+            }
+        } else {
+            counter_shown = false;
+            if (atk_state == "") _dmg = max(1, round(_dmg * 0.6));
+            if (current_time - poke_time > 1500) poke = 0;
+            poke_time = current_time;
+            if (state == "chase" && atk_state == "") {
+                poke++;
+                if (poke >= 4 && hp - _dmg > 0) {
+                    poke = 0;
+                    boss_counter();
+                }
+            }
+        }
+    }
     base_take_damage(_dmg, _dir, _crit, _src);
+}
+
+// ★ สวนกลับคนที่ยืนฟันรัว: ท่ากวาดรอบตัวของแต่ละบอส (มีวงเตือนปกติ หลบได้)
+poke = 0;
+poke_time = 0;
+counter_shown = false;
+boss_counter = function() {
+    float_text(x, y - 200, L("สวนกลับ!", "Counterattack!"), c_red, 1.3);
+    switch (variant) {
+        case "beast": begin_attack("beast_rake"); break;
+        case "brute": begin_attack("brute_pound"); break;
+        case "mage":  if (nova_cd <= 0) start_nova(); else begin_attack("beast_rake"); break;
+        default:      begin_attack(phase >= 2 ? "boss_slam" : "beast_rake"); break;
+    }
+    attack_cd = max(attack_cd, 30);
 }
 
 // ---- ★ ท่ากระโดดตกใส่ (ไล่ระยะผู้เล่นที่หนีไปยิงจากไกล) ----

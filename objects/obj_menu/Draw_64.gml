@@ -85,3 +85,39 @@ else {
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);
+
+// ★ ปุ่ม Debug มุมขวาบน: สี่เหลี่ยม + รูปแมลง (เขียว = เปิด)
+if (SHOW_DEBUG_MENU) {
+    var _b = dbg_btn;
+    var _hov = point_in_rectangle(device_mouse_x_to_gui(0), device_mouse_y_to_gui(0), _b[0], _b[1], _b[2], _b[3]);
+    var _on = global.debug;
+    var _ic = _on ? make_color_rgb(120, 240, 120) : (_hov ? UI_TEXT : UI_MUTED);
+    draw_set_alpha(0.85);
+    draw_set_color(_on ? make_color_rgb(20, 60, 24) : UI_BG);
+    draw_rectangle(_b[0], _b[1], _b[2], _b[3], false);
+    draw_set_alpha(1);
+    draw_set_color(_on ? make_color_rgb(120, 240, 120) : (_hov ? UI_GOLD : UI_GOLD_DARK));
+    draw_rectangle(_b[0], _b[1], _b[2], _b[3], true);
+    // แมลง
+    var _cx = (_b[0] + _b[2]) / 2;
+    var _cy = (_b[1] + _b[3]) / 2 + 2;
+    draw_set_color(_ic);
+    draw_ellipse(_cx - 7, _cy - 9, _cx + 7, _cy + 11, false);          // ตัว
+    draw_circle(_cx, _cy - 12, 5, false);                               // หัว
+    for (var _lg = -1; _lg <= 1; _lg++) {                               // ขา 3 คู่
+        draw_line_width(_cx - 7, _cy + _lg * 6, _cx - 14, _cy + _lg * 7 - 2, 2);
+        draw_line_width(_cx + 7, _cy + _lg * 6, _cx + 14, _cy + _lg * 7 - 2, 2);
+    }
+    draw_line_width(_cx - 2, _cy - 16, _cx - 7, _cy - 21, 2);           // หนวด
+    draw_line_width(_cx + 2, _cy - 16, _cx + 7, _cy - 21, 2);
+    draw_set_color(_on ? make_color_rgb(20, 60, 24) : UI_BG);
+    draw_line_width(_cx, _cy - 8, _cx, _cy + 10, 2);                    // เส้นกลางปีก
+    if (_hov) {
+        draw_set_halign(fa_right);
+        draw_set_valign(fa_middle);
+        ui_text(_b[0] - 8, (_b[1] + _b[3]) / 2, _on ? "Debug: ON" : "Debug: OFF", 0.45, _ic);
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    }
+    draw_set_color(c_white);
+}

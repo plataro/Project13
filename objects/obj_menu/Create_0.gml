@@ -11,6 +11,7 @@ has_save = save_exists();
 save_text = has_save ? save_summary() : "";
 if (has_save && save_text == "") has_save = false;   // เซฟเสีย = ทำเหมือนไม่มี
 save_lang = global.lang;
+dbg_btn = [906, 10, 950, 54];   // ★ ปุ่มเปิด/ปิด Debug มุมขวาบน
 msg = "";
 msg_timer = 0;
 

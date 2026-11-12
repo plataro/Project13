@@ -9,6 +9,20 @@ if (save_lang != global.lang) {
     if (has_save) save_text = save_summary();
 }
 
+// ★ ปุ่ม Debug: สี่เหลี่ยมมุมขวาบน (แยกจากรายการเมนู)
+if (SHOW_DEBUG_MENU && mouse_check_button_pressed(mb_left)
+    && point_in_rectangle(device_mouse_x_to_gui(0), device_mouse_y_to_gui(0), dbg_btn[0], dbg_btn[1], dbg_btn[2], dbg_btn[3])) {
+    global.debug = !global.debug;
+    if (global.debug) {
+        if (!instance_exists(obj_debug)) instance_create_depth(0, 0, -9500, obj_debug);
+    } else {
+        global.god = false;
+        instance_destroy(obj_debug);
+        if (screen == 3) { screen = 0; sel = 0; }
+    }
+    exit;
+}
+
 var _enter = input_ui_confirm();   // ★ Enter / Space / จอย A
 var _click = mouse_check_button_pressed(mb_left);
 var _back = input_ui_back();
@@ -45,7 +59,6 @@ if (screen == 0) {
     array_push(items, L("วิธีเล่น", "How to Play"));  array_push(acts, "howto");
     array_push(items, L("เครดิต", "Credits"));    array_push(acts, "credits");
     array_push(items, L("ตั้งค่า", "Settings"));    array_push(acts, "settings");
-    if (SHOW_DEBUG_MENU) { array_push(items, global.debug ? "Debug Mode: ON" : "Debug Mode: OFF"); array_push(acts, "debug"); }
     if (global.debug) { array_push(items, L("เลือกฉาก", "Scene Select")); array_push(acts, "scenes"); }
 } else if (screen == 4) {
     items = [difficulty_data(0).name, difficulty_data(1).name, difficulty_data(2).name, L("กลับ", "Back")];

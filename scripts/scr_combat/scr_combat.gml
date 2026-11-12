@@ -172,27 +172,28 @@ function enemy_attack_base(_name) {
                      lunge_speed: 0, lunge_frames: 0,
                      circles: [ [0, 0, 115] ] };
         // ===== เจ้าป่า: ข่วนเร็ว ๆ สลับซ้ายขวา =====
+        // ★ กรงเล็บ: ใหญ่ขึ้นและห่างตัวบอสขึ้น เห็นวงเตือนชัด (เดิมเล็กและชิดตัวจนมองไม่ทัน)
         case "beast_claw_r":
-            return { windup: 13, active: 6, recover: 6, dmg: 1, lift: 50,
-                     lock: 5, lead: 2, turn: 3,
+            return { windup: 18, active: 6, recover: 10, dmg: 1, lift: 50,
+                     lock: 6, lead: 2, turn: 2,
                      lunge_speed: 6, lunge_frames: 6,
-                     circles: [ [46, 30, 34], [66, -6, 36] ] };
+                     circles: [ [70, 34, 52], [110, -8, 56] ] };
         case "beast_claw_l":
-            return { windup: 13, active: 6, recover: 6, dmg: 1, lift: 50,
-                     lock: 5, lead: 2, turn: 3,
+            return { windup: 18, active: 6, recover: 10, dmg: 1, lift: 50,
+                     lock: 6, lead: 2, turn: 2,
                      lunge_speed: 6, lunge_frames: 6,
-                     circles: [ [46, -30, 34], [66, 6, 36] ] };
+                     circles: [ [70, -34, 52], [110, 8, 56] ] };
         case "beast_rake":   // หมุนตัวข่วนรอบตัว
-            return { windup: 18, active: 8, recover: 30, dmg: 1, lift: 40,
+            return { windup: 26, active: 8, recover: 34, dmg: 1, lift: 40,
                      lock: 0, lead: 0, turn: 0,
                      lunge_speed: 0, lunge_frames: 0,
-                     circles: [ [0, 0, 108] ] };
+                     circles: [ [0, 0, 150] ] };   // ★ วงใหญ่ขึ้น (เดิม 108) เตือนนานขึ้น
         case "beast_lunge":  // กระโจนตะครุบระยะกลาง
-            return { windup: 18, active: 14, recover: 26, dmg: 1, lift: 50,
-                     lock: 7, lead: 3, turn: 0,
+            return { windup: 22, active: 14, recover: 30, dmg: 1, lift: 50,
+                     lock: 8, lead: 3, turn: 0,
                      lunge_speed: 11, lunge_frames: 14,
                      circles: [],
-                     rects: [ [0, 120, -42, 42] ] };
+                     rects: [ [0, 170, -56, 56] ] };   // ★ ยาว/กว้างขึ้น
         // ===== ยักษ์ค้อน: ช้าแต่หนัก =====
         case "brute_smash":  // ทุบค้อนลงข้างหน้า (โดน = มึน)
             return { fx: "stun", windup: 40, active: 8, recover: 50, dmg: 3, lift: 50,

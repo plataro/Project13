@@ -34,9 +34,11 @@ if (variable_instance_exists(id, "is_orb")) {
     exit;
 }
 
+// ★ สัญญาณเตือน: ท่าประชิด = ตัวกะพริบขาว + "!" เหนือหัว / ท่าระยะไกล = แดงวาบ + "!" สีแดง
+var _melee_tel = telegraph && (atk_state == "windup" || (variable_instance_exists(id, "state") && (state == "leap_windup")));
 var _col = tint;
 if (flash > 0) _col = c_red;
-else if (telegraph) _col = c_yellow;
+else if (telegraph && !_melee_tel) _col = ((current_time div 90) mod 2 == 0) ? c_red : tint;
 
 var _ox = telegraph ? irandom_range(-2, 2) : 0;
 
@@ -150,6 +152,29 @@ if (shield > 0 && (shield > 60 || (shield div 5) mod 2 == 0)) {
     draw_circle(_scx, _scy, _srad - 2, true);
     gpu_set_blendmode(bm_normal);
     draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
+// ★ ท่าประชิด: ตัวกะพริบขาว
+if (_melee_tel && flash <= 0 && (current_time div 70) mod 2 == 0) {
+    gpu_set_blendmode(bm_add);
+    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.7);
+    gpu_set_blendmode(bm_normal);
+}
+// ★ เครื่องหมาย "!" เหนือหัว
+if (telegraph && vis > 0.3) {
+    var _er = enemy_hurt_rect(id);
+    var _ex = round(x);
+    var _ey = _er[1] - z - 22 - abs(sin(current_time / 90)) * 4;
+    var _ec = _melee_tel ? make_color_rgb(255, 220, 60) : make_color_rgb(255, 70, 60);
+    draw_set_color(c_black);
+    draw_circle(_ex, _ey, 11, false);
+    draw_set_color(_ec);
+    draw_circle(_ex, _ey, 9, false);
+    draw_triangle(_ex - 4, _ey + 7, _ex + 4, _ey + 7, _ex, _ey + 14, false);
+    draw_set_color(c_black);
+    draw_rectangle(_ex - 1.5, _ey - 6, _ex + 1.5, _ey + 2, false);
+    draw_rectangle(_ex - 1.5, _ey + 4, _ex + 1.5, _ey + 6, false);
     draw_set_color(c_white);
 }
 
