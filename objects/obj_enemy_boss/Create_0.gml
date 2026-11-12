@@ -242,7 +242,7 @@ leap_land = function() {
         var _n = (phase >= 3) ? 12 : 8;
         var _a0 = irandom(359);
         for (var _j = 0; _j < _n; _j++) {
-            var _b = instance_create_depth(x, y, depth, obj_enemy_bullet);
+            var _b = instance_create_depth(x, y, depth, obj_enemy_bullet); _b.from_boss = true;
             _b.direction = _a0 + _j * (360 / _n);
             _b.image_angle = _b.direction;
             _b.speed = 4.5;
@@ -272,7 +272,7 @@ process_erupts = function() {
             if (_e.r >= 60) _big = true;
             if (instance_exists(obj_player) && player_hit_by_circle(obj_player, _e.x, _e.y - 10, _e.r)) {
                 var _hp0 = obj_player.hp;
-                obj_player.take_damage(enemy_damage_calc(_e.dmg), _e.x, _e.y);
+                obj_player.take_damage(enemy_damage_calc(_e.dmg, true), _e.x, _e.y);
                 if (_e.fx != "" && obj_player.hp < _hp0) player_add_status(_e.fx);   // ★ ติดสถานะ
             }
         }
@@ -816,7 +816,7 @@ ai = function() {
                 var _vn = (phase >= 3) ? 5 : 3;
                 var _va = point_direction(x, y, obj_player.x, obj_player.y);
                 for (var _v = 0; _v < _vn; _v++) {
-                    var _vb = instance_create_depth(x, y, depth, obj_enemy_bullet);
+                    var _vb = instance_create_depth(x, y, depth, obj_enemy_bullet); _vb.from_boss = true;
                     _vb.direction = _va + (_v - (_vn - 1) / 2) * 14;
                     _vb.image_angle = _vb.direction;
                     _vb.speed = 6.5;
@@ -870,7 +870,7 @@ ai = function() {
                 if (instance_exists(obj_player) && player_hit_by_circle(obj_player, x, y - 40, 150)) {
                     var _p = obj_player;
                     var _hp0 = _p.hp;
-                    _p.take_damage(enemy_damage_calc(1), x, y);
+                    _p.take_damage(enemy_damage_calc(1, true), x, y);
                     if (_p.hp < _hp0) {   // ดันกระเด็นแรงกว่าปกติ
                         var _pa = point_direction(x, y, _p.x, _p.y);
                         _p.kb_x = lengthdir_x(15, _pa);
@@ -946,7 +946,7 @@ ai = function() {
                 var _waves = (phase >= 3) ? 3 : 2;
                 var _step = 360 / _dirs;
                 for (var _j = 0; _j < _dirs; _j++) {
-                    var _b = instance_create_depth(x, y, depth, obj_enemy_bullet);
+                    var _b = instance_create_depth(x, y, depth, obj_enemy_bullet); _b.from_boss = true;
                     _b.direction = burst_a0 + burst_wave * (_step / 2) + _j * _step;
                     _b.image_angle = _b.direction;
                     _b.speed = (phase >= 3) ? 5.5 : 5;

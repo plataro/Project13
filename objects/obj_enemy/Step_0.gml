@@ -7,6 +7,7 @@ if (!variable_instance_exists(id, "diff_applied")) {
     var _tr = tier_data();
     var _hpm = (object_index == obj_enemy_boss) ? _tr.boss_hp : _tr.hp;
     if (variable_instance_exists(id, "hp_mult")) _hpm *= hp_mult;   // ★ ยักษ์เลือดเยอะกว่า   // บอสตั้งเลือดเองใน Creation Code
+    if (object_index == obj_enemy_boss) _hpm *= _df.boss_hp;   // ★ บอสเลือดเยอะขึ้นตามความยาก
     hp = max(1, round(hp * _df.enemy_hp * _hpm * DMG_UNIT * enemy_power_mult()));   // ★ เลือดคูณตัวเลขดาเมจใหม่
     max_hp = hp;
     hp_shown = hp;

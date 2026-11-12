@@ -40,7 +40,7 @@ if (!hit_done && instance_exists(obj_player)) {
                 // (เดิม hitbox ยังอยู่ต่อ พอกลิ้งจบแต่ท่ายังไม่จบก็โดน = หลบแล้วยังโดน)
                 hit_done = true;
             } else {
-                _p.take_damage(enemy_damage_calc(atk.dmg), owner.x, owner.y);   // ★ ดาเมจตามความยาก x ด่าน - เกราะ
+                _p.take_damage(enemy_damage_calc(atk.dmg, instance_exists(owner) && owner.object_index == obj_enemy_boss), owner.x, owner.y);   // ★ ดาเมจตามความยาก x ด่าน - เกราะ
                 if (variable_struct_exists(atk, "fx")) player_add_status(atk.fx);   // ★ ติดสถานะ
                 hit_done = true;
                 owner.on_hit_player();
