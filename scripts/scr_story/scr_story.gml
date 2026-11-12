@@ -21,102 +21,102 @@ function portrait_data() {
 }
 
 function story_lines(_key) {
-    // ผู้เล่น = "ผู้ไร้นาม"  ราชามังกร = who "b"  (เปลี่ยน who/emo ตามรูป portrait ที่มี)
-    var _me = "ผู้ไร้นาม";
-    var _dr = "ราชามังกร";
+    // ผู้เล่น = L("ผู้ไร้นาม", "The Nameless")  ราชามังกร = who "b"  (เปลี่ยน who/emo ตามรูป portrait ที่มี)
+    var _me = L("ผู้ไร้นาม", "The Nameless");
+    var _dr = L("ราชามังกร", "The Dragon King");
     switch (_key) {
         // ---------- Sanctuary: ตื่นขึ้นมา ----------
         case "intro":
             return [
-                { name: _me, text: "...หนาวจัง" },
-                { name: _me, text: "ที่นี่ที่ไหนกัน? ฉัน... จำอะไรไม่ได้เลย แม้แต่ชื่อของตัวเอง" },
-                { name: _me, text: "แต่มีเสียงบางอย่างเรียกอยู่ข้างนอกนั่น เหมือนมีบางอย่างที่ฉันต้องไปให้ถึง" },
-                { name: _me, text: "ลองเดินออกไปดูก็แล้วกัน... ถ้าเจอทางออกนะ" },
+                { name: _me, text: L("...หนาวจัง", "...So cold.") },
+                { name: _me, text: L("ที่นี่ที่ไหนกัน? ฉัน... จำอะไรไม่ได้เลย แม้แต่ชื่อของตัวเอง", "Where is this place? I... can't remember anything. Not even my own name.") },
+                { name: _me, text: L("แต่มีเสียงบางอย่างเรียกอยู่ข้างนอกนั่น เหมือนมีบางอย่างที่ฉันต้องไปให้ถึง", "But something is calling to me from outside. Like there's somewhere I have to reach.") },
+                { name: _me, text: L("ลองเดินออกไปดูก็แล้วกัน... ถ้าเจอทางออกนะ", "I'll head out and see... if I can find the way.") },
             ];
         case "sword_found":
             return [
-                { name: _me, text: "ดาบเล่มนี้... ทำไมมันถึงคุ้นมือขนาดนี้" },
-                { name: _me, text: "เหมือนมันรอฉันมานานแล้ว" },
-                { name: _me, text: "ไปกันเถอะ" },
+                { name: _me, text: L("ดาบเล่มนี้... ทำไมมันถึงคุ้นมือขนาดนี้", "This sword... why does it feel so familiar in my hand?") },
+                { name: _me, text: L("เหมือนมันรอฉันมานานแล้ว", "As if it's been waiting for me for a long time.") },
+                { name: _me, text: L("ไปกันเถอะ", "Let's go.") },
             ];
 
         // ---------- ป่า ----------
         case "level1_mid":
             return [
-                { name: _me, text: "รอยไหม้บนพื้น... และต้นไม้ที่ล้มระเนระนาด" },
-                { name: _me, text: "นี่มันฝีมือของสัตว์ประหลาดพวกนี้... หรือของ 'มังกร' ที่ชาวบ้านพูดถึงกันนะ" },
+                { name: _me, text: L("รอยไหม้บนพื้น... และต้นไม้ที่ล้มระเนระนาด", "Scorch marks on the ground... and trees torn down everywhere.") },
+                { name: _me, text: L("นี่มันฝีมือของสัตว์ประหลาดพวกนี้... หรือของ 'มังกร' ที่ชาวบ้านพูดถึงกันนะ", "Did these monsters do this... or the 'dragon' the villagers talk about?") },
             ];
 
         // ---------- หมู่บ้าน ----------
         case "village_intro":
             return [
-                { name: "ชาวบ้าน", text: "นั่น... นักรบเหรอ? รอดมาจากป่านั่นได้ยังไงกัน" },
-                { name: "ชาวบ้าน", text: "ราชามังกรกลับมาแล้ว ท้องฟ้าเหนือปราสาทกลายเป็นสีเลือดมาหลายคืน" },
-                { name: "ชาวบ้าน", text: "ประตูปราสาทถูกผนึกไว้ ต้องไปเอาตราจากเหมืองร้างทางตะวันออกก่อนถึงจะเข้าไปได้" },
-                { name: _me, text: "(ลองคุยกับพ่อค้าดูหน่อย... ของที่ซื้อได้อาจช่วยชีวิตฉันไว้)" },
+                { name: L("ชาวบ้าน", "Villager"), text: L("นั่น... นักรบเหรอ? รอดมาจากป่านั่นได้ยังไงกัน", "Is that... a warrior? How did you make it out of that forest alive?") },
+                { name: L("ชาวบ้าน", "Villager"), text: L("ราชามังกรกลับมาแล้ว ท้องฟ้าเหนือปราสาทกลายเป็นสีเลือดมาหลายคืน", "The Dragon King has returned. The sky over the castle has been blood-red for many nights.") },
+                { name: L("ชาวบ้าน", "Villager"), text: L("ประตูปราสาทถูกผนึกไว้ ต้องไปเอาตราจากเหมืองร้างทางตะวันออกก่อนถึงจะเข้าไปได้", "The castle gate is sealed. You'll need the crest from the abandoned mine to the east to get in.") },
+                { name: _me, text: L("(ลองคุยกับพ่อค้าดูหน่อย... ของที่ซื้อได้อาจช่วยชีวิตฉันไว้)", "(Maybe I should talk to the merchants... what they sell might save my life.)") },
             ];
 
         // ---------- เหมือง ----------
         case "mine_intro":
             return [
-                { name: _me, text: "เหมืองร้าง... เงียบจนน่าขนลุก" },
-                { name: _me, text: "บนผนังมีรอยกรงเล็บขนาดใหญ่ ใหญ่เกินกว่าสัตว์ธรรมดาจะทำได้" },
+                { name: _me, text: L("เหมืองร้าง... เงียบจนน่าขนลุก", "The abandoned mine... it's eerily quiet.") },
+                { name: _me, text: L("บนผนังมีรอยกรงเล็บขนาดใหญ่ ใหญ่เกินกว่าสัตว์ธรรมดาจะทำได้", "Huge claw marks on the walls. Far too big for any ordinary beast.") },
             ];
 
         // ---------- ปราสาท ----------
         case "castle_intro":
             return [
-                { name: _me, text: "นี่คือปราสาทของราชามังกร... แต่ทำไมฉันรู้สึกเหมือนเคยมาที่นี่" },
-                { name: _me, text: "ความทรงจำบางอย่างกำลังย้อนกลับมา... ทีละนิด" },
+                { name: _me, text: L("นี่คือปราสาทของราชามังกร... แต่ทำไมฉันรู้สึกเหมือนเคยมาที่นี่", "So this is the Dragon King's castle... but why do I feel like I've been here before?") },
+                { name: _me, text: L("ความทรงจำบางอย่างกำลังย้อนกลับมา... ทีละนิด", "Some memories are coming back... little by little.") },
             ];
 
         // ---------- ห้องโถงสุดท้าย (side-scroll) ----------
         case "hall_1":
             return [
-                { name: "ผู้บรรยาย", text: "บนผนังมีภาพสลักเก่าแก่ นักรบถือดาบยืนเคียงข้างมังกรตัวใหญ่ ทั้งคู่ชูมือขึ้นสู่ท้องฟ้า" },
-                { name: _me, text: "เคียงข้างกัน...? มนุษย์กับมังกรเนี่ยนะ" },
+                { name: L("ผู้บรรยาย", "Narrator"), text: L("บนผนังมีภาพสลักเก่าแก่ นักรบถือดาบยืนเคียงข้างมังกรตัวใหญ่ ทั้งคู่ชูมือขึ้นสู่ท้องฟ้า", "An ancient carving covers the wall: a warrior with a sword stands beside a great dragon, both reaching toward the sky.") },
+                { name: _me, text: L("เคียงข้างกัน...? มนุษย์กับมังกรเนี่ยนะ", "Side by side...? A human and a dragon?") },
             ];
         case "hall_2":
             return [
-                { name: "ผู้บรรยาย", text: "ภาพถัดมา นักรบหลับใหลอยู่ในวิหาร และมังกรตัวนั้นกำลังปิดผนึก... ด้วยน้ำตา" },
-                { name: _me, text: "วิหารนั่น... คือที่ที่ฉันตื่นขึ้นมา" },
-                { name: _me, text: "แล้วคนที่ผนึกฉันไว้ก็คือ... ราชามังกรเอง?" },
+                { name: L("ผู้บรรยาย", "Narrator"), text: L("ภาพถัดมา นักรบหลับใหลอยู่ในวิหาร และมังกรตัวนั้นกำลังปิดผนึก... ด้วยน้ำตา", "The next carving: the warrior sleeps in a sanctuary, and the dragon seals it shut... in tears.") },
+                { name: _me, text: L("วิหารนั่น... คือที่ที่ฉันตื่นขึ้นมา", "That sanctuary... it's where I woke up.") },
+                { name: _me, text: L("แล้วคนที่ผนึกฉันไว้ก็คือ... ราชามังกรเอง?", "Then the one who sealed me away was... the Dragon King himself?") },
             ];
         case "hall_end":
             return [
-                { name: _me, text: "ประตูบานสุดท้าย" },
-                { name: _me, text: "ไม่ว่าเบื้องหลังจะมีอะไรอยู่ ฉันต้องรู้ความจริง" },
+                { name: _me, text: L("ประตูบานสุดท้าย", "The last door.") },
+                { name: _me, text: L("ไม่ว่าเบื้องหลังจะมีอะไรอยู่ ฉันต้องรู้ความจริง", "Whatever lies beyond it, I have to know the truth.") },
             ];
 
         // ---------- ห้องบอส: มีตัวเลือก ----------
         case "boss_intro":
             return [
-                { name: _dr, who: "b", side: "right", emo: "normal", text: "ในที่สุดเจ้าก็มาถึง... สหายของข้า" },
-                { name: _me, who: "a", side: "left", emo: "surprised", text: "นายรู้จักฉันงั้นเหรอ" },
-                { name: _dr, who: "b", side: "right", emo: "sad", text: "ข้าเองที่ผนึกเจ้าไว้ในวิหาร เพื่อให้เจ้าพ้นจากสงครามที่ข้าไม่อาจหยุดได้" },
-                { name: _dr, who: "b", side: "right", emo: "sad", text: "เราเคยสร้างสันติสุขร่วมกัน ก่อนที่ไฟแห่งความแค้นจะกลืนสติของข้าไป" },
-                { name: _dr, who: "b", side: "right", emo: "normal", text: "ข้าเหลือสติอยู่อีกไม่นาน ถ้าเจ้าไม่หยุดข้า ข้าจะเผาโลกนี้ทั้งใบ... หรือไม่ก็ยืนเคียงข้างข้า แล้วเราจะสร้างโลกใหม่ด้วยกันอีกครั้ง" },
-                { name: _me, who: "a", side: "left", emo: "normal", text: "ฉัน...", choices: [
-                    { t: "ฉันจะหยุดนายเอง", v: "kill" },
-                    { t: "ฉันจะอยู่เคียงข้างนาย", v: "join" }
+                { name: _dr, who: "b", side: "right", emo: "normal", text: L("ในที่สุดเจ้าก็มาถึง... สหายของข้า", "At last you have come... my old friend.") },
+                { name: _me, who: "a", side: "left", emo: "surprised", text: L("นายรู้จักฉันงั้นเหรอ", "You know me?") },
+                { name: _dr, who: "b", side: "right", emo: "sad", text: L("ข้าเองที่ผนึกเจ้าไว้ในวิหาร เพื่อให้เจ้าพ้นจากสงครามที่ข้าไม่อาจหยุดได้", "It was I who sealed you in the sanctuary, to spare you from a war I could not stop.") },
+                { name: _dr, who: "b", side: "right", emo: "sad", text: L("เราเคยสร้างสันติสุขร่วมกัน ก่อนที่ไฟแห่งความแค้นจะกลืนสติของข้าไป", "Together we once built a lasting peace, before the fire of vengeance consumed my mind.") },
+                { name: _dr, who: "b", side: "right", emo: "normal", text: L("ข้าเหลือสติอยู่อีกไม่นาน ถ้าเจ้าไม่หยุดข้า ข้าจะเผาโลกนี้ทั้งใบ... หรือไม่ก็ยืนเคียงข้างข้า แล้วเราจะสร้างโลกใหม่ด้วยกันอีกครั้ง", "My reason will not hold much longer. If you do not stop me, I will burn this world to ash... or stand beside me, and we will build a new world together once more.") },
+                { name: _me, who: "a", side: "left", emo: "normal", text: L("ฉัน...", "I..."), choices: [
+                    { t: L("ฉันจะหยุดนายเอง", "I'll stop you myself."), v: "kill" },
+                    { t: L("ฉันจะอยู่เคียงข้างนาย", "I'll stand beside you."), v: "join" }
                 ] },
             ];
         case "boss_kill":
             return [
-                { name: _me, who: "a", side: "left", emo: "sad", text: "ขอโทษนะ... แต่ฉันต้องทำ" },
-                { name: _dr, who: "b", side: "right", emo: "happy", text: "นั่นล่ะ... คำตอบที่ข้ารอคอย มาเถอะ!" },
+                { name: _me, who: "a", side: "left", emo: "sad", text: L("ขอโทษนะ... แต่ฉันต้องทำ", "I'm sorry... but I have to.") },
+                { name: _dr, who: "b", side: "right", emo: "happy", text: L("นั่นล่ะ... คำตอบที่ข้ารอคอย มาเถอะ!", "That is... the answer I have waited for. Come!") },
             ];
 
         // ---------- ตอนจบ ----------
         case "ending_kill":
             return [
-                { name: _dr, who: "b", side: "right", emo: "happy", text: "ขอบใจ... สหายของข้า ไฟแค้นกำลังดับลงแล้ว" },
-                { name: _me, who: "a", side: "left", emo: "sad", text: "หลับให้สบายเถอะ... ฉันจะจำนายไว้" },
+                { name: _dr, who: "b", side: "right", emo: "happy", text: L("ขอบใจ... สหายของข้า ไฟแค้นกำลังดับลงแล้ว", "Thank you... my friend. The fire of vengeance is fading at last.") },
+                { name: _me, who: "a", side: "left", emo: "sad", text: L("หลับให้สบายเถอะ... ฉันจะจำนายไว้", "Rest now... I'll remember you.") },
             ];
         case "ending_join":
             return [
-                { name: _dr, who: "b", side: "right", emo: "happy", text: "ขอบใจ... สหายของข้า ด้วยกัน เราจะไม่แพ้ใครอีก" },
-                { name: _me, who: "a", side: "left", emo: "happy", text: "คราวนี้ ฉันจะไม่ลืมนายอีกแล้ว" },
+                { name: _dr, who: "b", side: "right", emo: "happy", text: L("ขอบใจ... สหายของข้า ด้วยกัน เราจะไม่แพ้ใครอีก", "Thank you... my friend. Together, we will never fall again.") },
+                { name: _me, who: "a", side: "left", emo: "happy", text: L("คราวนี้ ฉันจะไม่ลืมนายอีกแล้ว", "This time, I won't forget you.") },
             ];
         case "ending":
             return [];
@@ -129,25 +129,25 @@ function cutscene_slides(_key) {
     switch (_key) {
         case "intro":
             return [
-                { img: "spr_cs_intro_1", text: "นานมาแล้ว มังกรและมนุษย์เคยอยู่ร่วมกันภายใต้ท้องฟ้าเดียวกัน" },
-                { img: "spr_cs_intro_2", text: "จนวันหนึ่ง ไฟแห่งสงครามลุกลามไปทั่วแผ่นดิน ราชามังกรผู้ยิ่งใหญ่หายไปในเปลวเพลิง" },
-                { img: "spr_cs_intro_3", text: "ผู้คนเล่าขานว่า นักรบนิรนามคนหนึ่งถูกผนึกไว้ในวิหารเก่าแก่ เพื่อรอวันที่โลกต้องการเขาอีกครั้ง" },
-                { img: "spr_cs_intro_4", text: "และบัดนี้ ราชามังกรกลับมาแล้ว ท้องฟ้าเหนือปราสาทกลายเป็นสีเลือด" },
-                { img: "spr_cs_intro_5", text: "ในความเงียบของวิหาร... บางสิ่งกำลังตื่นขึ้น" },
+                { img: "spr_cs_intro_1", text: L("นานมาแล้ว มังกรและมนุษย์เคยอยู่ร่วมกันภายใต้ท้องฟ้าเดียวกัน", "Long ago, dragons and humans lived together beneath the same sky.") },
+                { img: "spr_cs_intro_2", text: L("จนวันหนึ่ง ไฟแห่งสงครามลุกลามไปทั่วแผ่นดิน ราชามังกรผู้ยิ่งใหญ่หายไปในเปลวเพลิง", "Until one day, the fires of war spread across the land, and the great Dragon King vanished into the flames.") },
+                { img: "spr_cs_intro_3", text: L("ผู้คนเล่าขานว่า นักรบนิรนามคนหนึ่งถูกผนึกไว้ในวิหารเก่าแก่ เพื่อรอวันที่โลกต้องการเขาอีกครั้ง", "Legend tells of a nameless warrior sealed within an ancient sanctuary, waiting for the day the world would need him again.") },
+                { img: "spr_cs_intro_4", text: L("และบัดนี้ ราชามังกรกลับมาแล้ว ท้องฟ้าเหนือปราสาทกลายเป็นสีเลือด", "And now, the Dragon King has returned. The sky above his castle has turned the color of blood.") },
+                { img: "spr_cs_intro_5", text: L("ในความเงียบของวิหาร... บางสิ่งกำลังตื่นขึ้น", "In the silence of the sanctuary... something stirs.") },
             ];
         case "end_kill":
             return [
-                { img: "spr_cs_kill_1", text: "ร่างของราชามังกรสลายเป็นแสงสีทอง ไฟที่ลุกทั่วแผ่นดินค่อย ๆ มอดดับลง" },
-                { img: "spr_cs_kill_2", text: "ท้องฟ้ากลับเป็นสีคราม ชาวบ้านโห่ร้องเรียกขานผู้กล้า ทั้งที่ไม่มีใครรู้ชื่อจริงของเขา" },
-                { img: "spr_cs_kill_3", text: "ผู้ไร้นามเก็บเกล็ดมังกรชิ้นสุดท้ายไว้ แล้วออกเดินทางต่อ เพื่อตามหาตัวตนที่เลือนหายไป" },
-                { img: "spr_cs_kill_4", text: "ตอนจบที่ 1 : ผู้พิชิตมังกร" },
+                { img: "spr_cs_kill_1", text: L("ร่างของราชามังกรสลายเป็นแสงสีทอง ไฟที่ลุกทั่วแผ่นดินค่อย ๆ มอดดับลง", "The Dragon King's body dissolved into golden light, and the fires across the land slowly died away.") },
+                { img: "spr_cs_kill_2", text: L("ท้องฟ้ากลับเป็นสีคราม ชาวบ้านโห่ร้องเรียกขานผู้กล้า ทั้งที่ไม่มีใครรู้ชื่อจริงของเขา", "The sky turned blue once more. The people cheered for their hero, though no one knew his true name.") },
+                { img: "spr_cs_kill_3", text: L("ผู้ไร้นามเก็บเกล็ดมังกรชิ้นสุดท้ายไว้ แล้วออกเดินทางต่อ เพื่อตามหาตัวตนที่เลือนหายไป", "The Nameless kept the dragon's last scale and set out again, searching for the self he had lost.") },
+                { img: "spr_cs_kill_4", text: L("ตอนจบที่ 1 : ผู้พิชิตมังกร", "Ending 1 : The Dragonslayer") },
             ];
         case "end_join":
             return [
-                { img: "spr_cs_join_1", text: "ผู้ไร้นามชูดาบขึ้น ไม่ใช่เพื่อฟาดฟัน แต่เพื่อประสานกับเปลวไฟของมังกร" },
-                { img: "spr_cs_join_2", text: "ไฟแห่งความแค้นถูกแบ่งเป็นสอง และอ่อนแรงลง ราชามังกรได้สติกลับคืนมา" },
-                { img: "spr_cs_join_3", text: "ผู้คนหวาดกลัว และไม่ใช่ทุกคนที่ยอมรับ แต่ทั้งสองเริ่มสร้างโลกใหม่ ที่มนุษย์และมังกรอยู่ร่วมกัน" },
-                { img: "spr_cs_join_4", text: "ตอนจบที่ 2 : เคียงข้างราชา" },
+                { img: "spr_cs_join_1", text: L("ผู้ไร้นามชูดาบขึ้น ไม่ใช่เพื่อฟาดฟัน แต่เพื่อประสานกับเปลวไฟของมังกร", "The Nameless raised his sword, not to strike, but to join it with the dragon's flame.") },
+                { img: "spr_cs_join_2", text: L("ไฟแห่งความแค้นถูกแบ่งเป็นสอง และอ่อนแรงลง ราชามังกรได้สติกลับคืนมา", "The fire of vengeance, split in two, grew weak, and the Dragon King came back to his senses.") },
+                { img: "spr_cs_join_3", text: L("ผู้คนหวาดกลัว และไม่ใช่ทุกคนที่ยอมรับ แต่ทั้งสองเริ่มสร้างโลกใหม่ ที่มนุษย์และมังกรอยู่ร่วมกัน", "People were afraid, and not everyone accepted it. But together the two began building a new world where humans and dragons live side by side.") },
+                { img: "spr_cs_join_4", text: L("ตอนจบที่ 2 : เคียงข้างราชา", "Ending 2 : Beside the King") },
             ];
     }
     return [];
