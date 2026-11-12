@@ -272,6 +272,7 @@ switch (state) {
 // ==========================================
 
 move_and_collide(hsp + kb_x, vsp + kb_y, obj_wall);
+fog_eye = fog_eye_calc(id);
 
 // ชนกำแพงแล้วแรงเฉื่อยในทิศนั้นหาย
 if (mvx != 0 && place_meeting(x + sign(mvx), y, obj_wall)) {

@@ -127,6 +127,32 @@ if (!is_undefined(step_data)) {
                 break;
             }
 
+            // ===== ค้อนท่า 2: เหวี่ยงจากข้างตัวเข้าหน้า (หนา หนัก ฝั่งเดียว) =====
+            case "hswing": {
+                // มุมของวงแรกถึงวงสุดท้าย (ตามรูป hitbox จริง)
+                var _c0 = step_data.circles[0];
+                var _c1 = step_data.circles[array_length(step_data.circles) - 1];
+                var _a0 = point_direction(0, 0, _c0[0], -_c0[1]) - 12;
+                var _a1 = point_direction(0, 0, _c1[0], -_c1[1]) + 12;
+                if (_a0 > 180) _a0 -= 360;
+                if (_a1 > 180) _a1 -= 360;
+                var _sw = (_a1 >= _a0) ? 1 : -1;
+                var _e4 = 1 - power(1 - min(_t, 1), 2);
+                var _hd2 = image_angle + _a0 + (_a1 - _a0) * _e4;
+                var _tr2 = abs(_a1 - _a0) * 0.9;
+                var _ro3 = _rout * 0.95;
+                var _ri3 = _ro3 * 0.4;
+                draw_primitive_begin(pr_trianglestrip);
+                for (var _j2 = 0; _j2 <= 12; _j2++) {
+                    var _aa2 = _hd2 - _sw * _tr2 * (_j2 / 12);
+                    var _al3 = (1 - _j2 / 12) * 0.85 * _fade;
+                    draw_vertex_color(_cx0 + lengthdir_x(_ro3, _aa2), _cy0 + lengthdir_y(_ro3, _aa2), make_color_rgb(255, 225, 170), _al3);
+                    draw_vertex_color(_cx0 + lengthdir_x(_ri3, _aa2), _cy0 + lengthdir_y(_ri3, _aa2), make_color_rgb(255, 225, 170), 0);
+                }
+                draw_primitive_end();
+                break;
+            }
+
             // ===== ค้อนท่าจบ: ทุบพื้น วงรอบตัว + คลื่นวิ่งไปข้างหน้า =====
             case "quake": {
                 var _n2 = array_length(step_data.circles);

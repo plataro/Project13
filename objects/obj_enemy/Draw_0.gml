@@ -1,7 +1,8 @@
-// ไม่มีเส้นสายตา = ไม่วาดเลย (กันหัวยื่นพ้นกำแพงเข้าโซนสว่าง)
-var _show = los_clear || flash > 0;
+// ★ เห็นเมื่อรอยเท้าอยู่ในโซนสว่างของหมอก (เช็กทุกเฟรม ใช้จุดตาเดียวกับหมอก)
+// ค่อย ๆ จางเข้า/ออก ไม่โผล่/หายแบบกระตุก
+var _show = (flash > 0) || enemy_visible(id);
 if (!_show && instance_exists(obj_player) && point_distance(x, y, obj_player.x, obj_player.y) < 70) _show = true;
-vis = clamp(vis + (_show ? 0.5 : -0.5), 0, 1);
+vis = clamp(vis + (_show ? 0.2 : -0.1), 0, 1);
 if (vis <= 0.01) exit;
 
 var _col = tint;

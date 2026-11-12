@@ -120,8 +120,8 @@ function hammer_step_data(_n) {
             return { kind: "smash", time: 32, active_from: 14, active_to: 18, dmg: 4, kb: 20, radial: false,
                      lunge_speed: 1.5, lunge_frames: 4,
                      circles: [ [84, 0, 54] ] };
-        case 2:   // เหวี่ยงตีข้าง: กวาดเฉียงไปฝั่งเดียว (ไม่สมมาตรเหมือนดาบ)
-            return { kind: "smash", time: 34, active_from: 13, active_to: 19, dmg: 4, kb: 24, radial: false,
+        case 2:   // เหวี่ยงตีข้าง: ตั้งใจให้กวาดจากข้างตัวเข้ามาด้านหน้าฝั่งเดียว (ไม่สมมาตรเหมือนดาบ)
+            return { kind: "hswing", time: 34, active_from: 13, active_to: 19, dmg: 4, kb: 24, radial: false,
                      lunge_speed: 1, lunge_frames: 4,
                      circles: [ [24, -78, 36], [70, -48, 40], [96, 6, 40] ] };
         default:  // ท่าจบ: ทุบพื้น รอบตัว + คลื่นกระแทกวิ่งไปข้างหน้า
@@ -174,4 +174,43 @@ function enemy_attack_base(_name) {
                      rects: [ [0, 190, -62, 62] ] };
     }
     return undefined;
+}
+
+// =====================================================================
+// ★ หมอก / การมองเห็น (ใช้ร่วมกันระหว่างหมอกของผู้เล่นและการวาดศัตรู ให้ตรงกันเป๊ะ)
+// =====================================================================
+#macro FOG_RADIUS 720
+
+function fog_room() {
+    return room == rm_level_1_the_forest || room == rm_level_2_the_abandoned_mine || room == rm_level_3_the_castle;
+}
+
+// จุดตาของผู้เล่น: ปกติสูงจากเท้า 32px แต่ถ้าชิดกำแพงด้านบนจนจุดนั้นจมในกำแพง ให้ลดลงมา
+// (เดิมจุดตาจมในกำแพง = เรย์มองทะลุกำแพงนั้น หมอกหาย)
+function fog_eye_calc(_p) {
+    var _offs = [32, 24, 16, 8, 2];
+    for (var _i = 0; _i < 5; _i++) {
+        if (!position_meeting(_p.x, _p.y - _offs[_i], obj_wall)) return [_p.x, _p.y - _offs[_i]];
+    }
+    return [_p.x, _p.y];
+}
+
+// จุดบนพื้นนี้อยู่ในโซนสว่างไหม
+function fog_point_lit(_eye, _px, _py) {
+    if (point_distance(_eye[0], _eye[1], _px, _py) > FOG_RADIUS) return false;
+    return collision_line(_eye[0], _eye[1], _px, _py, obj_wall, false, true) == noone;
+}
+
+// ศัตรูตัวนี้ควรเห็นไหม: เช็กหลายจุดรอบรอยเท้า (เท้ากลาง ซ้าย ขวา และเหนือเท้านิดหน่อย)
+// จุดใดจุดหนึ่งอยู่ในโซนสว่าง = เห็น (ไม่ใช้จุดหัว กันหัวยื่นข้ามกำแพงมาโผล่ฝั่งผู้เล่น)
+function enemy_visible(_e) {
+    if (!fog_room() || !instance_exists(obj_player)) return true;
+    var _eye = obj_player.fog_eye;
+    var _hw = max(6, (_e.bbox_right - _e.bbox_left) * 0.5 - 2);
+    var _fy = _e.y - 4;
+    if (fog_point_lit(_eye, _e.x, _fy)) return true;
+    if (fog_point_lit(_eye, _e.x - _hw, _fy)) return true;
+    if (fog_point_lit(_eye, _e.x + _hw, _fy)) return true;
+    if (fog_point_lit(_eye, _e.x, _fy - _hw)) return true;
+    return false;
 }

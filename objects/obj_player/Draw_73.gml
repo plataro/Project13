@@ -1,10 +1,10 @@
 // ===== หมอกมืดนอกสายตา (obj_player > Post Draw = Draw_77.gml) =====
-if (room != rm_level_1_the_forest && room != rm_level_2_the_abandoned_mine && room != rm_level_3_the_castle) exit;
+if (!fog_room()) exit;
 if (instance_exists(obj_gameover)) exit;
 
 var _fog_dark = 0.88;     // ★ ความมืดของโซนที่มองไม่เห็น (0-1)
 var _rays = 160;          // ★ จำนวนเรย์
-var _radius = 720;        // ★ ระยะมองไกลสุด
+var _radius = FOG_RADIUS; // ★ ระยะมองไกลสุด (แก้ที่ scr_combat)
 var _soft = 48;           // ★ ความกว้างขอบนุ่ม (px)
 var _far = 1800;
 
@@ -17,8 +17,9 @@ if (!variable_global_exists("fog_room") || global.fog_room != room) {
     }
 }
 
-var _px = x;
-var _py = y - 32;
+fog_eye = fog_eye_calc(id);   // ชิดกำแพงบนแล้วไม่มองทะลุ
+var _px = fog_eye[0];
+var _py = fog_eye[1];
 
 // เลือกเฉพาะกำแพงที่อยู่ใกล้
 var _near = [];

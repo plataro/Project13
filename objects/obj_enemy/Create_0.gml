@@ -107,7 +107,7 @@ player_dodging = function() {
 // เช็กจริง (แพง) เรียกเฉพาะใน Step ทุก ~8 เฟรม
 los_check = function() {
     if (!instance_exists(obj_player)) return false;
-    return collision_line(x, y - 20, obj_player.x, obj_player.y - 20, obj_wall, false, true) == noone;
+    return collision_line(x, y - 4, obj_player.x, obj_player.y - 4, obj_wall, false, true) == noone;
 }
 
 // ผลที่ AI ใช้ (อ่านจากแคช)
