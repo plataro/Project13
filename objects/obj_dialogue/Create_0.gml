@@ -5,7 +5,9 @@ total = 0;
 wrapped = "";
 type_speed = 0.8;
 on_done = undefined;   // ฟังก์ชันที่เรียกหลังบทสนทนาจบ
-sel = 0;              // ตัวเลือกที่เลือกอยู่ (เฉพาะบรรทัดที่มี choices)
+sel = -1;             // ตัวเลือกที่เมาส์ชี้อยู่ (-1 = ไม่ได้ชี้) เฉพาะบรรทัดที่มี choices
+choice_t = 0;         // นับเฟรมตั้งแต่ตัวเลือกขึ้น
+choice_delay = 45;    // ★ ตัวเลือกกดได้หลังขึ้นมาแล้วกี่เฟรม (กันกดรัวแล้วเลือกพลาด)
 closing = false;      // true ตอนกำลังจะจบ (ให้ฟังก์ชันหลังจบเปิดบทสนทนาต่อได้)
 
 portrait_h = 400;   // ★ ความสูงของรูปตัวละครบนจอ (ปรับได้)
@@ -19,11 +21,21 @@ slots = {
 };
 speaker = "";   // "left", "right" หรือ "" (ผู้บรรยาย)
 
+// จบบทสนทนา: ล้างปุ่ม/คลิกเฟรมนี้ ไม่ให้ไปโดนฟันหรือกลิ้งต่อ
+finish = function() {
+    closing = true;
+    if (is_callable(on_done)) on_done();
+    instance_destroy();
+    io_clear();
+}
+
 load_line = function() {
     var _l = lines[index];
     wrapped = text_wrap_thai(_l.text, 840);
     chars = 0;
     total = string_length(wrapped);
+    choice_t = 0;
+    sel = -1;
 
     // ให้ตัวละครออกจากฉาก
     if (variable_struct_exists(_l, "hide")) {

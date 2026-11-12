@@ -169,3 +169,32 @@ function enemy_damage_calc(_base) {
     var _d = ceil(_base * difficulty_data().enemy_dmg * tier_data().dmg);
     return max(1, _d - global.save.armor);
 }
+
+// =====================================================================
+// ★ ตั้งค่า (เก็บไว้ในเบราว์เซอร์/เครื่อง ผ่าน settings.ini)
+// =====================================================================
+global.set_volume = 100;   // 0-100
+global.show_dmg = true;    // แสดงตัวเลขดาเมจ
+
+function settings_apply() {
+    audio_master_gain(global.set_volume / 100);
+}
+
+function settings_load() {
+    ini_open("settings.ini");
+    global.set_volume = ini_read_real("settings", "volume", 100);
+    global.fx_shake_scale = ini_read_real("settings", "shake", 2.5);
+    global.fx_hitstop_on = ini_read_real("settings", "hitstop", 1) > 0;
+    global.show_dmg = ini_read_real("settings", "dmg_numbers", 1) > 0;
+    ini_close();
+    settings_apply();
+}
+
+function settings_save() {
+    ini_open("settings.ini");
+    ini_write_real("settings", "volume", global.set_volume);
+    ini_write_real("settings", "shake", global.fx_shake_scale);
+    ini_write_real("settings", "hitstop", global.fx_hitstop_on ? 1 : 0);
+    ini_write_real("settings", "dmg_numbers", global.show_dmg ? 1 : 0);
+    ini_close();
+}

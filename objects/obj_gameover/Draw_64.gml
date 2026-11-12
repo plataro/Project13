@@ -9,7 +9,7 @@ if (alpha >= 0.8) {
     draw_set_color(c_red);
     draw_text_transformed(480, 190, "GAME OVER", 2.5, 2.5, 0);
     draw_set_color(c_white);
-    draw_text(480, 320, "กด Enter เพื่อลองใหม่");
+    draw_text(480, 320, "กด Enter หรือคลิกเพื่อลองใหม่");
     draw_set_halign(fa_left);
 }
 draw_set_color(c_white);

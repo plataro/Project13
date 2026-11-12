@@ -11,7 +11,7 @@ if (keyboard_check_pressed(ord("C"))) {
 
 // ทดสอบระบบเงิน/ยา/แต้มสกิล
 if (keyboard_check_pressed(ord("G"))) global.save.gold += 100;
-if (keyboard_check_pressed(ord("P"))) global.save.potions = min(global.save.potions + 1, global.save.potion_max);
+if (keyboard_check_pressed(ord("O"))) global.save.potions = min(global.save.potions + 1, global.save.potion_max);
 if (keyboard_check_pressed(ord("K"))) global.save.sp += 1;
 
 var _go = noone;

@@ -165,3 +165,4 @@ save_snapshot_new_room();
 arrive_pending = (global.arrive != "");   // ย้ายไปจุดเกิดของประตูใน Step (รอให้ประตูถูกสร้างครบก่อน)
 instance_create_depth(0, 0, -15000, obj_title_card);
 if (!instance_exists(obj_fx)) instance_create_depth(0, 0, -19000, obj_fx);
+if (!instance_exists(obj_pause)) instance_create_depth(0, 0, -14000, obj_pause);   // เผื่อเริ่มเทสจากห้องอื่นที่ไม่ใช่เมนู

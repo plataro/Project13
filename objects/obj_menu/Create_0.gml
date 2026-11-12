@@ -7,3 +7,5 @@ last_my = -1;
 
 // ตัวปรับขนาดแคนวาสสำหรับ HTML5 (persistent สร้างครั้งเดียว)
 if (!instance_exists(obj_scaler)) instance_create_depth(0, 0, 0, obj_scaler);
+// เมนูหยุดเกม + ตั้งค่า (persistent)
+if (!instance_exists(obj_pause)) instance_create_depth(0, 0, -14000, obj_pause);

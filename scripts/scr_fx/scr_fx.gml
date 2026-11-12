@@ -1,5 +1,6 @@
 // สร้างเลขดาเมจลอย (พิกัดโลก)
 function spawn_damage_text(_x, _y, _value, _crit = false) {
+    if (!global.show_dmg) return noone;   // ปิดในหน้าตั้งค่า
     var _t = instance_create_depth(_x, _y, -20000, obj_damage_text);
     _t.txt = string(_value) + (_crit ? "!" : "");
     var _heavy = (_value >= player_atk() * 2);   // แรงเกิน 2 เท่าของพลังโจมตี = ตัวใหญ่สีเหลือง

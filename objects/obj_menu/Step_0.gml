@@ -1,4 +1,5 @@
 if (instance_exists(obj_fade)) exit;
+if (instance_exists(obj_pause) && obj_pause.open) exit;   // หน้าตั้งค่าเปิดทับอยู่
 
 var _enter = keyboard_check_pressed(vk_enter);
 var _click = mouse_check_button_pressed(mb_left);
@@ -16,7 +17,7 @@ if (screen == 1 || screen == 2) {
 // หน้าเลือกฉาก (Debug) / เลือกระดับความยาก: Esc กลับ
 if (screen == 3 && _back) {
     screen = 0;
-    sel = 4;
+    sel = 5;
     exit;
 }
 if (screen == 4 && _back) {
@@ -27,7 +28,7 @@ if (screen == 4 && _back) {
 
 // สร้างรายการเมนู
 if (screen == 0) {
-    items = ["เริ่มเกม", "วิธีเล่น", "เครดิต", global.debug ? "Debug Mode: เปิด" : "Debug Mode: ปิด"];
+    items = ["เริ่มเกม", "วิธีเล่น", "เครดิต", "ตั้งค่า", global.debug ? "Debug Mode: เปิด" : "Debug Mode: ปิด"];
     if (global.debug) array_push(items, "เลือกฉาก");
 } else if (screen == 4) {
     items = ["ง่าย", "ปานกลาง", "ยาก", "กลับ"];
@@ -78,6 +79,9 @@ if (_enter || _clicked) {
                 screen = 2;
                 break;
             case 3:
+                if (instance_exists(obj_pause)) obj_pause.open_settings_menu();
+                break;
+            case 4:
                 global.debug = !global.debug;
                 if (global.debug) {
                     if (!instance_exists(obj_debug)) instance_create_depth(0, 0, -9500, obj_debug);
@@ -86,7 +90,7 @@ if (_enter || _clicked) {
                     instance_destroy(obj_debug);
                 }
                 break;
-            case 4:
+            case 5:
                 screen = 3;
                 sel = 0;
                 break;
@@ -105,7 +109,7 @@ if (_enter || _clicked) {
         // หน้าเลือกฉาก (Debug)
         if (sel >= array_length(global.levels)) {
             screen = 0;
-            sel = 4;
+            sel = 5;
         } else {
             game_reset();
             var _f2 = instance_create_depth(0, 0, -10000, obj_fade);

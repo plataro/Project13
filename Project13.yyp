@@ -74,6 +74,7 @@
     {"id":{"name":"obj_hint","path":"objects/obj_hint/obj_hint.yy",},},
     {"id":{"name":"obj_hitbox","path":"objects/obj_hitbox/obj_hitbox.yy",},},
     {"id":{"name":"obj_menu","path":"objects/obj_menu/obj_menu.yy",},},
+    {"id":{"name":"obj_pause","path":"objects/obj_pause/obj_pause.yy",},},
     {"id":{"name":"obj_pickup","path":"objects/obj_pickup/obj_pickup.yy",},},
     {"id":{"name":"obj_plate_ss","path":"objects/obj_plate_ss/obj_plate_ss.yy",},},
     {"id":{"name":"obj_platform_ss","path":"objects/obj_platform_ss/obj_platform_ss.yy",},},
