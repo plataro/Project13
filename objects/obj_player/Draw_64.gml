@@ -11,8 +11,8 @@ if (!variable_instance_exists(id, "hud_hp")) {
     hud_prev_hp = hp;
     hud_hurt_t = 0;
     hud_parts = [];         // พาร์ติเคิลสีแดงจากปลายหลอด
-    hud_pop = array_create(6, 0);
-    hud_prev_cd = array_create(6, 0);
+    hud_pop = array_create(7, 0);
+    hud_prev_cd = array_create(7, 0);
 }
 
 var _hp = max(hp, 0);
@@ -137,14 +137,16 @@ if (!_ui_busy) {
     var _ham = (global.save.weapon == "hammer");
     var _sz = 48;
     var _gap = 12;
-    var _n = 6;
+    var _n = 7;   // ★ ช่องวิ่ง (Shift) ซ้ายสุด
     var _x0 = 480 - (_n * _sz + (_n - 1) * _gap) / 2;
     var _y0 = 540 - _sz - 26;
 
     // [ปุ่ม, ไอคอน, คูลดาวน์ 0-1, ล็อก, จำนวน, กำลังทำงาน]
     var _atk_cd = (attack_cd > 0) ? attack_cd / max(1, (combo == 9) ? charge_end_lag : attack_end_lag) : 0;
     var _s1_cd = (shot1_reload_timer > 0) ? shot1_reload_timer / shot1_reload : ((shot1_timer > 0) ? shot1_timer / shot1_gap : 0);
+    var _running = (state == PState.MOVE) && keyboard_check(vk_shift) && (abs(hsp) + abs(vsp) > 0.5);
     var _slots = [
+        ["Shift", "run", 0, false, "", _running],
         ["คลิก",  _ham ? "hammer" : "sword", _atk_cd, false, (state == PState.ATTACK && combo > 0 && combo < 9) ? string(combo) : "", state == PState.ATTACK],
         ["ค้าง",  "charge", 0, !_ham, "", state == PState.CHARGE],
         ["1",     "fire", _s1_cd, false, string(shot1_ammo), false],
@@ -163,7 +165,7 @@ if (!_ui_busy) {
 
     // เกจชาร์จค้อนบนช่อง "ค้าง"
     if (state == PState.CHARGE) {
-        var _cxs = _x0 + 1 * (_sz + _gap);
+        var _cxs = _x0 + 2 * (_sz + _gap);
         draw_set_color(c_black);
         draw_rectangle(_cxs - 1, _y0 - 10, _cxs + _sz + 1, _y0 - 4, false);
         draw_set_color((charge_t >= charge_time) ? c_yellow : c_orange);

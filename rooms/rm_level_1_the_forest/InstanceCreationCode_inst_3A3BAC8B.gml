@@ -1,4 +1,1 @@
-items = [{ k: ["Shift"], c: [vk_shift], t: "วิ่ง (กดค้างระหว่างเดิน)" }];
-hkey = "hint_run";
-req = "hint_move";
-radius = 320;
+instance_destroy();   // ★ ป้ายลอยบนพื้นเลิกใช้ ย้ายไปสอนที่แถบสกิลล่างจอ (obj_tutorial)

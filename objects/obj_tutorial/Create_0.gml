@@ -27,28 +27,38 @@ seen = function(_key) {
 // ---- ป้ายปุ่มตามสถานการณ์ ----
 // key = จำว่าเรียนแล้ว, keys = ป้ายที่โชว์, codes = ปุ่มที่ต้องกด (-2 = ล้อเมาส์), text = คำอธิบาย
 // when = เงื่อนไขที่ทำให้โผล่, timeout = หายเองหลังกี่เฟรม (0 = รอจนกด)
-// ★ slot = ชี้ไปที่ช่องสกิลล่างจอ (0 คลิก, 1 ค้าง, 2 ยิง, 3 สกิล 2, 4 กลิ้ง, 5 ยา, 6 แผงบัฟ) / -1 = ป้ายบนกลางจอ
-//   sub = บรรทัดอธิบายเพิ่ม (โชว์ใต้ชื่อท่า)
+// ★ slot = ชี้ไปที่ช่องสกิลล่างจอ (0 วิ่ง, 1 คลิก, 2 ค้าง, 3 ยิง, 4 สกิล 2, 5 กลิ้ง, 6 ยา, 7 แผงบัฟ) / -1 = ป้ายบนกลางจอ
+//   sub = บรรทัดอธิบายเพิ่ม
+//   goal = เงื่อนไขว่า "ผ่านจริง" (ไม่มี = กดปุ่มก็ผ่าน) ยังไม่ผ่าน = ค้างป้ายไว้ / retry = ข้อความย้ำตอนกดแล้วแต่ยังไม่ผ่าน
 ctx_list = [
-    { key: "ctx_atk", slot: 0, keys: ["คลิกซ้าย"], codes: [-1], text: "โจมตี", sub: "คลิกต่อเนื่อง = คอมโบ 4 ท่า", timeout: 0,
-      when: function() { return instance_exists(obj_player) && (room != rm_level_1_the_forest || variable_struct_exists(global.story_seen, "hint_move")); } },
-    { key: "ctx_roll", slot: 4, keys: ["Space"], codes: [vk_space], text: "กลิ้งหลบ", sub: "ระหว่างกลิ้งจะไม่โดนโจมตี", timeout: 0,
-      when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "ctx_atk"); } },
-    { key: "ctx_shot", slot: 2, keys: ["1"], codes: [ord("1")], text: "ยิงลูกไฟไปทางเมาส์", sub: "กระสุนมีจำกัด หมดแล้วรอรีโหลดเอง", timeout: 0,
+    { key: "ctx_move", slot: 0, keys: ["Shift"], codes: [vk_shift], text: "วิ่ง", sub: "เดินด้วย W A S D แล้วกด Shift ค้างไว้", timeout: 0,
+      run_only: true,   // นับระยะเฉพาะตอนกด Shift
+      goal: function() { return ctx_dist >= 220; },
+      when: function() { return instance_exists(obj_player); } },
+    { key: "ctx_atk", slot: 1, keys: ["คลิกซ้าย"], codes: [-1], text: "โจมตี", sub: "คลิกต่อเนื่อง = คอมโบ 4 ท่า", timeout: 0,
+      when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "ctx_move"); } },
+    { key: "ctx_shot", slot: 3, keys: ["1"], codes: [ord("1")], text: "ยิงลูกไฟไปทางเมาส์", sub: "ยิงเป้าให้โดนทุกอันเพื่อเปิดประตู", timeout: 0,
+      retry: "ยังไม่โดนครบ! เล็งเมาส์ที่เป้าแล้วกด 1 อีกที",
+      goal: function() {
+          if (!instance_exists(obj_target)) return true;
+          var _all = true;
+          with (obj_target) if (!hit) _all = false;
+          return _all;
+      },
       when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "tut_dodge"); } },
-    { key: "ctx_potion", slot: 5, keys: ["Q"], codes: [ord("Q")], text: "ดื่มยาฟื้นเลือด", sub: "ฟื้น 2 หัวใจ ซื้อเพิ่มได้ที่ร้าน", timeout: 0,
+    { key: "ctx_potion", slot: 6, keys: ["Q"], codes: [ord("Q")], text: "ดื่มยาฟื้นเลือด", sub: "ฟื้น 2 หัวใจ ซื้อเพิ่มได้ที่ร้าน", timeout: 0,
       when: function() { return instance_exists(obj_player) && obj_player.hp <= obj_player.max_hp - 2 && global.save.potions > 0; } },
-    { key: "ctx_skill2", slot: 3, keys: ["2"], codes: [ord("2")], text: "ยิงกระจายสามทิศ", sub: "ปลดสกิลแล้ว! คูลดาวน์นานกว่าปุ่ม 1", timeout: 0,
+    { key: "ctx_skill2", slot: 4, keys: ["2"], codes: [ord("2")], text: "ยิงกระจายสามทิศ", sub: "ปลดสกิลแล้ว! คูลดาวน์นานกว่าปุ่ม 1", timeout: 0,
       when: function() { return global.save.shot_lv >= 2 && instance_exists(obj_player); } },
     { key: "ctx_weapon", keys: ["R", "ล้อเมาส์"], codes: [ord("R"), -2], text: "สลับอาวุธ", timeout: 0,
       when: function() { return array_length(variable_struct_get_names(global.save.weapons)) > 0 && instance_exists(obj_player); } },
-    { key: "ctx_charge", slot: 1, keys: ["คลิกซ้ายค้าง"], codes: [-3], text: "ชาร์จค้อน", sub: "ค้างจนเกจเต็มแล้วปล่อย ทุ่มลงพื้นรอบตัว", timeout: 0,
+    { key: "ctx_charge", slot: 2, keys: ["คลิกซ้ายค้าง"], codes: [-3], text: "ชาร์จค้อน", sub: "ค้างจนเกจเต็มแล้วปล่อย ทุ่มลงพื้นรอบตัว", timeout: 0,
       when: function() { return global.save.weapon == "hammer" && instance_exists(obj_player); } },
     { key: "ctx_tree", keys: ["T"], codes: [ord("T")], text: "เปิดต้นไม้สกิล (ใช้แต้ม SP อัปพลัง)", timeout: 0,
       when: function() { return flag_get("tree_unlocked") && instance_exists(obj_player); } },
     { key: "ctx_status", keys: ["I"], codes: [ord("I")], text: "ดูสถานะ / สวมเครื่องประดับ", timeout: 0,
       when: function() { return room == rm_the_village && instance_exists(obj_player); } },
-    { key: "ctx_buff", slot: 6, keys: ["F"], codes: [ord("F")], text: "ใช้ไอเท็มบัฟ", sub: "กด V เพื่อเปลี่ยนชนิดบัฟ", timeout: 0,
+    { key: "ctx_buff", slot: 7, keys: ["F"], codes: [ord("F")], text: "ใช้ไอเท็มบัฟ", sub: "กด V เพื่อเปลี่ยนชนิดบัฟ", timeout: 0,
       when: function() {
           var _bl = buff_list();
           for (var _i = 0; _i < array_length(_bl); _i++) if (variable_struct_exists(global.save.buff_items, _bl[_i]) && global.save.buff_items[$ _bl[_i]] > 0) return instance_exists(obj_player);
@@ -63,3 +73,8 @@ ctx_a = 0;
 ctx_done = 0;        // นับเฟรมโชว์เครื่องหมายถูกก่อนหาย
 
 seen_count = -1;   // ★ จำนวนบทสอน/เนื้อเรื่องที่ผ่านแล้ว (เปลี่ยน = เซฟ)
+ctx_dist = 0;    // ★ ระยะที่เดินไปแล้วระหว่างบทสอนเดิน
+ctx_tries = 0;   // ★ กดแล้วแต่ยังไม่ผ่านกี่ครั้ง (โชว์ข้อความย้ำ)
+ctx_shake = 0;
+ctx_px = 0;
+ctx_py = 0;

@@ -150,6 +150,20 @@ function ui_rect_progress(_x1, _y1, _x2, _y2, _p, _w) {
 function ui_icon(_kind, _x, _y, _r, _c) {
     draw_set_color(_c);
     switch (_kind) {
+        case "run":    // รองเท้า + เส้นความเร็ว
+            draw_triangle(_x - _r * 0.2, _y - _r * 0.6, _x + _r * 0.5, _y - _r * 0.6, _x + _r * 0.15, _y + _r * 0.3, false);
+            draw_rectangle(_x - _r * 0.3, _y + _r * 0.2, _x + _r * 0.9, _y + _r * 0.6, false);
+            draw_line_width(_x - _r * 1.0, _y - _r * 0.3, _x - _r * 0.45, _y - _r * 0.3, 2);
+            draw_line_width(_x - _r * 0.9, _y + _r * 0.05, _x - _r * 0.45, _y + _r * 0.05, 2);
+            draw_line_width(_x - _r * 1.0, _y + _r * 0.4, _x - _r * 0.5, _y + _r * 0.4, 2);
+            break;
+        case "move":   // ลูกศร 4 ทิศ
+            draw_triangle(_x, _y - _r, _x - _r * 0.35, _y - _r * 0.5, _x + _r * 0.35, _y - _r * 0.5, false);
+            draw_triangle(_x, _y + _r, _x - _r * 0.35, _y + _r * 0.5, _x + _r * 0.35, _y + _r * 0.5, false);
+            draw_triangle(_x - _r, _y, _x - _r * 0.5, _y - _r * 0.35, _x - _r * 0.5, _y + _r * 0.35, false);
+            draw_triangle(_x + _r, _y, _x + _r * 0.5, _y - _r * 0.35, _x + _r * 0.5, _y + _r * 0.35, false);
+            draw_circle(_x, _y, _r * 0.22, false);
+            break;
         case "sword":
             draw_line_width(_x - _r * 0.8, _y + _r * 0.8, _x + _r * 0.8, _y - _r * 0.8, 4);
             draw_line_width(_x - _r * 0.6, _y + _r * 0.1, _x - _r * 0.1, _y + _r * 0.6, 4);
@@ -315,17 +329,79 @@ function draw_loot_feed(_ytop) {
 }
 
 
-// ★ ตำแหน่งช่องสกิลล่างจอ (ต้องตรงกับ obj_player Draw_64: ช่อง 48 ห่าง 12 จำนวน 6)
-//   0 คลิก, 1 ค้าง, 2 ยิง, 3 สกิล 2, 4 กลิ้ง, 5 ยา, 6 แผงบัฟด้านขวา
+// ★ ตำแหน่งช่องสกิลล่างจอ (ต้องตรงกับ obj_player Draw_64: ช่อง 48 ห่าง 12 จำนวน 7)
+//   0 วิ่ง (Shift), 1 คลิก, 2 ค้าง, 3 ยิง, 4 สกิล 2, 5 กลิ้ง, 6 ยา, 7 แผงบัฟด้านขวา
 function hud_slot_rect(_i) {
     var _sz = 48;
     var _gap = 12;
-    var _x0 = 480 - (6 * _sz + 5 * _gap) / 2;
+    var _x0 = 480 - (7 * _sz + 6 * _gap) / 2;
     var _y0 = 540 - _sz - 26;
-    if (_i == 6) {
-        var _fx = _x0 + 6 * (_sz + _gap) + 8;
+    if (_i == 7) {
+        var _fx = _x0 + 7 * (_sz + _gap) + 8;
         return [_fx, _y0 + 4, _fx + 150, _y0 + _sz - 4];
     }
     var _x = _x0 + _i * (_sz + _gap);
     return [_x, _y0, _x + _sz, _y0 + _sz];
+}
+
+// ★ กล่องสอนชี้ที่ช่องสกิล (กรอบเรือง + กล่องคำอธิบาย + ลูกศรชี้ลง)  วาดใน Draw GUI
+function tut_slot_callout(_slot, _keys, _text, _sub, _subc, _done, _a, _shake = 0) {
+    if (_a <= 0.02) return;
+    draw_set_font(fnt_dialog);
+    var _r = hud_slot_rect(_slot);
+    var _scx = (_r[0] + _r[2]) / 2;
+    var _gc = _done ? make_color_rgb(120, 240, 120) : UI_GOLD;
+    var _pl = 0.5 + 0.5 * sin(current_time / 140);
+    var _sx = (_shake > 0) ? irandom_range(-3, 3) : 0;
+
+    // กรอบเรืองรอบช่อง
+    draw_set_alpha(_a);
+    draw_set_color(_gc);
+    var _gr = 3 + 3 * _pl;
+    draw_rectangle(_r[0] - _gr, _r[1] - _gr, _r[2] + _gr, _r[3] + _gr, true);
+    draw_rectangle(_r[0] - _gr - 1, _r[1] - _gr - 1, _r[2] + _gr + 1, _r[3] + _gr + 1, true);
+    gpu_set_blendmode(bm_add);
+    draw_set_alpha(_a * 0.18 * (0.6 + 0.4 * _pl));
+    draw_rectangle(_r[0], _r[1], _r[2], _r[3], false);
+    gpu_set_blendmode(bm_normal);
+
+    // กล่องเหนือช่อง
+    var _s1 = 0.55;
+    var _s2 = 0.42;
+    var _kws = [];
+    var _sumk = 0;
+    for (var _k = 0; _k < array_length(_keys); _k++) {
+        _kws[_k] = max(26, string_width(_keys[_k]) * _s1 + 14);
+        _sumk += _kws[_k] + 6;
+    }
+    var _w = max(_sumk + string_width(_text) * _s1 + 30, string_width(_sub) * _s2 + 28);
+    var _h = (_sub != "") ? 56 : 36;
+    var _bob = _done ? 0 : sin(current_time / 200) * 3;
+    var _ay = _r[1] - 12 + _bob - (1 - _a) * 12;
+    var _by2 = _ay - 10;
+    var _by1 = _by2 - _h;
+    var _bx1 = clamp(_scx - _w / 2, 8, 952 - _w) + _sx;
+    ui_panel(_bx1, _by1, _bx1 + _w, _by2, _a);
+    draw_set_alpha(_a);
+    draw_set_color(_gc);
+    draw_triangle(_scx - 9, _by2, _scx + 9, _by2, _scx, _ay, false);
+
+    var _ly = _by1 + 18;
+    var _cx = _bx1 + 12;
+    draw_set_valign(fa_middle);
+    draw_set_halign(fa_center);
+    for (var _k2 = 0; _k2 < array_length(_keys); _k2++) {
+        draw_set_color(_done ? make_color_rgb(40, 110, 50) : make_color_rgb(150, 120, 70));
+        draw_rectangle(_cx, _ly - 10, _cx + _kws[_k2], _ly + 13, false);
+        draw_set_color(_done ? make_color_rgb(150, 240, 150) : make_color_rgb(250, 235, 200));
+        draw_rectangle(_cx, _ly - 12, _cx + _kws[_k2], _ly + 10, false);
+        draw_set_color(make_color_rgb(40, 30, 20));
+        draw_text_transformed(_cx + _kws[_k2] / 2, _ly - 1, _keys[_k2], _s1, _s1, 0);
+        _cx += _kws[_k2] + 6;
+    }
+    draw_set_halign(fa_left);
+    ui_text_bold(_cx + 4, _ly, _text, _s1, _done ? make_color_rgb(150, 255, 150) : UI_TEXT);
+    if (_sub != "") ui_text(_bx1 + 12, _ly + 24, _sub, _s2, _subc);
+    draw_set_halign(fa_center);
+    draw_set_alpha(1);
 }

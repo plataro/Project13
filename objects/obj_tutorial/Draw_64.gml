@@ -73,30 +73,16 @@ if (!is_undefined(global.boss_intro)) {
     }
 }
 
-// ===== หยุดรอกลิ้งหลบ (กลางจอ ไม่ทับช่องสกิล) =====
+// ===== ★ หยุดรอกลิ้งหลบ: ศัตรูกำลังฟัน เกมหยุด แล้วชี้ที่ช่อง Space ในแถบสกิล =====
 if (freeze) {
     var _fa = min(1, freeze_t / 10);
-    draw_set_alpha(0.35 * _fa);
+    // ★ จอมืดทั้งจอ (ช่อง Space ยังเรืองเด่นจากกรอบที่ชี้)
+    draw_set_alpha(0.4 * _fa);
     draw_set_color(c_black);
     draw_rectangle(0, 0, 960, 540, false);
     draw_set_alpha(1);
-
-    var _bob = sin(current_time / 150) * 3;
-    var _py = 170 + (1 - _fa) * 20;
-    ui_panel(270, _py, 690, _py + 120, _fa);
-    draw_set_alpha(_fa);
-    ui_text_bold(480, _py + 24, "ศัตรูกำลังจะโจมตี!", 0.8, make_color_rgb(255, 120, 100));
-
-    // ปุ่ม Space
-    draw_set_color(make_color_rgb(150, 120, 70));
-    draw_rectangle(410, _py + 46 + _bob, 550, _py + 80 + _bob, false);
-    draw_set_color(make_color_rgb(250, 235, 200));
-    draw_rectangle(410, _py + 42 + _bob, 550, _py + 76 + _bob, false);
-    draw_set_color(make_color_rgb(40, 30, 20));
-    draw_text_transformed(480, _py + 59 + _bob, "Space", 0.7, 0.7, 0);
-
-    ui_text(480, _py + 100, "กลิ้งหลบ  (กดทิศทางค้างไว้ = เลือกทางกลิ้ง)", 0.5, UI_MUTED);
-    draw_set_alpha(1);
+    ui_text_bold(480, 150, "ศัตรูกำลังจะโจมตี!", 0.85, make_color_rgb(255, 120, 100));
+    tut_slot_callout(5, ["Space"], "กลิ้งหลบ", "ระหว่างกลิ้งจะไม่โดนโจมตี (กดทิศค้าง = เลือกทาง)", UI_MUTED, false, _fa, 0);
 }
 
 // ===== ข้อความสั้น =====
@@ -110,65 +96,11 @@ if (msg_t > 0 && is_undefined(global.boss_intro)) {
 // ===== ★ ป้ายสอนเล่น: ย้ายมาบนกลางจอ (ไม่ทับช่องสกิลด้านล่าง) =====
 // ===== ★ สอนใช้สกิล: ชี้ที่ช่องสกิลล่างจอทีละอัน =====
 var _slot_mode = !is_undefined(ctx) && variable_struct_exists(ctx, "slot") && ctx.slot >= 0 && instance_exists(obj_player);
-if (_slot_mode && ctx_a > 0.02 && is_undefined(global.boss_intro)) {
-    var _r = hud_slot_rect(ctx.slot);
-    var _scx = (_r[0] + _r[2]) / 2;
-    var _done = (ctx_done > 0);
-    var _gc = _done ? make_color_rgb(120, 240, 120) : UI_GOLD;
-    var _pl = 0.5 + 0.5 * sin(current_time / 140);
-
-    // กรอบเรืองรอบช่อง (ขยายเข้า-ออก)
-    draw_set_alpha(ctx_a);
-    draw_set_color(_gc);
-    var _gr = 3 + 3 * _pl;
-    draw_rectangle(_r[0] - _gr, _r[1] - _gr, _r[2] + _gr, _r[3] + _gr, true);
-    draw_rectangle(_r[0] - _gr - 1, _r[1] - _gr - 1, _r[2] + _gr + 1, _r[3] + _gr + 1, true);
-    gpu_set_blendmode(bm_add);
-    draw_set_alpha(ctx_a * 0.18 * (0.6 + 0.4 * _pl));
-    draw_rectangle(_r[0], _r[1], _r[2], _r[3], false);
-    gpu_set_blendmode(bm_normal);
-
-    // กล่องคำอธิบายเหนือช่อง + ลูกศรชี้ลง (เด้งขึ้นลง)
-    var _s1 = 0.55;
-    var _s2 = 0.42;
-    var _kws = [];
-    var _sumk = 0;
-    for (var _k = 0; _k < array_length(ctx.keys); _k++) {
-        _kws[_k] = max(26, string_width(ctx.keys[_k]) * _s1 + 14);
-        _sumk += _kws[_k] + 6;
-    }
+if (_slot_mode && ctx_a > 0.02 && is_undefined(global.boss_intro) && !freeze) {
     var _sub = variable_struct_exists(ctx, "sub") ? ctx.sub : "";
-    var _w = max(_sumk + string_width(ctx.text) * _s1 + 30, string_width(_sub) * _s2 + 28);
-    var _h = (_sub != "") ? 56 : 36;
-    var _bob = sin(current_time / 200) * 3 * (1 - _done);
-    var _ay = _r[1] - 12 + _bob - (1 - ctx_a) * 12;   // ปลายลูกศร
-    var _by2 = _ay - 10;
-    var _by1 = _by2 - _h;
-    var _bx1 = clamp(_scx - _w / 2, 8, 952 - _w);
-    ui_panel(_bx1, _by1, _bx1 + _w, _by2, ctx_a);
-    draw_set_alpha(ctx_a);
-    draw_set_color(_gc);
-    draw_triangle(_scx - 9, _by2, _scx + 9, _by2, _scx, _ay, false);
-
-    // ปุ่ม + ชื่อท่า
-    var _ly = _by1 + 18;
-    var _cx = _bx1 + 12;
-    draw_set_valign(fa_middle);
-    draw_set_halign(fa_center);
-    for (var _k2 = 0; _k2 < array_length(ctx.keys); _k2++) {
-        draw_set_color(_done ? make_color_rgb(40, 110, 50) : make_color_rgb(150, 120, 70));
-        draw_rectangle(_cx, _ly - 10, _cx + _kws[_k2], _ly + 13, false);
-        draw_set_color(_done ? make_color_rgb(150, 240, 150) : make_color_rgb(250, 235, 200));
-        draw_rectangle(_cx, _ly - 12, _cx + _kws[_k2], _ly + 10, false);
-        draw_set_color(make_color_rgb(40, 30, 20));
-        draw_text_transformed(_cx + _kws[_k2] / 2, _ly - 1, ctx.keys[_k2], _s1, _s1, 0);
-        _cx += _kws[_k2] + 6;
-    }
-    draw_set_halign(fa_left);
-    ui_text_bold(_cx + 4, _ly, ctx.text, _s1, _done ? make_color_rgb(150, 255, 150) : UI_TEXT);
-    if (_sub != "") ui_text(_bx1 + 12, _ly + 24, _sub, _s2, UI_MUTED);
-    draw_set_halign(fa_center);
-    draw_set_alpha(1);
+    var _subc = UI_MUTED;
+    if (ctx_tries > 0 && variable_struct_exists(ctx, "retry")) { _sub = ctx.retry; _subc = make_color_rgb(255, 150, 120); }
+    tut_slot_callout(ctx.slot, ctx.keys, ctx.text, _sub, _subc, ctx_done > 0, ctx_a, ctx_shake);
 }
 
 if (!_slot_mode && !is_undefined(ctx) && ctx_a > 0.02 && is_undefined(global.boss_intro)) {

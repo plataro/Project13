@@ -39,6 +39,7 @@ if (!is_undefined(global.boss_intro)) {
 }
 
 if (msg_t > 0) msg_t--;
+if (ctx_shake > 0) ctx_shake--;
 
 // ต้นไม้สกิลเปิดใช้ได้ตั้งแต่ถึงหมู่บ้านครั้งแรก
 if (room == rm_the_village && !flag_get("tree_unlocked")) flag_set("tree_unlocked");
@@ -120,6 +121,10 @@ if (is_undefined(ctx)) {
                 ctx = _c;
                 ctx_t = 0;
                 ctx_done = 0;
+                ctx_dist = 0;
+                ctx_tries = 0;
+                ctx_px = obj_player.x;
+                ctx_py = obj_player.y;
                 break;
             }
         }
@@ -138,12 +143,22 @@ if (is_undefined(ctx)) {
         var _ok = false;
         for (var _k = 0; _k < array_length(ctx.codes); _k++) {
             var _code = ctx.codes[_k];
-            if (_code == -1) { if (mouse_check_button_pressed(mb_left)) _ok = true; }
+            if (_code == vk_shift) { if (keyboard_check(vk_shift)) _ok = true; }
+            else if (_code == -1) { if (mouse_check_button_pressed(mb_left)) _ok = true; }
             else if (_code == -2) { if (mouse_wheel_up() || mouse_wheel_down()) _ok = true; }
             else if (_code == -3) { if (obj_player.state == PState.CHARGE && obj_player.charge_t >= obj_player.charge_time) _ok = true; }   // ชาร์จเต็มสักครั้ง
             else if (keyboard_check_pressed(_code)) _ok = true;
         }
         if (ctx.timeout > 0 && ctx_t >= ctx.timeout) _ok = true;
+        // ★ มีเป้าหมายจริง: กดแล้วยังไม่ผ่าน = ค้างป้ายไว้ + ย้ำ
+        if (variable_struct_exists(ctx, "goal")) {
+            if (!variable_struct_exists(ctx, "run_only") || keyboard_check(vk_shift)) ctx_dist += point_distance(ctx_px, ctx_py, obj_player.x, obj_player.y);
+            ctx_px = obj_player.x;
+            ctx_py = obj_player.y;
+            var _g = method(self, ctx.goal)();
+            if (_ok && !_g) { ctx_tries++; ctx_shake = 12; }
+            _ok = _g;
+        }
         if (_ok) ctx_done = 1;
     }
 }
