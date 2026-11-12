@@ -9,7 +9,7 @@ var _hs = 0.42;
 var _help = [
     "DEBUG  (H = hide)",
     "Z heal   X god: " + (global.god ? "ON" : "OFF"),
-    "C kill all   G +100 gold",
+    "Del kill all   G +100 gold",
     "O +potion   K +SP   L +shot",
     "PgUp / PgDn  room   N  menu",
     "F3 stats"

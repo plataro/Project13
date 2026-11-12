@@ -5,7 +5,7 @@ if (keyboard_check_pressed(ord("Z")) && instance_exists(obj_player)) {
     obj_player.hp = obj_player.max_hp;
 }
 
-if (keyboard_check_pressed(ord("C"))) {
+if (keyboard_check_pressed(vk_delete)) {   // ★ ฆ่าศัตรูทั้งหมด (เดิม C ชนกับปุ่มท่าไม้ตาย)
     with (obj_enemy) hp = 0;
 }
 

@@ -151,6 +151,16 @@ base_take_damage = take_damage;
 take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
     if (invuln > 0 || airborne) return;
 
+    // ★ ยังไม่เปิดตัว: ไม่เข้าดาเมจ (กันยิงตอดจากนอกห้อง) / ถ้าผู้เล่นตีโดนแปลว่ามาถึงแล้ว = เปิดตัวเลย
+    if (!intro_done) {
+        fx_spark(x, y - 70, _dir + 180, 4, c_white);
+        if (!instance_exists(obj_dialogue) && !instance_exists(obj_fade) && !instance_exists(obj_cutscene)) {
+            intro_done = true;
+            boss_intro_start(id, boss_name, boss_title);
+        }
+        return;
+    }
+
     // ★ ระหว่างร่ายไม้ตาย: กระสุนไม่เข้า ฟันระยะประชิดสะสมเกจขัดจังหวะ
     if (state == "ult") {
         if (_src == "bullet") {

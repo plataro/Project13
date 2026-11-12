@@ -17,7 +17,25 @@ if (!variable_instance_exists(id, "diff_applied")) {
 
 if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade) || instance_exists(obj_skilltree) || instance_exists(obj_status)) exit;
 if (global.hitstop > 0) exit;   // hit-stop
-if (object_index == obj_enemy_boss) boss_check_intro();   // ★ เปิดตัวบอสตอนผู้เล่นเข้าห้องบอส
+if (object_index == obj_enemy_boss) {
+    boss_check_intro();   // ★ เปิดตัวบอสตอนผู้เล่นเข้าห้องบอส
+    // ★ แก้บัค: ก่อนคัทซีนเปิดตัว บอสต้องยืนนิ่งรอในห้องตัวเอง
+    //   (เดิม zone ใน Creation Code กว้างกว่า arena ที่ใช้เช็กเปิดตัว -> ผู้เล่นยืนแก้พัซเซิลคริสตัล
+    //    อยู่ในเขต zone แต่ยังไม่เข้า arena = บอสตื่นมาเดินไล่ แล้วกระโดดใส่ก่อนคัทซีน/หลอดเลือดขึ้น)
+    if (!intro_done) {
+        alert_timer = 0;
+        engaged = false;
+        far_timer = 0;
+        wall_t = 0;
+        hsp = 0;
+        vsp = 0;
+        kb_x = 0;
+        kb_y = 0;
+        if (flash > 0) flash--;
+        depth = -y;
+        exit;
+    }
+}
 
 if (flash > 0) flash--;
 
