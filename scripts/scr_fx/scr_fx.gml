@@ -13,6 +13,7 @@ function enemy_attack_data(_name) {
     var _a = enemy_attack_base(_name);
     if (is_undefined(_a)) return undefined;
     _a.windup = max(8, round(_a.windup * difficulty_data().windup));
+    _a.lock = min(_a.lock, _a.windup - 4);   // ★ ยากแล้ว windup สั้นลง ให้ยังมีช่วงเล็งตามก่อนล็อก
     return _a;
 }
 

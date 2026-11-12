@@ -19,9 +19,13 @@ if (hp <= 0) {
     exit;
 }
 
+// ★ จำปุ่มกลิ้งไว้ก่อนเช็ก hit-stop (เดิมกดตอนจอหยุดตอนโดนตี ปุ่มหายเลย = กดแล้วไม่กลิ้ง)
+if (keyboard_check_pressed(vk_space)) roll_buffer = roll_buffer_time;
+
 if (global.hitstop > 0) exit;   // hit-stop
 
 if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_shop) || instance_exists(obj_skilltree)) {
+    roll_buffer = 0;
     hsp = 0;
     vsp = 0;
     mvx = 0;
@@ -41,6 +45,8 @@ aim = point_direction(x, y - aim_height, mouse_x, mouse_y);
 // ตัวจับเวลา
 if (roll_cd_timer > 0) roll_cd_timer--;
 if (invuln_timer > 0) invuln_timer--;
+if (dodge_timer > 0) dodge_timer--;
+if (roll_buffer > 0) roll_buffer--;
 if (attack_cd > 0) attack_cd--;
 if (shot1_timer > 0) shot1_timer--;
 if (skill2_timer > 0) skill2_timer--;
@@ -113,38 +119,9 @@ switch (state) {
         hsp = mvx;
         vsp = mvy;
 
-        // กลิ้ง
-        if (keyboard_check_pressed(vk_space) && roll_cd_timer <= 0) {
-
-            state = PState.ROLL;
-            roll_timer = roll_time;
-			
-			roll_echo_timer = 0;
-
-			for (var i = 0; i < 4; i++) {
-				roll_echo_age[i] = 999;
-			}
-
-
-            combo = 0;
-            combo_window = 0;
-
-            if (_len == 0) {
-                // ไม่มีทิศทางเดิน = กลิ้งตามเมาส์
-                dir_x = lengthdir_x(1, aim);
-                dir_y = lengthdir_y(1, aim);
-                face = round(aim / 90) mod 4;
-            } else {
-                // มีทิศทางเดิน = กลิ้งตามปุ่มเดิน
-                dir_x = _kx / _len;
-                dir_y = _ky / _len;
-
-                if (abs(_kx) > abs(_ky)) {
-                    face = (_kx > 0) ? 0 : 2;
-                } else {
-                    face = (_ky < 0) ? 1 : 3;
-                }
-            }
+        // กลิ้ง (ใช้ปุ่มที่จำไว้ กดล่วงหน้าได้)
+        if (roll_buffer > 0 && roll_cd_timer <= 0) {
+            start_roll(_kx, _ky, _len);
         }
 
         // โจมตี
@@ -250,42 +227,8 @@ switch (state) {
         vsp = mvy + _ly;
 
         // กลิ้งตัดจังหวะ (คอมโบรีเซ็ต)
-        if (keyboard_check_pressed(vk_space) && roll_cd_timer <= 0) {
-
-            state = PState.ROLL;
-            roll_timer = roll_time;
-			
-			roll_echo_timer = 0;
-
-			for (var i = 0; i < 4; i++) {
-				roll_echo_age[i] = 999;
-			}
-
-
-            combo = 0;
-            combo_window = 0;
-            combo_buffer = false;
-
-            if (_len > 0) {
-
-                // มีปุ่มเดิน = กลิ้งตามทิศทางเดิน
-                dir_x = _kx / _len;
-                dir_y = _ky / _len;
-
-                if (abs(_kx) > abs(_ky)) {
-                    face = (_kx > 0) ? 0 : 2;
-                } else {
-                    face = (_ky < 0) ? 1 : 3;
-                }
-
-            } else {
-
-                // ไม่มีปุ่มเดิน = กลิ้งตามเมาส์
-                dir_x = lengthdir_x(1, aim);
-                dir_y = lengthdir_y(1, aim);
-                face = round(aim / 90) mod 4;
-            }
-
+        if (roll_buffer > 0 && roll_cd_timer <= 0) {
+            start_roll(_kx, _ky, _len);
             break;
         }
 

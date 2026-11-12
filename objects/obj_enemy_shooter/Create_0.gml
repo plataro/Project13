@@ -23,6 +23,7 @@ ai = function() {
         if (telegraph_timer <= 0) {
             telegraph = false;
             var _lead = _d / bullet_speed;
+            if (obj_player.state == PState.ROLL) _lead = 0;   // ★ ไม่ยิงดักปลายทางกลิ้ง
             var _tx = obj_player.x + obj_player.hsp * _lead * 0.6;
             var _ty = obj_player.y + obj_player.vsp * _lead * 0.6;
             var _a = point_direction(x, y, _tx, _ty);

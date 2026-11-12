@@ -15,8 +15,10 @@ if (vis > 0.5) draw_shadow(x, y, _sw, _sw * 0.35);
 
 // วงเตือนพื้นที่โจมตีตอนเตรียมท่า
 if (atk_state == "windup" && !is_undefined(atk_cur)) {
-    draw_set_alpha(0.15 + 0.1 * sin(current_time / 60));
-    draw_set_color(c_red);
+    // ★ ล็อกทิศแล้ว = วงเข้มขึ้นชัด ๆ (สัญญาณว่า "กลิ้งตอนนี้")
+    var _locked = (atk_timer <= atk_cur.lock);
+    draw_set_alpha(_locked ? 0.42 : 0.15 + 0.1 * sin(current_time / 60));
+    draw_set_color(_locked ? make_color_rgb(255, 60, 40) : c_red);
     if (variable_struct_exists(atk_cur, "rects")) {
         for (var _k = 0; _k < array_length(atk_cur.rects); _k++) {
             var _r = atk_cur.rects[_k];

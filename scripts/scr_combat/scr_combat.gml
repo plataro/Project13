@@ -123,29 +123,29 @@ function combo_step_data(_n) {
 function enemy_attack_base(_name) {
     switch (_name) {
         case "slash":        // ศัตรูทั่วไป: ฟันกวาดโค้งหน้าตัว ตามผู้เล่นทัน
-            return { windup: 16, active: 8, recover: 26, dmg: 1, lift: 40,
-                     lock: 3, lead: 10, turn: 6,
+            return { windup: 20, active: 8, recover: 26, dmg: 1, lift: 40,
+                     lock: 9, lead: 4, turn: 2,      // ★ เดิม windup 16 / lock 3 / lead 10 / turn 6 (ตามแรงจนหลบไม่ได้)
                      lunge_speed: 5, lunge_frames: 8,
                      circles: [ [44, -38, 32], [56, 0, 38], [44, 38, 32] ] };
         case "dash":         // Dasher: พุ่งชนเป็นเส้นตรง
             return { windup: 30, active: 18, recover: 50, dmg: 2, lift: 40,
-                     lock: 8, lead: 0, turn: 0,
+                     lock: 12, lead: 0, turn: 0,     // ★ เดิม lock 8
                      lunge_speed: 10, lunge_frames: 18,
                      circles: [],
                      rects: [ [0, 130, -34, 34] ] };   // [หน้าสุด-หลังสุด ระยะ, เบี่ยงซ้าย, เบี่ยงขวา] สี่เหลี่ยมยาวไปข้างหน้า
         case "boss_swing":   // บอส: ฟาดกวาดกว้าง
             return { windup: 34, active: 8, recover: 40, dmg: 2, lift: 70,
-                     lock: 8, lead: 6, turn: 3,
+                     lock: 12, lead: 3, turn: 1.5,   // ★ เดิม lock 8 / lead 6 / turn 3
                      lunge_speed: 2, lunge_frames: 6,
                      circles: [ [70, -70, 55], [90, 0, 60], [70, 70, 55] ] };
         case "boss_slam":    // บอส: ทุบพื้นรอบตัว (เฟส 2)
             return { windup: 46, active: 8, recover: 55, dmg: 2, lift: 40,
                      lock: 0, lead: 0, turn: 0,
                      lunge_speed: 0, lunge_frames: 0,
-                     circles: [ [0, 0, 130] ] };
+                     circles: [ [0, 0, 120] ] };     // ★ เดิม 130 (กลิ้ง 1 ครั้งออกไม่พ้น)
         case "boss_dash":    // บอส: พุ่งชน
             return { windup: 40, active: 22, recover: 50, dmg: 2, lift: 70,
-                     lock: 8, lead: 0, turn: 0,
+                     lock: 12, lead: 0, turn: 0,     // ★ เดิม lock 8
                      lunge_speed: 11, lunge_frames: 22,
                      circles: [],
                      rects: [ [0, 190, -62, 62] ] };

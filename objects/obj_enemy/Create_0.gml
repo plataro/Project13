@@ -72,11 +72,20 @@ dir_to_player = function() {
 }
 
 // ทิศไปยังตำแหน่งที่ผู้เล่นกำลังจะไปถึงในอีก _lead เฟรม
+// ★ ผู้เล่นกำลังกลิ้ง = ไม่เล็งดักทางกลิ้ง (เดิมเอาความเร็วกลิ้งมาคูณ เลยเล็งไปรอปลายทางที่กลิ้งไปพอดี)
 aim_at_player = function(_lead) {
     if (!instance_exists(obj_player)) return atk_dir;
-    var _tx = obj_player.x + obj_player.hsp * _lead;
-    var _ty = obj_player.y + obj_player.vsp * _lead;
+    var _p = obj_player;
+    if (_p.state == PState.ROLL) _lead = 0;
+    var _tx = _p.x + _p.hsp * _lead;
+    var _ty = _p.y + _p.vsp * _lead;
     return point_direction(x, y, _tx, _ty);
+}
+
+// ผู้เล่นกำลังกลิ้ง/อมตะอยู่ไหม (ศัตรูจะไม่หมุนตาม)
+player_dodging = function() {
+    if (!instance_exists(obj_player)) return false;
+    return obj_player.state == PState.ROLL || obj_player.dodge_timer > 0;
 }
 
 // เช็กจริง (แพง) เรียกเฉพาะใน Step ทุก ~8 เฟรม
@@ -167,7 +176,8 @@ run_attack = function() {
 
         case "active":
             // หมุนตามผู้เล่นระหว่าง hitbox ทำงาน (turn องศาต่อเฟรม)
-            if (atk_cur.turn > 0) {
+            // ★ ผู้เล่นกลิ้งหลบอยู่ = ไม่หมุนตาม (หลบด้านข้างได้จริง)
+            if (atk_cur.turn > 0 && !player_dodging()) {
                 var _want = aim_at_player(atk_cur.lead * 0.5);
                 var _diff = ((_want - atk_dir + 540) mod 360) - 180;
                 atk_dir += clamp(_diff, -atk_cur.turn, atk_cur.turn);

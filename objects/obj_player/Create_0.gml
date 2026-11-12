@@ -20,9 +20,15 @@ sliding = false;
 
 roll_speed = 10;
 roll_time = 18;
-roll_cooldown = 30;
+roll_cooldown = 22;       // พักหลังกลิ้ง (เดิม 30 = กดซ้ำแล้วไม่ออก)
 roll_timer = 0;
 roll_cd_timer = 0;
+
+// ---- i-frame ตอนกลิ้ง (แยกจาก i-frame หลังโดนตี) ----
+roll_iframes = roll_time + 8;   // ★ อมตะนานกว่าตัวกลิ้ง 8 เฟรม (ช่วงไถลหลังกลิ้งยังไม่โดน)
+dodge_timer = 0;
+roll_buffer_time = 10;          // ★ กดกลิ้งล่วงหน้าได้กี่เฟรม (กดตอนติดคูลดาวน์/ตอนจอหยุดก็ยังออก)
+roll_buffer = 0;
 
 roll_echo_timer = 0;
 
@@ -62,7 +68,7 @@ skill2_timer = 0;
 
 max_hp = global.max_hp;
 hp = global.player_hp;
-invuln_time = 60;
+invuln_time = 90;          // ★ อมตะหลังโดนตี 1.5 วิ (เดิม 1 วิ)
 invuln_timer = 0;
 kb_x = 0;
 kb_y = 0;
@@ -74,8 +80,13 @@ dir_x = 0;
 dir_y = 1;
 face = 3;   // 0=ขวา 1=บน 2=ซ้าย 3=ล่าง
 
+// อมตะอยู่ไหม (กลิ้ง / เพิ่งโดนตี / โหมดอมตะ) ศัตรูใช้เช็กว่า "หลบผ่าน" หรือเปล่า
+is_invulnerable = function() {
+    return global.god || invuln_timer > 0 || dodge_timer > 0 || state == PState.ROLL;
+}
+
 take_damage = function(_dmg, _sx, _sy) {
-    if (global.god || invuln_timer > 0 || state == PState.ROLL) exit;
+    if (is_invulnerable()) exit;
     hp -= _dmg;
     fx_player_hurt(_dmg);
     invuln_timer = invuln_time;
@@ -121,6 +132,32 @@ start_attack = function(_n) {
 	_h.lift = aim_height;
 	_h.step_data = _d;
 	_h.damage = _d.dmg;
+}
+
+// เริ่มกลิ้ง: มีปุ่มเดิน = กลิ้งตามทิศเดิน, ไม่มี = กลิ้งตามเมาส์
+start_roll = function(_kx, _ky, _len) {
+    state = PState.ROLL;
+    roll_timer = roll_time;
+    dodge_timer = roll_iframes;
+    roll_buffer = 0;
+
+    roll_echo_timer = 0;
+    for (var i = 0; i < 4; i++) roll_echo_age[i] = 999;
+
+    combo = 0;
+    combo_window = 0;
+    combo_buffer = false;
+
+    if (_len > 0) {
+        dir_x = _kx / _len;
+        dir_y = _ky / _len;
+        if (abs(_kx) > abs(_ky)) face = (_kx > 0) ? 0 : 2;
+        else face = (_ky < 0) ? 1 : 3;
+    } else {
+        dir_x = lengthdir_x(1, aim);
+        dir_y = lengthdir_y(1, aim);
+        face = round(aim / 90) mod 4;
+    }
 }
 
 player_apply_skills();

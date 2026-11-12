@@ -35,10 +35,12 @@ if (!hit_done && instance_exists(obj_player)) {
         }
 
         if (_hit) {
-            var _hp0 = _p.hp;
-            var _dmg = enemy_damage_calc(atk.dmg);   // ★ ดาเมจตามความยาก x ด่าน - เกราะ
-            _p.take_damage(_dmg, owner.x, owner.y);
-            if (_p.hp < _hp0) {   // กลิ้งหลบอยู่จะไม่เสียเลือด hitbox ยังอยู่ต่อ
+            if (_p.is_invulnerable()) {
+                // ★ กลิ้งผ่าน/อมตะตอนโดนท่านี้ = ท่านี้ "พลาด" ไปแล้ว ไม่โดนซ้ำตอน i-frame หมด
+                // (เดิม hitbox ยังอยู่ต่อ พอกลิ้งจบแต่ท่ายังไม่จบก็โดน = หลบแล้วยังโดน)
+                hit_done = true;
+            } else {
+                _p.take_damage(enemy_damage_calc(atk.dmg), owner.x, owner.y);   // ★ ดาเมจตามความยาก x ด่าน - เกราะ
                 hit_done = true;
                 owner.on_hit_player();
             }
