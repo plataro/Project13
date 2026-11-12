@@ -6,7 +6,8 @@ max_hp = hp;
 move_speed = 1.5;
 tint = c_ltgray;
 sep_radius = 120;
-sep_strength = 0.3;             // บอสถูกดันยาก แต่ดันตัวเล็กออกได้แรง
+sep_strength = 0.3;
+engage_range = 220;             // บอสถูกดันยาก แต่ดันตัวเล็กออกได้แรง
 sight_range = is_final ? 3000 : 1000;   // บอสไล่เมื่อเห็นผู้เล่นในถิ่นตัวเอง
 
 phase = 1;

@@ -65,7 +65,8 @@ if (!_in_zone) alert_timer = 0;   // ผู้เล่นอยู่นอก�
 hsp = 0;
 vsp = 0;
 
-if (engage_grace > 0 && alert_timer > 0) engage_grace--;
+// นับถอยหลังช่วงรอเฉพาะตอนผู้เล่นประชิดแล้ว (เดินเข้าหาอยู่ = ยังไม่นับ)
+if (engage_grace > 0 && alert_timer > 0 && _pdist <= engage_range) engage_grace--;
 
 var _busy = (atk_state != "") || (variable_instance_exists(id, "state") && state != "chase");
 if (alert_timer > 0 || _busy) {
