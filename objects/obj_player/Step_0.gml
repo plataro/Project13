@@ -139,6 +139,7 @@ switch (state) {
 			_b.speed = bullet_speed;
 			_b.lift = aim_height;
 			_b.pierce = bullet_pierce;
+			_b.damage = shot1_dmg;   // ★ แรงตามระดับพลังยิง
 
 			shot1_ammo--;
 			shot1_timer = shot1_gap;
@@ -149,7 +150,7 @@ switch (state) {
 		}
 
                 // สกิล 2
-		else if (keyboard_check(ord("2")) && skill2_timer <= 0) {
+		else if (keyboard_check(ord("2")) && skill2_timer <= 0 && skill2_unlocked) {
 
 			for (var _i = 0; _i < skill2_count; _i++) {
 

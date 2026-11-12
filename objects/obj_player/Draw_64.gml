@@ -24,16 +24,17 @@ for (var _i = 0; _i < shot1_max; _i++) {
 }
 // แถบรีโหลด
 if (shot1_reload_timer > 0) {
-    var _rw = shot1_max * 22 - 6;
+    var _rw = max(shot1_max, 4) * 22 - 6;
     draw_set_color(c_black);
     draw_rectangle(_bx + 23, _sy + 20, _bx + 25 + _rw, _sy + 26, false);
     draw_set_color(c_orange);
     draw_rectangle(_bx + 24, _sy + 21, _bx + 24 + _rw * (1 - shot1_reload_timer / shot1_reload), _sy + 25, false);
 }
 
-// สกิล 2: แถบคูลดาวน์
+// สกิล 2: แถบคูลดาวน์ (โชว์เมื่อปลดแล้ว)
 var _s2y = 96;
-var _s2w = shot1_max * 22 - 6;
+var _s2w = max(shot1_max, 4) * 22 - 6;
+if (skill2_unlocked) {
 draw_set_color(c_white);
 draw_text_transformed(_bx, _s2y - 5, "2", 0.6, 0.6, 0);
 draw_set_color(c_black);
@@ -41,6 +42,7 @@ draw_rectangle(_bx + 23, _s2y - 1, _bx + 25 + _s2w, _s2y + 16, false);
 var _ready = (skill2_timer <= 0);
 draw_set_color(_ready ? c_yellow : c_gray);
 draw_rectangle(_bx + 24, _s2y, _bx + 24 + _s2w * (_ready ? 1 : 1 - skill2_timer / skill2_cooldown), _s2y + 15, false);
+}
 
 draw_set_color(c_white);
 

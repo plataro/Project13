@@ -13,6 +13,11 @@ if (keyboard_check_pressed(ord("C"))) {
 if (keyboard_check_pressed(ord("G"))) global.save.gold += 100;
 if (keyboard_check_pressed(ord("O"))) global.save.potions = min(global.save.potions + 1, global.save.potion_max);
 if (keyboard_check_pressed(ord("K"))) global.save.sp += 1;
+if (keyboard_check_pressed(ord("L"))) {   // พลังยิง +1 และปลดต้นไม้สกิล
+    global.save.shot_lv = min(4, global.save.shot_lv + 1);
+    flag_set("tree_unlocked");
+    with (obj_player) player_apply_skills();
+}
 
 var _go = noone;
 if (keyboard_check_pressed(ord("B"))) {

@@ -5,7 +5,7 @@ function skill_nodes() {
         { key: "b2", branch: 0, tier: 1, name: "คมดาบกว้าง",   desc: "วงฟันทุกท่ากว้างขึ้น 25%",                 cost: 1, req: "b1" },
         { key: "b3", branch: 0, tier: 2, name: "พุ่งทะลวง",    desc: "ท่าพุ่งไกลขึ้น และต่อคอมโบได้ง่ายขึ้น",    cost: 2, req: "b2" },
 
-        { key: "a1", branch: 1, tier: 0, name: "แม็กใหญ่",     desc: "สกิล 1 บรรจุ 8 นัด (จาก 6)",               cost: 1, req: "" },
+        { key: "a1", branch: 1, tier: 0, name: "แม็กใหญ่",     desc: "สกิล 1 บรรจุเพิ่ม 2 นัด",                   cost: 1, req: "" },
         { key: "a2", branch: 1, tier: 1, name: "รีโหลดไว",     desc: "รีโหลดสกิล 1 เร็วขึ้นเกือบครึ่ง",           cost: 1, req: "a1" },
         { key: "a3", branch: 1, tier: 2, name: "กระสุนทะลุ",   desc: "กระสุนทะลุศัตรู 1 ตัว",                    cost: 2, req: "a2" },
         { key: "a4", branch: 1, tier: 3, name: "ห้าทิศ",       desc: "สกิล 2 ยิง 5 ลูก และคูลดาวน์สั้นลง",       cost: 1, req: "a3" },
@@ -15,6 +15,18 @@ function skill_nodes() {
         { key: "g3", branch: 2, tier: 2, name: "ลมใต้เท้า",    desc: "วิ่งเร็วขึ้นและออกตัวไวขึ้น",               cost: 1, req: "g2" },
         { key: "g4", branch: 2, tier: 3, name: "ยาแรง",        desc: "ยาฟื้นเลือดฟื้น 3 หัวใจ (จาก 2)",           cost: 1, req: "g3" }
     ];
+}
+
+// ★ พลังยิง (สกิล 1) ตามระดับที่เก็บจากหีบพลัง: เริ่ม 1 นัดแรงมากแต่รอนาน -> นัดเยอะขึ้น รอสั้นลง
+// lv 2 ขึ้นไปปลดสกิล 2 (ยิงสามทิศ)
+function shot_data(_lv) {
+    switch (clamp(_lv, 0, 4)) {
+        case 0: return { ammo: 1, dmg: 3,    reload: 240 };
+        case 1: return { ammo: 2, dmg: 2.5,  reload: 210 };
+        case 2: return { ammo: 3, dmg: 2,    reload: 180 };
+        case 3: return { ammo: 4, dmg: 1.75, reload: 165 };
+    }
+    return { ammo: 6, dmg: 1.5, reload: 150 };
 }
 
 function skill_has(_key) {
@@ -52,8 +64,11 @@ function skill_unlock(_key) {
 function player_apply_skills() {
     var _old_max = shot1_max;
 
-    shot1_max         = skill_has("a1") ? 8 : 6;
-    shot1_reload      = skill_has("a2") ? 90 : 150;
+    var _sd = shot_data(global.save.shot_lv);
+    shot1_max         = _sd.ammo + (skill_has("a1") ? 2 : 0);
+    shot1_reload      = round(_sd.reload * (skill_has("a2") ? 0.6 : 1));
+    shot1_dmg         = _sd.dmg;
+    skill2_unlocked   = (global.save.shot_lv >= 2);
     bullet_pierce     = skill_has("a3") ? 1 : 0;
     skill2_count      = skill_has("a4") ? 5 : 3;
     skill2_cooldown   = skill_has("a4") ? 120 : 150;
@@ -88,6 +103,7 @@ function skills_modify_combo(_d, _n) {
 }
 
 function skilltree_toggle() {
+    if (!flag_get("tree_unlocked")) return;   // ★ ปลดตอนถึงหมู่บ้านครั้งแรก
     if (instance_exists(obj_skilltree)) return;
     if (variable_global_exists("tree_closed_at") && current_time - global.tree_closed_at < 250) return;
     if (instance_exists(obj_dialogue) || instance_exists(obj_fade)

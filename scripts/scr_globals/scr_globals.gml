@@ -61,6 +61,7 @@ function save_default() {
         weapon: "sword",   // อาวุธที่ถืออยู่ (sword, greatsword, hammer)
         weapons: {},       // อาวุธที่ซื้อแล้ว (ดาบเริ่มต้นมีอยู่แล้วเสมอ)
         armor: 0,          // เกราะ 0-2 (ลดดาเมจที่ได้รับ)
+        shot_lv: 0,        // ★ ระดับพลังยิง 0-4 (ได้จากหีบพลังในป่า/เหมือง)
         quests: {},        // สถานะเควส
         flags: {}          // ธงเนื้อเรื่อง เช่น mine_done
     };
@@ -180,6 +181,8 @@ function save_load() {
     } catch (_e) {
         return -1;
     }
+    // เซฟเก่าก่อนมีระบบพลังยิง = ให้ระดับตามความคืบหน้า
+    if (!variable_struct_exists(global.save, "shot_lv")) global.save.shot_lv = min(4, power_stage() * 2);
     // เซฟเก่าที่ขาดช่องใหม่ ๆ = เติมค่าเริ่มต้น
     var _def = save_default();
     var _keys = variable_struct_get_names(_def);

@@ -6,6 +6,16 @@ draw_set_alpha(0.35);
 draw_ellipse(_x - 26, _y - 6, _x + 26, _y + 6, false);
 draw_set_alpha(1);
 
+// ★ หีบพลัง: ออร่าม่วงกะพริบ
+if (!opened && shot_up > 0) {
+    gpu_set_blendmode(bm_add);
+    draw_set_color(make_color_rgb(150, 70, 255));
+    draw_set_alpha(0.25 + 0.15 * sin(current_time / 200));
+    draw_circle(_x, _y - 22, 44, false);
+    draw_set_alpha(1);
+    gpu_set_blendmode(bm_normal);
+}
+
 if (!opened) {
     draw_set_color(make_color_rgb(150, 95, 40));
     draw_rectangle(_x - 24, _y - 34, _x + 24, _y - 2, false);

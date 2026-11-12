@@ -133,12 +133,13 @@ function draw_hud_money() {
     if (_s.sp > 0) {
         draw_set_halign(fa_right);
         draw_set_color(make_color_rgb(255, 220, 90));
-        draw_text_transformed(932, 96, "[T] สกิล  SP " + string(_s.sp), 0.6, 0.6, 0);
+        draw_text_transformed(932, 96, (flag_get("tree_unlocked") ? "[T] สกิล  SP " : "SP ") + string(_s.sp), 0.6, 0.6, 0);
     }
     // อาวุธ/เกราะ (กด R สลับอาวุธ)
     draw_set_halign(fa_right);
     draw_set_color(c_ltgray);
-    draw_text_transformed(932, 116, "[R] " + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  เกราะ " + string(_s.armor)) : ""), 0.6, 0.6, 0);
+    var _multi = array_length(variable_struct_get_names(_s.weapons)) > 0;   // มีอาวุธมากกว่า 1 ชิ้นถึงโชว์ [R]
+    draw_text_transformed(932, 116, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  เกราะ " + string(_s.armor)) : ""), 0.6, 0.6, 0);
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_color(c_white);

@@ -17,6 +17,7 @@ had_focus = true;
 btn = [8, 500, 40, 532];   // ★ ปุ่มหยุด (พิกัด GUI)
 
 settings_load();
+if (!instance_exists(obj_tutorial)) instance_create_depth(0, 0, -13900, obj_tutorial);   // สอนเล่นตามสถานการณ์ (persistent)
 
 // หยุดได้ตอนนี้ไหม
 can_pause = function() {
