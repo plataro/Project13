@@ -66,6 +66,8 @@ engage_range = 140;
 // ---- ลอยตัว (บอสกระโดด) / วงเตือนบนพื้น [x, y, รัศมี, ล็อกแล้ว] ----
 z = 0;
 marker = undefined;
+shield = 0;          // เกราะกันกระสุน เหลือกี่เฟรม (บอสใช้)
+shield_hp = 0;       // ต้องฟันอีกกี่ทีเกราะถึงแตก
 
 // ---- สถานะท่าโจมตี ----
 atk_cur = undefined;
@@ -273,7 +275,7 @@ ai = function() {
     }
 }
 
-take_damage = function(_dmg, _dir, _crit = false) {
+take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
     hp -= _dmg;
     flash = 6;
     fx_enemy_hit(id, _dmg, _dir);

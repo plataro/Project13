@@ -110,14 +110,16 @@ function level_tier() {
     return 1;
 }
 
+// boss_hp = คูณเลือดมินิบอสในด่าน (เพิ่มเติมจากตัวเลขใน Creation Code)
 // hp = คูณเลือดศัตรูตัวเล็ก, dmg = คูณดาเมจ, speed = คูณความเร็ว, coin = มูลค่าเหรียญที่ดรอปต่อเหรียญ, attackers = บุกพร้อมกันเพิ่ม
 function tier_data(_t = level_tier()) {
     switch (_t) {
-        case 2:  return { hp: 2.2, dmg: 1,   speed: 1.1,  coin: 3, attackers: 0 };
-        case 3:  return { hp: 3.5, dmg: 1.5, speed: 1.2,  coin: 5, attackers: 1 };
-        case 4:  return { hp: 3.5, dmg: 1.5, speed: 1.2,  coin: 5, attackers: 1 };
+        // ★ ด่าน 2-3 ยากขึ้นนิดหน่อย (เดิม ด่าน2 hp 2.2 speed 1.1 / ด่าน3 hp 3.5 speed 1.2)
+        case 2:  return { hp: 2.4, dmg: 1,   speed: 1.13, coin: 3, attackers: 0, boss_hp: 1.1 };
+        case 3:  return { hp: 3.8, dmg: 1.5, speed: 1.23, coin: 5, attackers: 1, boss_hp: 1.1 };
+        case 4:  return { hp: 3.5, dmg: 1.5, speed: 1.2,  coin: 5, attackers: 1, boss_hp: 1 };
     }
-    return { hp: 1, dmg: 1, speed: 1, coin: 2, attackers: 0 };
+    return { hp: 1, dmg: 1, speed: 1, coin: 2, attackers: 0, boss_hp: 1 };
 }
 
 // =====================================================================

@@ -32,16 +32,64 @@ leap_t = 0;
 airborne = false;     // ลอยกลางอากาศ = ไม่โดนดาเมจ
 volley_n = 0;
 
+// ---- ★ เกราะกันกระสุน: โดนยิงเยอะ หรือสุ่มตั้งเอง กระสุนไม่เข้า ต้องฟันด้วยดาบให้แตก ----
+bullet_heat = 0;      // นับกระสุนที่โดนช่วงนี้ (ค่อย ๆ ลดลงเอง)
+shield_cd = 240;      // ห้ามตั้งเกราะซ้ำจนกว่าจะหมดเวลานี้
+shield_time = 330;    // ★ เกราะอยู่ได้นานสุด (เฟรม)
+
+raise_shield = function() {
+    if (shield > 0) return;
+    shield = shield_time;
+    shield_hp = 3 + phase;   // ★ ฟันกี่ทีแตก (เฟส 1 = 4, 2 = 5, 3 = 6)
+    bullet_heat = 0;
+    float_text(x, y - 200, "เกราะ!", make_color_rgb(110, 190, 255), 1.3);
+    fx_spark(x, y - 70, 0, 18, make_color_rgb(110, 190, 255), 180);
+}
+
+end_shield = function(_broken) {
+    shield = 0;
+    shield_cd = (phase >= 3) ? 420 : 600;
+    if (_broken) {
+        float_text(x, y - 200, "เกราะแตก!", c_yellow, 1.4);
+        fx_shake(6);
+        fx_spark(x, y - 70, 0, 30, make_color_rgb(110, 190, 255), 180);
+        // เสียหลัก = ช่วงรางวัลให้รุมฟัน (ถ้าไม่ได้ออกท่า/กระโดดอยู่)
+        if (atk_state == "" && (state == "chase" || state == "recover")) {
+            state = "recover";
+            state_timer = 55;
+            telegraph = false;
+        }
+    }
+}
+
 // ---- อมตะช่วงเปลี่ยนเฟส ----
 base_take_damage = take_damage;
-take_damage = function(_dmg, _dir, _crit = false) {
+take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
     if (invuln > 0 || airborne) return;
+
+    if (_src == "bullet") {
+        // ★ เกราะอยู่ = กระสุนเด้งออก ไม่เสียเลือด
+        if (shield > 0) {
+            fx_spark(x, y - 70, _dir + 180, 6, make_color_rgb(110, 190, 255));
+            if (dist_to_player() > far_range) far_timer += 25;
+            return;
+        }
+        // โดนยิงเยอะเกิน = ตั้งเกราะ
+        bullet_heat++;
+        var _limit = (phase == 1) ? 9 : ((phase == 2) ? 8 : 7);   // ★ โดนกี่นัดถึงตั้งเกราะ
+        if (bullet_heat >= _limit && shield_cd <= 0 && state != "trans") raise_shield();
+    } else if (shield > 0) {
+        // ฟันด้วยดาบ = เข้าเลือดปกติ และกะเทาะเกราะ
+        shield_hp--;
+        if (shield_hp <= 0) end_shield(true);
+    }
+
     // โดนยิงจากไกล = เกจยิงตอดขึ้นเร็ว และไม่มีช่วงรอจังหวะแรก (ผู้เล่นเลือกตีจากไกลเอง)
     if (dist_to_player() > far_range) {
         far_timer += 25;
         engage_grace = 0;
     }
-    base_take_damage(_dmg, _dir, _crit);
+    base_take_damage(_dmg, _dir, _crit, _src);
 }
 
 // ---- ★ ท่ากระโดดตกใส่ (ไล่ระยะผู้เล่นที่หนีไปยิงจากไกล) ----
@@ -116,6 +164,8 @@ enter_phase = function(_n) {
     airborne = false;
     marker = undefined;
     far_timer = 0;
+    shield = 0;
+    shield_cd = 120;
     with (obj_enemy_bullet) instance_destroy();
     with (obj_enemy_hitbox) instance_destroy();
 
@@ -133,6 +183,15 @@ enter_phase = function(_n) {
 
 ai = function() {
     if (invuln > 0) invuln--;
+
+    // เกราะ / เกจกระสุน
+    if (shield > 0) {
+        shield--;
+        if (shield <= 0) end_shield(false);
+    } else if (shield_cd > 0) {
+        shield_cd--;
+    }
+    bullet_heat = max(0, bullet_heat - 1 / 45);   // ★ ลด 1 นัดทุก ~0.75 วิ
 
     // ตรวจเงื่อนไขเปลี่ยนเฟส
     if (is_final) {
@@ -196,6 +255,8 @@ ai = function() {
                     if (_d > far_range) array_push(_opts, "leap");
                 }
                 if (phase >= 3) array_push(_opts, "spiral");
+                // ★ สุ่มตั้งเกราะเองบ้าง (ผู้เล่นใช้แต่ดาบก็เจอได้)
+                if (shield <= 0 && shield_cd <= 0 && irandom(3) == 0) array_push(_opts, "guard");
 
                 var _pick = _opts[irandom(array_length(_opts) - 1)];
                 if (_pick == last_attack && array_length(_opts) > 1) {
@@ -213,6 +274,9 @@ ai = function() {
                     case "slam":  begin_attack("boss_slam"); break;
                     case "dash":  begin_attack("boss_dash"); break;
                     case "leap":  start_leap(); break;
+                    case "guard":
+                        raise_shield();
+                        break;
                     case "volley":
                         state = "volley_windup";
                         state_timer = 24;
@@ -227,6 +291,7 @@ ai = function() {
                         break;
                 }
                 attack_cd = (phase == 1) ? 90 : ((phase == 2) ? 50 : 35);
+                if (_pick == "guard") attack_cd = 25;   // ตั้งเกราะแล้วเดินหน้าบุกต่อเลย
             }
             break;
 

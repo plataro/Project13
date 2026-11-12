@@ -47,6 +47,24 @@ if (atk_state == "windup" && !is_undefined(atk_cur)) {
 
 draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, _col, vis);
 
+// ★ เกราะกันกระสุน: วงฟ้าเรือง ๆ รอบตัว (กะพริบตอนใกล้หมด)
+if (shield > 0 && (shield > 60 || (shield div 5) mod 2 == 0)) {
+    var _sr = enemy_hurt_rect(id);
+    var _scx = (_sr[0] + _sr[2]) / 2;
+    var _scy = (_sr[1] + _sr[3]) / 2 - z;
+    var _srad = max(_sr[2] - _sr[0], _sr[3] - _sr[1]) * 0.62;
+    gpu_set_blendmode(bm_add);
+    draw_set_color(make_color_rgb(70, 160, 255));
+    draw_set_alpha(0.18 * vis);
+    draw_circle(_scx, _scy, _srad, false);
+    draw_set_alpha((0.55 + 0.25 * sin(current_time / 90)) * vis);
+    draw_circle(_scx, _scy, _srad, true);
+    draw_circle(_scx, _scy, _srad - 2, true);
+    gpu_set_blendmode(bm_normal);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
 // แฟลชขาวช่วงแรกที่โดนตี (บวกสีขาวทับตัวศัตรู)
 if (flash > 3) {
     gpu_set_blendmode(bm_add);
