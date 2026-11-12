@@ -72,7 +72,7 @@ function pickup_collect(_kind, _value, _x, _y) {
             return true;
 
         case "potion":
-            if (_s.potions >= _s.potion_max) return false;
+            if (_s.potions >= potion_cap()) return false;
             _s.potions++;
             float_text(_x, _y - 30, "+ยา", c_red, 0.8);
             return true;
@@ -119,7 +119,7 @@ function draw_hud_money() {
     draw_text_transformed(914, 36, string(_s.gold), 1, 1, 0);
 
     // ยา (ช่องแดง) ปุ่ม Q
-    for (var _i = 0; _i < _s.potion_max; _i++) {
+    for (var _i = 0; _i < potion_cap(); _i++) {
         var _px = 932 - _i * 22;
         draw_set_color(c_black);
         draw_rectangle(_px - 17, 62, _px, 80, false);
@@ -127,7 +127,7 @@ function draw_hud_money() {
         draw_rectangle(_px - 16, 63, _px - 1, 79, false);
     }
     draw_set_color(c_white);
-    draw_text_transformed(932 - _s.potion_max * 22 - 6, 71, "Q", 0.6, 0.6, 0);
+    draw_text_transformed(932 - potion_cap() * 22 - 6, 71, "Q", 0.6, 0.6, 0);
 
 
     if (_s.sp > 0) {

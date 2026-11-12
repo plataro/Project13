@@ -10,9 +10,18 @@ choice_t = 0;         // นับเฟรมตั้งแต่ตัวเ�
 choice_delay = 45;    // ★ ตัวเลือกกดได้หลังขึ้นมาแล้วกี่เฟรม (กันกดรัวแล้วเลือกพลาด)
 closing = false;      // true ตอนกำลังจะจบ (ให้ฟังก์ชันหลังจบเปิดบทสนทนาต่อได้)
 
-portrait_h = 400;   // ★ ความสูงของรูปตัวละครบนจอ (ปรับได้)
+portrait_h = 330;   // ★ ความสูงของรูปตัวละครบนจอ (ปรับได้)
 
 pdata = portrait_data();
+
+// ★ ขนาดกล่องและตัวอักษร
+text_scale = 0.72;
+box = [110, 408, 850, 522];   // ซ้าย บน ขวา ล่าง
+choice_x1 = 270;
+choice_x2 = 690;
+choice_y0 = 170;
+choice_h = 46;
+choice_gap = 58;
 
 // ช่องตัวละคร 2 ฝั่ง
 slots = {
@@ -31,7 +40,7 @@ finish = function() {
 
 load_line = function() {
     var _l = lines[index];
-    wrapped = text_wrap_thai(_l.text, 840);
+    wrapped = text_wrap_thai(_l.text, 970);   // ★ ความกว้างตอนสเกล 1 (วาดจริงที่ text_scale)
     chars = 0;
     total = string_length(wrapped);
     choice_t = 0;

@@ -102,6 +102,53 @@ if (!is_undefined(step_data)) {
                 break;
             }
 
+            // ===== ค้อน: ทุบกระแทก (วงระเบิดที่จุดโดน + รอยแตก) =====
+            case "smash": {
+                var _e3 = min(_t / 0.6, 1);
+                for (var _q = 0; _q < array_length(step_data.circles); _q++) {
+                    var _sc = step_data.circles[_q];
+                    var _px2 = _cx0 + lengthdir_x(_sc[0], image_angle) + lengthdir_x(_sc[1], image_angle + 90);
+                    var _py2 = _cy0 + lengthdir_y(_sc[0], image_angle) + lengthdir_y(_sc[1], image_angle + 90) + lift * 0.6;
+                    var _rr2 = _sc[2] * (0.35 + 0.75 * _e3);
+                    draw_set_color(make_color_rgb(255, 225, 170));
+                    draw_set_alpha(0.35 * (1 - _e3) * _fade);
+                    draw_circle(_px2, _py2, _rr2 * 0.8, false);
+                    draw_set_alpha(0.9 * _fade);
+                    draw_circle(_px2, _py2, _rr2, true);
+                    draw_circle(_px2, _py2, _rr2 - 1, true);
+                    // รอยแตกบนพื้น
+                    draw_set_alpha(0.7 * _fade);
+                    for (var _cr = 0; _cr < 6; _cr++) {
+                        var _ca = _cr * 60 + _q * 17 + image_angle;
+                        draw_line_width(_px2, _py2, _px2 + lengthdir_x(_rr2 * 0.9, _ca), _py2 + lengthdir_y(_rr2 * 0.5, _ca), 2);
+                    }
+                }
+                draw_set_alpha(1);
+                break;
+            }
+
+            // ===== ค้อนท่าจบ: ทุบพื้น วงรอบตัว + คลื่นวิ่งไปข้างหน้า =====
+            case "quake": {
+                var _n2 = array_length(step_data.circles);
+                for (var _w = 0; _w < _n2; _w++) {
+                    var _wc = step_data.circles[_w];
+                    var _delay = _w * 0.25;                       // คลื่นถัดไปตามมาทีหลัง
+                    var _tw = clamp((_t - _delay) / 0.7, 0, 1);
+                    if (_tw <= 0) continue;
+                    var _wx = _cx0 + lengthdir_x(_wc[0], image_angle);
+                    var _wy = _cy0 + lengthdir_y(_wc[0], image_angle) + lift * 0.6;
+                    var _wr = _wc[2] * (0.3 + 0.8 * _tw);
+                    draw_set_color(make_color_rgb(230, 190, 130));
+                    draw_set_alpha(0.3 * (1 - _tw) * _fade);
+                    draw_ellipse(_wx - _wr, _wy - _wr * 0.55, _wx + _wr, _wy + _wr * 0.55, false);
+                    draw_set_alpha(0.85 * (1 - _tw * 0.5) * _fade);
+                    draw_ellipse(_wx - _wr, _wy - _wr * 0.55, _wx + _wr, _wy + _wr * 0.55, true);
+                    draw_ellipse(_wx - _wr + 2, _wy - _wr * 0.55 + 1, _wx + _wr - 2, _wy + _wr * 0.55 - 1, true);
+                }
+                draw_set_alpha(1);
+                break;
+            }
+
             // ===== ท่า 1-2: ฟันโค้ง =====
             default: {
                 var _spr = asset_get_index("spr_fx_slash");

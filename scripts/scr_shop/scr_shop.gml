@@ -6,13 +6,13 @@ function item_kinds() {
 function weapon_data(_id) {
     switch (_id) {
         case "greatsword":
-            return { name: "ดาบใหญ่", dmg: 2, time: 1.3, rad: 1.25, kb: 1.4, lunge: 0.8, price: 220,
+            return { name: "ดาบใหญ่", combo: 4, dmg: 2, time: 1.3, rad: 1.25, kb: 1.4, lunge: 0.8, price: 220,
                      desc: "ดาเมจ x2 · ช้าลงนิดหน่อย · กวาดกว้างและไกลขึ้น" };
         case "hammer":
-            return { name: "ค้อน", dmg: 4, time: 2.2, rad: 1.5, kb: 2.5, lunge: 0.4, price: 520,
-                     desc: "ดาเมจ x4 · ช้ามาก · ทุบกว้าง กระเด็นไกล" };
+            return { name: "ค้อน", combo: 3, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 520,
+                     desc: "คอมโบ 3 ท่า · ทุบหนัก ช้า · ท่าจบทุบพื้นเป็นคลื่นกระแทก" };
     }
-    return { name: "ดาบ", dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 0, desc: "สมดุล เร็ว" };
+    return { name: "ดาบ", combo: 4, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 0, desc: "สมดุล เร็ว" };
 }
 
 function weapon_owned(_id) {
@@ -25,8 +25,14 @@ function weapon_equip(_id) {
     if (instance_exists(obj_player)) float_text(obj_player.x, obj_player.y - 110, weapon_data(_id).name, c_white, 1);
 }
 
+// จำนวนท่าในคอมโบของอาวุธที่ถืออยู่
+function weapon_combo_max() {
+    return weapon_data(global.save.weapon).combo;
+}
+
 // ปรับท่าฟันตามอาวุธ (เรียกก่อน skills_modify_combo)
 function weapon_modify_combo(_d, _n) {
+    if (global.save.weapon == "hammer") return hammer_step_data(_n);   // ★ ค้อนมีชุดท่าของตัวเอง
     var _w = weapon_data(global.save.weapon);
     _d.dmg = max(1, round(_d.dmg * _w.dmg));
     _d.time = max(6, round(_d.time * _w.time));
@@ -51,8 +57,8 @@ function shop_item_info(_id) {
     switch (_id) {
         case "potion":
             return { name: "ยาฟื้นเลือด",
-                     desc: "ฟื้น 2 หัวใจ กด Q ใช้ · ถืออยู่ " + string(_s.potions) + "/" + string(_s.potion_max),
-                     price: 15, ok: _s.potions < _s.potion_max, why: "ถือเต็มแล้ว" };
+                     desc: "ฟื้น 2 หัวใจ กด Q ใช้ · ถืออยู่ " + string(_s.potions) + "/" + string(potion_cap()),
+                     price: 15, ok: _s.potions < potion_cap(), why: "ถือเต็มแล้ว" };
         case "heart":
             return { name: "หัวใจเพิ่ม",
                      desc: "เลือดสูงสุด +1 (ซื้อแล้ว " + string(_b) + "/3)",

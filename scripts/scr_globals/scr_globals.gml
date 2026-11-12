@@ -61,14 +61,14 @@ function save_default() {
         weapon: "sword",   // อาวุธที่ถืออยู่ (sword, greatsword, hammer)
         weapons: {},       // อาวุธที่ซื้อแล้ว (ดาบเริ่มต้นมีอยู่แล้วเสมอ)
         armor: 0,          // เกราะ 0-2 (ลดดาเมจที่ได้รับ)
-        shot_lv: 0,        // ★ ระดับพลังยิง 0-4 (ได้จากหีบพลังในป่า/เหมือง)
+        shot_lv: 0,        // ★ ระดับพลังยิง 0-3 (ได้จากหีบบททดสอบ ด่านละ 1)
         quests: {},        // สถานะเควส
         flags: {}          // ธงเนื้อเรื่อง เช่น mine_done
     };
 }
 
 function apply_difficulty() {
-    global.max_hp = difficulty_data().player_hp + global.save.hp_bonus;
+    global.max_hp = difficulty_data().player_hp + global.save.hp_bonus + (skill_has("g5") ? 1 : 0);
 }
 
 // เริ่มเกมใหม่ (เลือดเต็มตามระดับความยาก บทสนทนาเล่นใหม่ได้) ไม่แตะสถานะ debug
@@ -182,7 +182,8 @@ function save_load() {
         return -1;
     }
     // เซฟเก่าก่อนมีระบบพลังยิง = ให้ระดับตามความคืบหน้า
-    if (!variable_struct_exists(global.save, "shot_lv")) global.save.shot_lv = min(4, power_stage() * 2);
+    if (!variable_struct_exists(global.save, "shot_lv")) global.save.shot_lv = power_stage();
+    global.save.shot_lv = min(3, global.save.shot_lv);   // ระบบเดิมมี 4 ระดับ
     // เซฟเก่าที่ขาดช่องใหม่ ๆ = เติมค่าเริ่มต้น
     var _def = save_default();
     var _keys = variable_struct_get_names(_def);

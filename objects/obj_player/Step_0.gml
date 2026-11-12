@@ -126,7 +126,7 @@ switch (state) {
 
         // โจมตี
         else if (mouse_check_button_pressed(mb_left) && attack_cd <= 0) {
-            start_attack((combo_window > 0) ? combo + 1 : 1);
+            start_attack((combo_window > 0) ? min(combo + 1, weapon_combo_max()) : 1);
         }
 
         // สกิล 1
@@ -242,7 +242,7 @@ switch (state) {
 
         if (attack_timer <= 0) {
 
-            if (combo_buffer && combo < 4) {
+            if (combo_buffer && combo < weapon_combo_max()) {
 
                 start_attack(combo + 1);
 
@@ -251,7 +251,7 @@ switch (state) {
                 state = PState.MOVE;
                 combo_buffer = false;
 
-                if (combo >= 4) {
+                if (combo >= weapon_combo_max()) {
 
                     combo = 0;
                     combo_window = 0;

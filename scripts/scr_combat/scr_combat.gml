@@ -113,6 +113,24 @@ function combo_step_data(_n) {
     }
 }
 
+// ★ ท่าค้อน (คอมโบ 3 ท่า รูป hitbox ไม่ซ้ำดาบ)
+function hammer_step_data(_n) {
+    switch (_n) {
+        case 1:   // ทุบลงตรงหน้า: วงกลมใหญ่ก้อนเดียว ไกลกว่าดาบ
+            return { kind: "smash", time: 32, active_from: 14, active_to: 18, dmg: 4, kb: 20, radial: false,
+                     lunge_speed: 1.5, lunge_frames: 4,
+                     circles: [ [84, 0, 54] ] };
+        case 2:   // เหวี่ยงตีข้าง: กวาดเฉียงไปฝั่งเดียว (ไม่สมมาตรเหมือนดาบ)
+            return { kind: "smash", time: 34, active_from: 13, active_to: 19, dmg: 4, kb: 24, radial: false,
+                     lunge_speed: 1, lunge_frames: 4,
+                     circles: [ [24, -78, 36], [70, -48, 40], [96, 6, 40] ] };
+        default:  // ท่าจบ: ทุบพื้น รอบตัว + คลื่นกระแทกวิ่งไปข้างหน้า
+            return { kind: "quake", time: 52, active_from: 20, active_to: 28, dmg: 7, kb: 30, radial: true,
+                     lunge_speed: 0, lunge_frames: 0,
+                     circles: [ [0, 0, 74], [122, 0, 46], [180, 0, 38] ] };
+    }
+}
+
 // ข้อมูลท่าโจมตีของศัตรู
 // windup  = เวลาเตรียม (ตัวสั่น + เห็นวงเตือน), active = เวลาที่ hitbox ทำงาน, recover = เวลาพักหลังโจมตี (เฟรม)
 // lock    = กี่เฟรมสุดท้ายของ windup ที่ล็อกทิศ (น้อย = ตามผู้เล่นทันนานขึ้น)

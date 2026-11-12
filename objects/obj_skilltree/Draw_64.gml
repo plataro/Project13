@@ -28,7 +28,7 @@ draw_text(px + pw - 24, py + 30, "แต้มสกิล: " + string(global.sa
 draw_set_halign(fa_center);
 for (var _b = 0; _b < 3; _b++) {
     draw_set_color(_gold);
-    draw_text(col_x[_b], py + 72, branch_names[_b]);
+    draw_text(col_x[_b], py + 68, branch_names[_b]);
 }
 
 // เส้นเชื่อม
@@ -65,11 +65,11 @@ for (var _j = 0; _j < array_length(nodes); _j++) {
     draw_rectangle(_rc[0], _rc[1], _rc[2], _rc[3], true);
 
     draw_set_color((_has || _avail) ? c_white : c_gray);
-    draw_text(_cx2, _rc[1] + 24, _nn.name);
+    draw_text_transformed(_cx2, _rc[1] + 17, _nn.name, 0.8, 0.8, 0);
 
     if (_has) draw_set_color(_gold);
     else draw_set_color(_afford ? c_yellow : c_gray);
-    draw_text_transformed(_cx2, _rc[1] + 50, _has ? "ปลดแล้ว" : (string(_nn.cost) + " SP"), 0.65, 0.65, 0);
+    draw_text_transformed(_cx2, _rc[1] + 37, _has ? "ปลดแล้ว" : (string(_nn.cost) + " SP"), 0.6, 0.6, 0);
 }
 
 // คำอธิบายและข้อความแจ้งผล

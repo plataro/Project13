@@ -25,7 +25,7 @@ if (chars < total) {
     var _click = false;
     sel = -1;
     for (var _k = 0; _k < _cnt; _k++) {
-        if (point_in_rectangle(_mx, _my, 220, 150 + _k * 70, 740, 150 + _k * 70 + 56)) {
+        if (point_in_rectangle(_mx, _my, choice_x1, choice_y0 + _k * choice_gap, choice_x2, choice_y0 + _k * choice_gap + choice_h)) {
             sel = _k;
             if (choice_t >= choice_delay && mouse_check_button_pressed(mb_left)) _click = true;
         }

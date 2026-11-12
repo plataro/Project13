@@ -1,32 +1,44 @@
 // สายที่ 0 = ดาบ, 1 = ยิง, 2 = ร่างกาย  (tier = แถวจากบนลงล่าง, req = ต้องปลดตัวนี้ก่อน)
 function skill_nodes() {
     return [
-        { key: "b1", branch: 0, tier: 0, name: "ฟันหนัก",     desc: "ท่าฟันที่ 3 และ 4 แรงขึ้น +1",             cost: 1, req: "" },
-        { key: "b2", branch: 0, tier: 1, name: "คมดาบกว้าง",   desc: "วงฟันทุกท่ากว้างขึ้น 25%",                 cost: 1, req: "b1" },
-        { key: "b3", branch: 0, tier: 2, name: "พุ่งทะลวง",    desc: "ท่าพุ่งไกลขึ้น และต่อคอมโบได้ง่ายขึ้น",    cost: 2, req: "b2" },
+        // ---- ดาบ ----
+        { key: "b1", branch: 0, tier: 0, name: "คมกริบ",        desc: "ท่าสุดท้ายของคอมโบแรงขึ้น +1",            cost: 1, req: "" },
+        { key: "b2", branch: 0, tier: 1, name: "วงดาบกว้าง",     desc: "ระยะฟันทุกท่ากว้างขึ้น 15%",               cost: 1, req: "b1" },
+        { key: "b3", branch: 0, tier: 2, name: "จังหวะต่อเนื่อง", desc: "มีเวลาต่อคอมโบนานขึ้น",                    cost: 1, req: "b2" },
+        { key: "b4", branch: 0, tier: 3, name: "ก้าวพุ่ง",       desc: "ท่าที่พุ่งไปข้างหน้าพุ่งไกลขึ้น 30%",        cost: 1, req: "b3" },
+        { key: "b5", branch: 0, tier: 4, name: "มือไว",          desc: "ทุกท่าฟันเร็วขึ้น 10%",                     cost: 2, req: "b4" },
 
-        { key: "a1", branch: 1, tier: 0, name: "แม็กใหญ่",     desc: "สกิล 1 บรรจุเพิ่ม 2 นัด",                   cost: 1, req: "" },
-        { key: "a2", branch: 1, tier: 1, name: "รีโหลดไว",     desc: "รีโหลดสกิล 1 เร็วขึ้นเกือบครึ่ง",           cost: 1, req: "a1" },
-        { key: "a3", branch: 1, tier: 2, name: "กระสุนทะลุ",   desc: "กระสุนทะลุศัตรู 1 ตัว",                    cost: 2, req: "a2" },
-        { key: "a4", branch: 1, tier: 3, name: "ห้าทิศ",       desc: "สกิล 2 ยิง 5 ลูก และคูลดาวน์สั้นลง",       cost: 1, req: "a3" },
+        // ---- ยิง ----
+        { key: "a1", branch: 1, tier: 0, name: "แม็กเสริม",      desc: "สกิล 1 ยิงได้เพิ่ม 1 นัด",                  cost: 1, req: "" },
+        { key: "a2", branch: 1, tier: 1, name: "รีโหลดไว",       desc: "รอรีโหลดสกิล 1 สั้นลง 25%",                 cost: 1, req: "a1" },
+        { key: "a3", branch: 1, tier: 2, name: "กระสุนไว",       desc: "กระสุนพุ่งเร็วขึ้น 30% เล็งโดนง่ายขึ้น",       cost: 1, req: "a2" },
+        { key: "a4", branch: 1, tier: 3, name: "กระสุนทะลุ",     desc: "กระสุนทะลุศัตรูได้ 1 ตัว",                  cost: 2, req: "a3" },
+        { key: "a5", branch: 1, tier: 4, name: "ห้าทิศ",         desc: "สกิล 2 ยิง 5 ลูก (จาก 3)",                  cost: 1, req: "a4" },
 
-        { key: "g1", branch: 2, tier: 0, name: "เท้าเบา",      desc: "กลิ้งได้ถี่ขึ้น (คูลดาวน์ลดเกือบครึ่ง)",     cost: 1, req: "" },
-        { key: "g2", branch: 2, tier: 1, name: "กลิ้งยาว",     desc: "กลิ้งนานและไกลขึ้น หลบได้นานขึ้น",          cost: 1, req: "g1" },
-        { key: "g3", branch: 2, tier: 2, name: "ลมใต้เท้า",    desc: "วิ่งเร็วขึ้นและออกตัวไวขึ้น",               cost: 1, req: "g2" },
-        { key: "g4", branch: 2, tier: 3, name: "ยาแรง",        desc: "ยาฟื้นเลือดฟื้น 3 หัวใจ (จาก 2)",           cost: 1, req: "g3" }
+        // ---- ร่างกาย ----
+        { key: "g1", branch: 2, tier: 0, name: "เท้าเบา",        desc: "คูลดาวน์กลิ้งสั้นลง 30%",                   cost: 1, req: "" },
+        { key: "g2", branch: 2, tier: 1, name: "ลมใต้เท้า",      desc: "วิ่งเร็วขึ้นและออกตัวไวขึ้น",                 cost: 1, req: "g1" },
+        { key: "g3", branch: 2, tier: 2, name: "ยาแรง",          desc: "ยาฟื้นเลือดเพิ่ม 1 หัวใจ (เป็น 3)",          cost: 1, req: "g2" },
+        { key: "g4", branch: 2, tier: 3, name: "กระเป๋ายา",       desc: "ถือยาได้เพิ่ม 1 ขวด",                       cost: 1, req: "g3" },
+        { key: "g5", branch: 2, tier: 4, name: "ใจสู้",          desc: "หัวใจสูงสุด +1",                            cost: 2, req: "g4" }
     ];
 }
 
 // ★ พลังยิง (สกิล 1) ตามระดับที่เก็บจากหีบพลัง: เริ่ม 1 นัดแรงมากแต่รอนาน -> นัดเยอะขึ้น รอสั้นลง
 // lv 2 ขึ้นไปปลดสกิล 2 (ยิงสามทิศ)
+// ระดับ 1/2/3 ได้จากหีบบททดสอบของป่า/เหมือง/ปราสาท (ด่านละ +2 นัด)
 function shot_data(_lv) {
-    switch (clamp(_lv, 0, 4)) {
-        case 0: return { ammo: 1, dmg: 3,    reload: 240 };
-        case 1: return { ammo: 2, dmg: 2.5,  reload: 210 };
-        case 2: return { ammo: 3, dmg: 2,    reload: 180 };
-        case 3: return { ammo: 4, dmg: 1.75, reload: 165 };
+    switch (clamp(_lv, 0, 3)) {
+        case 0: return { ammo: 1, dmg: 3,   reload: 240 };
+        case 1: return { ammo: 2, dmg: 2.5, reload: 210 };
+        case 2: return { ammo: 4, dmg: 2,   reload: 180 };
     }
     return { ammo: 6, dmg: 1.5, reload: 150 };
+}
+
+// ถือยาได้สูงสุด (ร้านค้า + สกิลกระเป๋ายา)
+function potion_cap() {
+    return global.save.potion_max + (skill_has("g4") ? 1 : 0);
 }
 
 function skill_has(_key) {
@@ -65,21 +77,28 @@ function player_apply_skills() {
     var _old_max = shot1_max;
 
     var _sd = shot_data(global.save.shot_lv);
-    shot1_max         = _sd.ammo + (skill_has("a1") ? 2 : 0);
-    shot1_reload      = round(_sd.reload * (skill_has("a2") ? 0.6 : 1));
+    shot1_max         = _sd.ammo + (skill_has("a1") ? 1 : 0);
+    shot1_reload      = round(_sd.reload * (skill_has("a2") ? 0.75 : 1));
     shot1_dmg         = _sd.dmg;
     skill2_unlocked   = (global.save.shot_lv >= 2);
-    bullet_pierce     = skill_has("a3") ? 1 : 0;
-    skill2_count      = skill_has("a4") ? 5 : 3;
-    skill2_cooldown   = skill_has("a4") ? 120 : 150;
+    bullet_speed      = skill_has("a3") ? 13 : 10;
+    bullet_pierce     = skill_has("a4") ? 1 : 0;
+    skill2_count      = skill_has("a5") ? 5 : 3;
+    skill2_cooldown   = 150;
 
-    roll_cooldown     = skill_has("g1") ? 16 : 30;
-    roll_time         = skill_has("g2") ? 24 : 18;
-    run_speed         = skill_has("g3") ? 7.3 : 6.5;
-    run_accel         = skill_has("g3") ? 0.4 : 0.28;
-    potion_heal       = skill_has("g4") ? 3 : 2;
+    roll_cooldown     = round(22 * (skill_has("g1") ? 0.7 : 1));
+    run_speed         = skill_has("g2") ? 7.3 : 6.5;
+    run_accel         = skill_has("g2") ? 0.4 : 0.28;
+    potion_heal       = skill_has("g3") ? 3 : 2;
 
     combo_window_time = skill_has("b3") ? 28 : 18;
+
+    // หัวใจสูงสุด (สกิลใจสู้)
+    apply_difficulty();
+    var _gain = global.max_hp - max_hp;
+    max_hp = global.max_hp;
+    if (_gain > 0) hp += _gain;
+    hp = min(hp, max_hp);
 
     // แม็กใหญ่ขึ้น = เติมกระสุนส่วนที่เพิ่มให้เลย
     shot1_ammo = clamp(shot1_ammo + max(0, shot1_max - _old_max), 0, shot1_max);
@@ -87,17 +106,22 @@ function player_apply_skills() {
 
 // ปรับข้อมูลท่าฟันตามสกิลดาบ (เรียกจาก start_attack)
 function skills_modify_combo(_d, _n) {
-    if (skill_has("b1") && _n >= 3) _d.dmg += 1;
+    if (skill_has("b1") && _n >= weapon_combo_max()) _d.dmg += 1;
 
     if (skill_has("b2")) {
         for (var _i = 0; _i < array_length(_d.circles); _i++) {
-            _d.circles[_i][2] *= 1.25;
+            _d.circles[_i][2] *= 1.15;
         }
     }
 
-    if (skill_has("b3") && _d.lunge_frames > 0) {
-        _d.lunge_speed *= 1.5;
-        _d.lunge_frames += 2;
+    if (skill_has("b4") && _d.lunge_frames > 0) {
+        _d.lunge_speed *= 1.3;
+    }
+
+    if (skill_has("b5")) {
+        _d.time = max(6, round(_d.time * 0.9));
+        _d.active_from = round(_d.active_from * 0.9);
+        _d.active_to = round(_d.active_to * 0.9);
     }
     return _d;
 }

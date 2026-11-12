@@ -6,10 +6,10 @@ pw = 840;
 ph = 480;
 
 node_w = 220;
-node_h = 68;
+node_h = 50;
 col_x = [px + 140, px + 420, px + 700];
-row_y0 = py + 110;
-row_gap = 86;
+row_y0 = py + 98;
+row_gap = 64;
 
 branch_names = ["ดาบ", "ยิง", "ร่างกาย"];
 nodes = skill_nodes();

@@ -6,8 +6,17 @@ draw_set_alpha(0.35);
 draw_ellipse(_x - 26, _y - 6, _x + 26, _y + 6, false);
 draw_set_alpha(1);
 
-// ★ หีบพลัง: ออร่าม่วงกะพริบ
-if (!opened && shot_up > 0) {
+// ★ เขตบททดสอบ (ตอนกำลังสู้)
+if (trial && !opened && trial_state == 1) {
+    draw_set_color(make_color_rgb(150, 70, 255));
+    draw_set_alpha(0.35 + 0.15 * sin(current_time / 150));
+    draw_ellipse(_x - trial_r, _y - trial_r * 0.7, _x + trial_r, _y + trial_r * 0.7, true);
+    draw_ellipse(_x - trial_r + 3, _y - trial_r * 0.7 + 2, _x + trial_r - 3, _y + trial_r * 0.7 - 2, true);
+    draw_set_alpha(1);
+}
+
+// ★ หีบพลัง/บททดสอบ: ออร่าม่วงกะพริบ
+if (!opened && (shot_up > 0 || trial)) {
     gpu_set_blendmode(bm_add);
     draw_set_color(make_color_rgb(150, 70, 255));
     draw_set_alpha(0.25 + 0.15 * sin(current_time / 200));
@@ -30,11 +39,15 @@ if (!opened) {
     draw_rectangle(_x - 24, _y - 52, _x + 24, _y - 44, false);
 }
 
+draw_set_font(fnt_dialog);
+draw_set_halign(fa_center);
 if (near) {
-    draw_set_font(fnt_dialog);
-    draw_set_halign(fa_center);
     draw_set_color(c_yellow);
-    draw_text_transformed(_x, _y - 74, "[E] เปิดหีบ", 0.6, 0.6, 0);
-    draw_set_halign(fa_left);
+    draw_text_transformed(_x, _y - 74, trial ? "[E] บททดสอบ: ชนะศัตรู 3 รอบ" : "[E] เปิดหีบ", 0.6, 0.6, 0);
 }
+if (trial && !opened && trial_state == 1) {
+    draw_set_color(make_color_rgb(210, 150, 255));
+    draw_text_transformed(_x, _y - 74, "รอบ " + string(max(1, trial_wave)) + " / " + string(trial_waves) + "  ·  อย่าออกนอกวง", 0.6, 0.6, 0);
+}
+draw_set_halign(fa_left);
 draw_set_color(c_white);
