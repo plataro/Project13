@@ -8,6 +8,10 @@ py = 44;
 pw = 740;
 ph = 452;
 open_t = 0;
+pad_i = 0;      // ★ เครื่องประดับที่เลือกด้วยจอย
+pad_on = (global.input_dev == "pad");
+pad_mx = device_mouse_x_to_gui(0);
+pad_my = device_mouse_y_to_gui(0);
 
 // รายการเครื่องประดับที่มี (ใช้ทั้ง Draw และ Step)
 acc_x1 = px + 470;

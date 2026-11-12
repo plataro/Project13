@@ -54,6 +54,55 @@ draw_set_color(c_black);
 draw_rectangle(0, 0, 960, 540, false);
 draw_set_alpha(1);
 
+// ★ หน้าตั้งค่าปุ่ม (แผงกว้าง 2 คอลัมน์: คีย์บอร์ด / จอย)
+if (screen == 3) {
+    var _items3 = get_items();
+    var _n3 = array_length(_items3);
+    var _rl = input_rebind_list();
+    var _py2b = row_y(_n3 - 1) + 52;
+    ui_panel(190, 30, 770, _py2b);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    ui_text_bold(480, 54, L("ตั้งค่าปุ่ม", "Controls"), 0.75, UI_GOLD);
+    ui_text_bold(560, 80, L("คีย์บอร์ด", "Keyboard"), 0.45, UI_GOLD, false);
+    ui_text_bold(690, 80, L("จอย", "Gamepad"), 0.45, UI_GOLD, false);
+    for (var _i3 = 0; _i3 < _n3; _i3++) {
+        var _y3 = row_y(_i3);
+        var _on3 = (_i3 == sel);
+        if (_on3) ui_highlight(204, _y3 - 2, 756, _y3 + 21);
+        var _yc = _y3 + 10;
+        if (_i3 < array_length(_rl)) {
+            var _act = _rl[_i3];
+            draw_set_halign(fa_left);
+            ui_text(216, _yc, _items3[_i3], 0.48, _on3 ? c_white : UI_TEXT);
+            draw_set_halign(fa_center);
+            var _waiting = (bind_wait == _act);
+            var _blink = (current_time div 300) mod 2 == 0;
+            var _kbl = _waiting ? (_blink ? L("กดปุ่ม...", "Press...") : "") : input_key_name(global.bind_kb[$ _act][0]);
+            var _pdl = _waiting ? (_blink ? L("กดปุ่ม...", "Press...") : "") : input_pad_name(global.bind_pad[$ _act]);
+            // กล่องปุ่ม
+            draw_set_color(UI_BG);
+            draw_rectangle(500, _y3 + 1, 620, _y3 + 19, false);
+            draw_rectangle(630, _y3 + 1, 750, _y3 + 19, false);
+            draw_set_color(_waiting ? UI_GOLD : UI_GOLD_DARK);
+            draw_rectangle(500, _y3 + 1, 620, _y3 + 19, true);
+            draw_rectangle(630, _y3 + 1, 750, _y3 + 19, true);
+            ui_text(560, _yc, _kbl, ui_fit(_kbl, 0.44, 112), _waiting ? UI_GOLD : UI_TEXT);
+            ui_text(690, _yc, _pdl, ui_fit(_pdl, 0.44, 112), _waiting ? UI_GOLD : UI_TEXT);
+        } else {
+            ui_text(480, _yc, _items3[_i3], 0.5, _on3 ? c_white : UI_MUTED);
+        }
+    }
+    var _h3 = (bind_wait != "")
+        ? L("กดปุ่มคีย์บอร์ด/เมาส์ หรือปุ่มจอยที่ต้องการ  |  Esc ยกเลิก", "Press a key/mouse button or a gamepad button  |  Esc cancel")
+        : L("เลือกแถวแล้วกดปุ่มใหม่  |  Esc / B กลับ", "Select a row, then press the new button  |  Esc / B back");
+    ui_text(480, _py2b - 16, _h3, ui_fit(_h3, 0.4, 540), UI_MUTED);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_color(c_white);
+    exit;
+}
+
 // ★ แผงเล็กลง มีขอบ (placeholder)
 var _items = get_items();
 var _n = array_length(_items);

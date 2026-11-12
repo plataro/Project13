@@ -34,17 +34,24 @@ draw_set_color(c_white);
 
 // โหมด debug (F3): โชว์สถานะประตูเหนือประตู
 if (global.debug) {
-    var _p = instance_find(obj_player_ss, 0);
+    // ★ ข้อความ debug ของประตู: สั้นลง และดันให้อยู่ในจอเสมอ (ประตูชิดขอบห้อง ข้อความเคยหลุดจอ)
     var _ov = place_meeting(x, y, obj_player_ss);
-    draw_set_font(fnt_dialog);
-    draw_set_color(c_yellow);
-    draw_set_halign(fa_right);
-    draw_text_transformed(x - 50, y - 170,
-        "locked=" + string(locked) + " req=" + req_flag + "\nsword=" + string(flag_get("sword")) + " flags=" + json_stringify(global.save.flags)
+    var _cam = view_camera[0];
+    var _vx = camera_get_view_x(_cam);
+    var _vw = camera_get_view_width(_cam);
+    var _dt = "locked=" + string(locked) + " req=" + req_flag
         + "\nnext=" + ((next_room == noone) ? "NONE" : room_get_name(next_room))
-        + "\nfade=" + string(instance_exists(obj_fade)) + " dlg=" + string(instance_exists(obj_dialogue)) + " cut=" + string(instance_exists(obj_cutscene))
-        + "\noverlap=" + string(_ov), 0.6, 0.6, 0);
+        + "\nsword=" + string(flag_get("sword")) + " overlap=" + string(_ov);
+    draw_set_font(fnt_dialog);
+    var _tw = string_width(_dt) * 0.45;
+    var _tx = clamp(x - _tw / 2, _vx + 8, _vx + _vw - 8 - _tw);
+    draw_set_alpha(0.6);
+    draw_set_color(c_black);
+    draw_rectangle(_tx - 4, y - 172, _tx + _tw + 4, y - 120, false);
+    draw_set_alpha(1);
+    draw_set_color(c_yellow);
     draw_set_halign(fa_left);
+    draw_text_transformed(_tx, y - 170, _dt, 0.45, 0.45, 0);
     draw_set_color(c_white);
     draw_rectangle_color(x - 40, y - 80, x + 104, y + 140, c_yellow, c_yellow, c_yellow, c_yellow, true);
 }

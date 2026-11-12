@@ -104,7 +104,7 @@ if (hover_key != "") {
     var _hn = skill_find(hover_key);
     ui_text(px + pw / 2, _dy, _hn.desc, ui_fit(_hn.desc, 0.52, pw - 40), UI_TEXT);
 } else {
-    ui_text(px + pw / 2, _dy, L("ชี้ที่สกิลเพื่อดูรายละเอียด | คลิกเพื่อปลด | T / Esc ปิด", "Hover a skill for details | Click to unlock | T / Esc close"), 0.46, UI_MUTED);
+    ui_text(px + pw / 2, _dy, ((global.input_dev == "pad") ? L("ลูกศรเลือกสกิล | A ปลด | B ปิด", "D-Pad select | A unlock | B close") : L("ชี้ที่สกิลเพื่อดูรายละเอียด | คลิกเพื่อปลด | T / Esc ปิด", "Hover a skill for details | Click to unlock | T / Esc close")), 0.46, UI_MUTED);
 }
 if (msg != "") ui_text_bold(px + pw / 2 - 40, py + ph - 26, msg, 0.5, make_color_rgb(255, 225, 120));
 
@@ -116,7 +116,7 @@ draw_set_color(_ch ? make_color_rgb(110, 54, 58) : make_color_rgb(80, 40, 44));
 draw_rectangle(close_x1, close_y1, close_x2, close_y2, false);
 draw_set_color(_ch ? UI_GOLD : UI_GOLD_DARK);
 draw_rectangle(close_x1, close_y1, close_x2, close_y2, true);
-ui_text((close_x1 + close_x2) / 2, (close_y1 + close_y2) / 2, L("ปิด (T)", "Close (T)"), 0.5, UI_TEXT);
+ui_text((close_x1 + close_x2) / 2, (close_y1 + close_y2) / 2, L("ปิด (", "Close (") + input_label("tree") + ")", 0.5, UI_TEXT);
 
 draw_set_alpha(1);
 draw_set_halign(fa_left);

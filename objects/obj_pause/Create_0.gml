@@ -97,8 +97,16 @@ get_items = function() {
                 L("กล้องสั่น:  ", "Screen shake:  ") + shake_name(),
                 L("หยุดจังหวะตอนตีโดน:  ", "Hit-stop:  ") + (global.fx_hitstop_on ? _on : _off),
                 L("ตัวเลขดาเมจ:  ", "Damage numbers:  ") + (global.show_dmg ? _on : _off),
+                L("ตั้งค่าปุ่ม / จอย", "Controls"),
                 L("กลับ", "Back")
             ];
+        case 3:   // ★ ตั้งค่าปุ่ม
+            var _rl = input_rebind_list();
+            var _out = [];
+            for (var _ri = 0; _ri < array_length(_rl); _ri++) array_push(_out, input_action_name(_rl[_ri]));
+            array_push(_out, L("คืนค่าเดิมทั้งหมด", "Reset to defaults"));
+            array_push(_out, L("กลับ", "Back"));
+            return _out;
         case 2:
             return [L("ยืนยัน กลับหน้าหลัก", "Yes, return to title"), L("ยกเลิก", "Cancel")];
     }
@@ -149,13 +157,21 @@ confirm = function(_row) {
             else { screen = 2; sel = 1; }
             break;
         case 1:
-            if (_row == 5) close_settings();
+            if (_row == 6) close_settings();
+            else if (_row == 5) { screen = 3; sel = 0; bind_wait = ""; }
             else if (_row == 1) {
                 // เสียง: กดวนขึ้นทีละ 20% ถึง 100 แล้ววนกลับ 0
                 global.set_volume = (global.set_volume >= 100) ? 0 : min(100, global.set_volume + 20);
                 settings_apply();
             }
             else change_setting(_row, 1);
+            break;
+        case 3:   // ★ ตั้งค่าปุ่ม: เลือกแถวแล้วกดปุ่มใหม่ (คีย์บอร์ด/เมาส์ = ปุ่มคีย์บอร์ด, จอย = ปุ่มจอย)
+            var _rl2 = input_rebind_list();
+            var _nr = array_length(_rl2);
+            if (_row < _nr) { bind_wait = _rl2[_row]; bind_delay = 8; }
+            else if (_row == _nr) input_reset_defaults();
+            else { input_save(); screen = 1; sel = 5; }
             break;
         case 2:
             if (_row == 0) go_title();
@@ -166,5 +182,8 @@ confirm = function(_row) {
 
 // ตำแหน่งแถวบนจอ (ใช้ทั้งวาดและเช็กเมาส์)
 row_y = function(_i) {
+    if (screen == 3) return 96 + _i * 25;   // ★ หน้าตั้งค่าปุ่ม รายการยาว
     return 214 + _i * 40;
 }
+bind_wait = "";   // ★ การกระทำที่กำลังรอให้กดปุ่มใหม่
+bind_delay = 0;

@@ -21,6 +21,25 @@ for (var _i = 0; _i < array_length(nodes); _i++) {
     if (point_in_rectangle(_mx, _my, _r[0], _r[1], _r[2], _r[3])) hover_key = nodes[_i].key;
 }
 
+// ★ จอย / ลูกศร: เลื่อนตามสาย (ซ้าย/ขวา) และขั้น (ขึ้น/ลง), A ปลด
+var _nav = false;
+if (input_ui_left())  { pad_b = max(0, pad_b - 1); _nav = true; }
+if (input_ui_right()) { pad_b = min(2, pad_b + 1); _nav = true; }
+if (input_ui_up())    { pad_t = max(0, pad_t - 1); _nav = true; }
+if (input_ui_down())  { pad_t = min(4, pad_t + 1); _nav = true; }
+if (_nav) pad_on = true;
+if (global.input_dev == "kb" && (abs(_mx - pad_mx) + abs(_my - pad_my) > 4)) pad_on = false;   // ขยับเมาส์ = กลับไปใช้เมาส์
+pad_mx = _mx;
+pad_my = _my;
+if (pad_on) {
+    for (var _pi = 0; _pi < array_length(nodes); _pi++) if (nodes[_pi].branch == pad_b && nodes[_pi].tier == pad_t) hover_key = nodes[_pi].key;
+    if (open_delay <= 0 && hover_key != "" && (keyboard_check_pressed(vk_enter) || input_pad_pressed(gp_face1))) {
+        var _resp = skill_unlock(hover_key);
+        msg = (_resp == "") ? L("ปลดสกิลแล้ว!", "Skill unlocked!") : _resp;
+        msg_timer = 120;
+    }
+}
+
 if (open_delay <= 0 && mouse_check_button_pressed(mb_left) && hover_key != "") {
     var _res = skill_unlock(hover_key);
     msg = (_res == "") ? L("ปลดสกิลแล้ว!", "Skill unlocked!") : _res;

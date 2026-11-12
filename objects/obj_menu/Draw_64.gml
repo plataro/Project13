@@ -21,16 +21,17 @@ if (screen == 1 || screen == 2) {
     var _lines;
     if (screen == 1) {
         ui_text_bold(480, 74, L("วิธีเล่น", "How to Play"), 0.95, UI_GOLD);
+        var _K = function(_a) { return input_label(_a); };
         _lines = [
-            [L("WASD / ลูกศร", "WASD / Arrows"), L("เดิน   |   Shift ค้าง = วิ่ง", "Move   |   Hold Shift = Run")],
-            [L("เมาส์", "Mouse"), L("เล็งและหันตัว", "Aim and face direction")],
-            [L("คลิกซ้าย", "Left Click"), L("โจมตี (คลิกต่อเนื่อง = คอมโบ) | ค้อน: กดค้างชาร์จ", "Attack (keep clicking = combo) | Hammer: hold to charge")],
-            ["1 / 2", L("ยิงลูกไฟ / ยิงกระจาย", "Fireball / Spread shot")],
-            ["Space", L("กลิ้งหลบ (ระหว่างกลิ้งไม่โดนโจมตี)", "Dodge roll (invincible while rolling)")],
-            ["Q / F / V", L("ดื่มยา / ใช้บัฟ / เปลี่ยนบัฟ", "Potion / Use buff / Switch buff")],
-            ["E", L("คุย | เปิดหีบ | เข้าร้าน", "Talk | Open chest | Enter shop")],
-            ["T / I", L("ต้นไม้สกิล / หน้าสถานะ", "Skill tree / Status")],
-            ["P / Esc", L("หยุดเกม", "Pause")]
+            [_K("move"), L("เดิน   |   ", "Move   |   ") + _K("run") + L(" ค้าง = วิ่ง", " (hold) = Run")],
+            [_K("aim"), L("เล็งและหันตัว", "Aim and face direction")],
+            [_K("attack"), L("โจมตี (กดต่อเนื่อง = คอมโบ) | ค้อน: กดค้างชาร์จ", "Attack (keep pressing = combo) | Hammer: hold to charge")],
+            [_K("shoot1") + " / " + _K("shoot2"), L("ยิงลูกไฟ / ยิงกระจาย", "Fireball / Spread shot")],
+            [_K("roll"), L("กลิ้งหลบ (ระหว่างกลิ้งไม่โดนโจมตี)", "Dodge roll (invincible while rolling)")],
+            [_K("potion") + " / " + _K("buff_use") + " / " + _K("buff_next"), L("ดื่มยา / ใช้บัฟ / เปลี่ยนบัฟ", "Potion / Use buff / Switch buff")],
+            [_K("interact"), L("คุย | เปิดหีบ | เข้าร้าน", "Talk | Open chest | Enter shop")],
+            [_K("tree") + " / " + _K("status"), L("ต้นไม้สกิล / หน้าสถานะ", "Skill tree / Status")],
+            [_K("pause"), L("หยุดเกม (ตั้งปุ่มเองได้ในตั้งค่า)", "Pause (rebind keys in Settings)")]
         ];
     } else {
         ui_text_bold(480, 74, L("เครดิต", "Credits"), 0.95, UI_GOLD);
@@ -39,7 +40,7 @@ if (screen == 1 || screen == 2) {
     for (var _l = 0; _l < array_length(_lines); _l++) {
         var _ly = 124 + _l * 38;
         draw_set_halign(fa_right);
-        ui_text_bold(400, _ly, _lines[_l][0], 0.55, UI_GOLD);
+        ui_text_bold(400, _ly, _lines[_l][0], ui_fit(_lines[_l][0], 0.55, 230), UI_GOLD);
         draw_set_halign(fa_left);
         ui_text(420, _ly, _lines[_l][1], ui_fit(_lines[_l][1], 0.55, 380), UI_TEXT);
     }

@@ -42,9 +42,36 @@ if (!open) {
 var _items = get_items();
 var _n = array_length(_items);
 
+// ★ รอกดปุ่มใหม่ (หน้าตั้งค่าปุ่ม)
+if (bind_wait != "") {
+    if (bind_delay > 0) { bind_delay--; exit; }
+    if (keyboard_check_pressed(vk_escape)) { bind_wait = ""; io_clear(); exit; }   // ยกเลิก (Esc ตั้งเป็นปุ่มไม่ได้)
+    var _got = false;
+    if (keyboard_check_pressed(vk_anykey) && keyboard_lastkey != vk_escape && keyboard_lastkey > 0) {
+        global.bind_kb[$ bind_wait][0] = keyboard_lastkey;
+        _got = true;
+    }
+    else if (mouse_check_button_pressed(mb_left))   { global.bind_kb[$ bind_wait][0] = -1; _got = true; }
+    else if (mouse_check_button_pressed(mb_right))  { global.bind_kb[$ bind_wait][0] = -2; _got = true; }
+    else if (mouse_check_button_pressed(mb_middle)) { global.bind_kb[$ bind_wait][0] = -3; _got = true; }
+    else if (global.pad >= 0) {
+        for (var _pb = gp_face1; _pb <= gp_padr; _pb++) {
+            if (gamepad_button_check_pressed(global.pad, _pb)) {
+                if (_pb == gp_start && bind_wait != "pause") break;   // Start สงวนไว้หยุดเกม
+                global.bind_pad[$ bind_wait] = _pb;
+                _got = true;
+                break;
+            }
+        }
+    }
+    if (_got) { bind_wait = ""; input_save(); io_clear(); }
+    exit;
+}
+
 // ปิด / ย้อนกลับ
 if (keyboard_check_pressed(vk_escape) || input_pressed("pause") || input_pad_pressed(gp_face2)) {
     if (screen == 1) close_settings();
+    else if (screen == 3) { input_save(); screen = 1; sel = 5; }
     else if (screen == 2) { screen = 0; sel = 2; }
     else if (!menu_mode) do_resume();
     exit;
@@ -65,7 +92,10 @@ last_my = _my;
 var _hit = -1;
 for (var _i = 0; _i < _n; _i++) {
     var _y = row_y(_i);
-    if (_mx > 320 && _mx < 640 && _my > _y - 6 && _my < _y + 32) {
+    var _hx1 = (screen == 3) ? 200 : 320;
+    var _hx2 = (screen == 3) ? 760 : 640;
+    var _hh = (screen == 3) ? 22 : 32;
+    if (_mx > _hx1 && _mx < _hx2 && _my > _y - 4 && _my < _y + _hh) {
         if (_moved) sel = _i;
         if (_click) _hit = _i;
     }

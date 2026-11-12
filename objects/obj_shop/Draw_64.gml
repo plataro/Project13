@@ -112,7 +112,7 @@ if (tab == 0) {
         ui_icon("gem", row_x + 26, _ry2 + (row_h - 6) / 2, 11, _item.col);
 
         ui_text_bold(row_x + 56, _ry2 + 16, _item.name + "  x" + string(_cnt), 0.5, UI_TEXT, false);
-        ui_text(row_x + 56, _ry2 + 36, L("คลิก = ขาย 1 ชิ้น | Shift+คลิก = ขายทั้งหมด", "Click = sell 1 | Shift+Click = sell all"), 0.4, UI_MUTED);
+        ui_text(row_x + 56, _ry2 + 36, ((global.input_dev == "pad") ? L("A = ขาย 1 ชิ้น | X = ขายทั้งหมด", "A = sell 1 | X = sell all") : L("คลิก = ขาย 1 ชิ้น | Shift+คลิก = ขายทั้งหมด", "Click = sell 1 | Shift+Click = sell all")), 0.4, UI_MUTED);
 
         draw_set_halign(fa_right);
         ui_text_bold(row_x + row_w - 30, _ry2 + (row_h - 6) / 2, "+" + string(round(_item.price * sell_mul)), 0.5, make_color_rgb(255, 215, 90));
@@ -143,7 +143,7 @@ var _button = function(_x1, _y1, _x2, _y2, _txt, _col, _mx, _my) {
     draw_set_halign(fa_left);
 };
 if (tab == 1) _button(sell_x1, btn_y1 + _oy, sell_x2, btn_y2 + _oy, L("ขายทั้งหมด", "Sell All"), make_color_rgb(40, 70, 50), _mx, _my);
-_button(close_x1, btn_y1 + _oy, close_x2, btn_y2 + _oy, L("ปิด (E)", "Close (E)"), make_color_rgb(80, 40, 44), _mx, _my);
+_button(close_x1, btn_y1 + _oy, close_x2, btn_y2 + _oy, L("ปิด (", "Close (") + input_label("interact") + ")", make_color_rgb(80, 40, 44), _mx, _my);
 
 // ข้อความแจ้งผล
 if (msg != "") {

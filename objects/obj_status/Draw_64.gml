@@ -13,7 +13,7 @@ draw_set_valign(fa_middle);
 draw_set_halign(fa_left);
 ui_text_bold(px + 22, py + 24, L("สถานะตัวละคร", "Character Status"), 0.66, UI_GOLD);
 draw_set_halign(fa_right);
-ui_text(px + pw - 22, py + 24, L("I / Esc ปิด", "I / Esc close"), 0.42, UI_MUTED);
+ui_text(px + pw - 22, py + 24, ((global.input_dev == "pad") ? L("B ปิด", "B close") : L("I / Esc ปิด", "I / Esc close")), 0.42, UI_MUTED);
 draw_set_halign(fa_left);
 draw_set_color(UI_GOLD_DARK);
 draw_line(px + 20, py + 42, px + pw - 20, py + 42);
@@ -182,7 +182,7 @@ for (var _j = 0; _j < array_length(_bl); _j++) {
     _anyi = true;
 }
 if (!_anyi) ui_text(px + 140, _by + 40, "-", 0.45, UI_MUTED);
-ui_text(px + 22, py + ph - 26, L("F ใช้บัฟ | V เปลี่ยน", "F use buff | V switch"), 0.4, UI_MUTED);
+ui_text(px + 22, py + ph - 26, input_label("buff_use") + L(" ใช้บัฟ | ", " use buff | ") + input_label("buff_next") + L(" เปลี่ยน", " switch"), 0.4, UI_MUTED);
 
 // ปุ่มปิด
 var _mx = device_mouse_x_to_gui(0);
@@ -194,6 +194,11 @@ if (hover_acc != "") {
     var _tw2 = string_width(_dsc) * 0.42 + 20;
     var _tx1 = clamp(_mx - _tw2 - 10, 4, 956 - _tw2);
     var _ty1 = _my + 14;
+    if (pad_on) {   // ★ จอย: วางกล่องใต้ช่องที่เลือก
+        var _prr = acc_rect(pad_i);
+        _tx1 = clamp(_prr[2] - _tw2, 4, 956 - _tw2);
+        _ty1 = _prr[3] + 6;
+    }
     draw_set_alpha(0.95 * _ok);
     draw_set_color(UI_BG);
     draw_rectangle(_tx1, _ty1, _tx1 + _tw2, _ty1 + 26, false);
@@ -209,7 +214,7 @@ draw_rectangle(close_x1, close_y1, close_x2, close_y2, false);
 draw_set_color(_ch ? UI_GOLD : UI_GOLD_DARK);
 draw_rectangle(close_x1, close_y1, close_x2, close_y2, true);
 draw_set_halign(fa_center);
-ui_text((close_x1 + close_x2) / 2, (close_y1 + close_y2) / 2, L("ปิด (I)", "Close (I)"), 0.5, UI_TEXT);
+ui_text((close_x1 + close_x2) / 2, (close_y1 + close_y2) / 2, L("ปิด (", "Close (") + input_label("status") + ")", 0.5, UI_TEXT);
 
 draw_set_alpha(1);
 draw_set_halign(fa_left);

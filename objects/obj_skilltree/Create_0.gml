@@ -19,6 +19,11 @@ close_y2 = py + ph - 12;
 branch_icon = ["sword", "fire", "star"];
 branch_col = [make_color_rgb(240, 120, 100), make_color_rgb(255, 160, 70), make_color_rgb(120, 200, 255)];
 open_t = 0;
+pad_b = 0;      // ★ สาย/ขั้นที่เลือกด้วยจอย
+pad_t = 0;
+pad_on = (global.input_dev == "pad");
+pad_mx = device_mouse_x_to_gui(0);
+pad_my = device_mouse_y_to_gui(0);
 
 branch_names = function() { return [L("ดาบ", "Sword"), L("ยิง", "Shooting"), L("ร่างกาย", "Body")]; };
 nodes = skill_nodes();

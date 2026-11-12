@@ -23,6 +23,10 @@ close_x2 = px + pw - 20;
 sell_x1 = px + 20;
 sell_x2 = px + 160;
 open_t = 0;          // แอนิเมชันเปิด
+pad_row = 0;         // ★ แถวที่เลือกด้วยจอย/ลูกศร
+pad_on = (global.input_dev == "pad");
+pad_mx = device_mouse_x_to_gui(0);
+pad_my = device_mouse_y_to_gui(0);
 
 tab = 0;             // 0 = ซื้อ, 1 = ขาย
 msg = "";
