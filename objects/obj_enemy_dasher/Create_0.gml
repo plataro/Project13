@@ -26,7 +26,7 @@ ai = function() {
     if (_d > 280) {
         hsp = lengthdir_x(move_speed * 1.3, _dir);
         vsp = lengthdir_y(move_speed * 1.3, _dir);
-    } else if (has_los()) {
+    } else if (has_los() && can_attack()) {
         begin_attack("dash");
     } else {
         strafe(ring_dist, move_speed);   // กำแพงบัง ขยับหามุม

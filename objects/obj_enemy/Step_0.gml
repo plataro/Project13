@@ -55,12 +55,17 @@ if (los_timer <= 0) {
         los_timer = (_pdist < 700) ? 2 : 8;
     los_clear = (_pdist < 1200) && los_check();
 }
-if (los_clear && _pdist <= sight_range && _in_zone) alert_timer = 150;
+if (los_clear && _pdist <= sight_range && _in_zone) {
+    alert_timer = 150;
+    engage();   // เพิ่งเห็นผู้เล่น = เริ่มช่วงรอจังหวะแรก
+}
 else if (alert_timer > 0) alert_timer--;
 if (!_in_zone) alert_timer = 0;   // ผู้เล่นอยู่นอกถิ่นของตัวนี้ = เลิกไล่
 
 hsp = 0;
 vsp = 0;
+
+if (engage_grace > 0 && alert_timer > 0) engage_grace--;
 
 var _busy = (atk_state != "") || (variable_instance_exists(id, "state") && state != "chase");
 if (alert_timer > 0 || _busy) {
@@ -68,6 +73,7 @@ if (alert_timer > 0 || _busy) {
 } else {
     // ไม่เห็นผู้เล่น: คืนคิวโจมตี แล้วเดินกลับจุดเกิด
     if (has_token) release_token(60);
+    engaged = false;   // เจอกันใหม่รอบหน้า = ได้ช่วงรอจังหวะแรกอีกครั้ง
     var _hd = point_distance(x, y, home_x, home_y);
     if (_hd > 40) {
         var _hdir = point_direction(x, y, home_x, home_y);

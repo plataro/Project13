@@ -56,7 +56,7 @@ ai = function() {
         with (obj_enemy_shooter) {
             if (telegraph) _busy = true;
         }
-        if (fire_timer <= 0 && !_busy) {
+        if (fire_timer <= 0 && !_busy && can_attack()) {
             fire_timer = fire_cd;
             telegraph_timer = telegraph_time;
         }

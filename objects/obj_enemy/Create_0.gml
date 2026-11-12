@@ -53,6 +53,14 @@ zone = undefined;      // [x1,y1,x2,y2] ถ้าตั้ง: ออกนอ�
 no_drop = false;       // true = ตายแล้วไม่ดรอป (ลูกน้องที่ตายตามบอส)
 master = noone;        // บอสที่เรียกตัวนี้มา
 
+// ---- จังหวะแรกตอนเจอผู้เล่น: ยังไม่ออกท่า ให้ผู้เล่นได้ตีก่อน (ผู้เล่นไม่เห็นตัวเลขนี้) ----
+engaged = false;         // เจอผู้เล่นรอบนี้แล้วหรือยัง
+engage_grace = 0;        // เหลือกี่เฟรมก่อนจะเริ่มออกท่าได้
+engage_hits = 0;         // โดนตีไปกี่ทีในช่วงนี้
+engage_hits_max = 2;     // ★ โดนตีครบกี่ทีแล้วเลิกรอ
+// ★ เวลารอสูงสุด (เฟรม) ตามความยาก: ง่าย / กลาง / ยาก ยืนนิ่งใกล้ ๆ ก็ยังโดนตีเมื่อหมดเวลา
+engage_grace_time = [100, 75, 50][clamp(global.difficulty, 0, 2)];
+
 // ---- สถานะท่าโจมตี ----
 atk_cur = undefined;
 atk_dir = 0;
@@ -142,6 +150,19 @@ strafe = function(_ring, _spd) {
     vsp = _ty + lengthdir_y(_r, _dir);
 }
 
+// เพิ่งเจอผู้เล่น (เห็นตัว หรือโดนตีก่อน) = เริ่มช่วงรอ สุ่มยาวสั้นนิดหน่อยให้ไม่พร้อมกันทั้งฝูง
+engage = function() {
+    if (engaged) return;
+    engaged = true;
+    engage_hits = 0;
+    engage_grace = round(engage_grace_time * random_range(0.8, 1.2));
+}
+
+// ออกท่าได้หรือยัง (ทุก AI เช็กก่อนเริ่มท่า)
+can_attack = function() {
+    return engage_grace <= 0;
+}
+
 // เริ่มท่าโจมตี _name (ดูข้อมูลที่ enemy_attack_data)
 begin_attack = function(_name) {
     atk_cur = enemy_attack_data(_name);
@@ -228,11 +249,14 @@ ai = function() {
 
     if (has_token) {
         token_timer--;
-        if (_d < 110 && has_los()) {
+        if (_d < 110 && has_los() && can_attack()) {
             begin_attack("slash");
             exit;
         }
-        if (_d > 70) {   // ใกล้พอแล้วหยุด ไม่เดินทับผู้เล่น
+        if (_d < 110 && !can_attack()) {
+            // ยังไม่ถึงจังหวะ: ขยับเลี่ยงข้าง ๆ เหมือนหาช่อง (ไม่ยืนนิ่งให้ดูออก)
+            strafe(95, move_speed * 0.6);
+        } else if (_d > 70) {   // ใกล้พอแล้วหยุด ไม่เดินทับผู้เล่น
             var _dir = dir_to_player() + flank * clamp((_d - 80) / 200, 0, 1);
             hsp = lengthdir_x(move_speed * 1.2, _dir);
             vsp = lengthdir_y(move_speed * 1.2, _dir);
@@ -248,6 +272,13 @@ take_damage = function(_dmg, _dir) {
     flash = 6;
     fx_enemy_hit(id, _dmg, _dir);
     alert_timer = 300;   // โดนตี = รู้ตัวทันที
+
+    // ช่วงรอจังหวะแรก: นับครั้งที่โดนตี ครบแล้วเว้นจังหวะนิดนึงค่อยสวนกลับ (ดูเป็นธรรมชาติ ไม่สวนทันที)
+    engage();
+    if (engage_grace > 0) {
+        engage_hits++;
+        if (engage_hits >= engage_hits_max) engage_grace = min(engage_grace, 14);
+    }
     hp_bar_timer = 180;   // ★ แสดงหลอดเลือด 3 วินาทีหลังโดนตี
     kb_x = lengthdir_x(8, _dir);
     kb_y = lengthdir_y(8, _dir);

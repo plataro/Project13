@@ -114,7 +114,7 @@ ai = function() {
 
             if (attack_cd > 0) {
                 attack_cd--;
-            } else {
+            } else if (can_attack()) {
                 // เลือกท่าตามระยะและเฟส ไม่ซ้ำท่าเดิมถ้ามีตัวเลือกอื่น
                 var _opts = [];
                 if (_d < 170) {
