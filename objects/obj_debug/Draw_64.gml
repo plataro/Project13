@@ -2,7 +2,7 @@ if (!show) exit;
 
 draw_set_font(fnt_dialog);
 draw_set_color(c_lime);
-var _s = "DEBUG  Z:heal  X:god(" + (global.god ? "ON" : "OFF") + ")  C:kill all  G:+100g  O:+potion  K:+SP  L:+shot  V/B:room  N:menu  H:hide  F3:stats";
+var _s = "DEBUG  Z:heal  X:god(" + (global.god ? "ON" : "OFF") + ")  C:kill all  G:+100g  O:+potion  K:+SP  L:+shot  PgUp/PgDn:room  N:menu  H:hide  F3:stats";
 draw_text_transformed(10, 512, _s, 0.6, 0.6, 0);
 
 if (stats) {

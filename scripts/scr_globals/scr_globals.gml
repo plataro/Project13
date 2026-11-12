@@ -61,6 +61,9 @@ function save_default() {
         weapon: "sword",   // อาวุธที่ถืออยู่ (sword, greatsword, hammer)
         weapons: {},       // อาวุธที่ซื้อแล้ว (ดาบเริ่มต้นมีอยู่แล้วเสมอ)
         armor: 0,          // เกราะ 0-2 (ลดดาเมจที่ได้รับ)
+        acc: {},           // ★ เครื่องประดับที่มี
+        acc_eq: [],        // ★ ที่สวมอยู่ (สูงสุด 2)
+        buff_items: {},    // ★ ไอเท็มบัฟที่ถืออยู่ { buff_atk: 2 }
         shot_lv: 0,        // ★ ระดับพลังยิง 0-3 (ได้จากหีบบททดสอบ ด่านละ 1)
         quests: {},        // สถานะเควส
         flags: {}          // ธงเนื้อเรื่อง เช่น mine_done
@@ -68,7 +71,7 @@ function save_default() {
 }
 
 function apply_difficulty() {
-    global.max_hp = difficulty_data().player_hp + global.save.hp_bonus + (skill_has("g5") ? 1 : 0);
+    global.max_hp = difficulty_data().player_hp + global.save.hp_bonus + (skill_has("g5") ? 1 : 0) + player_stats().hp;
 }
 
 // เริ่มเกมใหม่ (เลือดเต็มตามระดับความยาก บทสนทนาเล่นใหม่ได้) ไม่แตะสถานะ debug
@@ -79,6 +82,7 @@ function game_reset() {
     apply_difficulty();
     global.player_hp = global.max_hp;
     global.story_seen = {};
+    global.buffs = [];
 }
 
 // เก็บภาพเซฟตอนเข้าห้องใหม่ (ตายแล้วเริ่มห้องซ้ำ ไม่เก็บซ้ำ) + ★ เซฟลงเบราว์เซอร์อัตโนมัติ
@@ -193,6 +197,7 @@ function save_load() {
 
     global.ending = _d.ending;
     global.arrive = _d.arrive;
+    global.buffs = [];
     global.snap = "";
     global.snap_room = noone;
     global.hitstop = 0;
@@ -271,16 +276,17 @@ function enemy_power_mult(_tier = level_tier()) {
 
 // ★ สุ่มดาเมจจากผู้เล่น: แกว่ง ±10% และคริติคอล 8% (x1.6) คืนค่า [ดาเมจ, คริไหม]
 function player_hit(_base) {
-    var _d = _base * player_atk() * random_range(0.9, 1.1);
-    var _crit = (random(1) < 0.08);
-    if (_crit) _d *= 1.6;
+    var _st = player_stats();
+    var _d = _base * player_atk() * _st.atk * random_range(0.9, 1.1);   // ★ ATK จากเครื่องประดับ/บัฟ
+    var _crit = (random(1) < _st.crit);
+    if (_crit) _d *= _st.critdmg;
     return [max(1, round(_d)), _crit];
 }
 
 // ดาเมจที่ผู้เล่นได้รับจริง: ความยาก x ด่าน แล้วหักเกราะ (ขั้นต่ำ 1)
 function enemy_damage_calc(_base) {
     var _d = ceil(_base * difficulty_data().enemy_dmg * tier_data().dmg);
-    return max(1, _d - global.save.armor);
+    return max(1, _d - player_stats().def);   // ★ เกราะ + เครื่องประดับ + บัฟ
 }
 
 // =====================================================================

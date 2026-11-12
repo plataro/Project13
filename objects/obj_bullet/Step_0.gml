@@ -36,6 +36,7 @@ with (obj_enemy) {
 if (_target != noone) {
     var _hr = player_hit(damage);
     _target.take_damage(_hr[0], direction, _hr[1], "bullet");
+    player_on_hit(_target);
     if (pierce > 0) {
         pierce--;
         array_push(hit_ids, _target);

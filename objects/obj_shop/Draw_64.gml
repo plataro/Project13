@@ -43,9 +43,9 @@ draw_text(px + pw - 24, py + 42, string(global.save.gold) + " เหรียญ
 // รายการ
 draw_set_halign(fa_left);
 if (tab == 0) {
-    for (var _i = 0; _i < array_length(buy_ids); _i++) {
+    for (var _i = scroll; _i < min(array_length(buy_ids), scroll + vis_rows); _i++) {
         var _info = shop_item_info(buy_ids[_i]);
-        var _ry = row_y0 + _i * row_h;
+        var _ry = row_y0 + (_i - scroll) * row_h;
 
         draw_set_color((hover_row == _i) ? make_color_rgb(78, 68, 96) : make_color_rgb(56, 48, 70));
         draw_rectangle(row_x, _ry, row_x + row_w, _ry + row_h - 6, false);
@@ -68,11 +68,11 @@ if (tab == 0) {
         draw_text(px + pw / 2, row_y0 + 60, "ไม่มีของสะสมให้ขาย");
         draw_set_halign(fa_left);
     }
-    for (var _i2 = 0; _i2 < array_length(sell_list); _i2++) {
+    for (var _i2 = scroll; _i2 < min(array_length(sell_list), scroll + vis_rows); _i2++) {
         var _kind = sell_list[_i2];
         var _item = item_data(_kind);
         var _cnt = global.save.items[$ _kind];
-        var _ry2 = row_y0 + _i2 * row_h;
+        var _ry2 = row_y0 + (_i2 - scroll) * row_h;
 
         draw_set_color((hover_row == _i2) ? make_color_rgb(78, 68, 96) : make_color_rgb(56, 48, 70));
         draw_rectangle(row_x, _ry2, row_x + row_w, _ry2 + row_h - 6, false);
@@ -96,6 +96,15 @@ if (tab == 0) {
     draw_set_color(c_white);
     draw_set_halign(fa_center);
     draw_text(px + 124, py + ph - 42, "ขายทั้งหมด");
+}
+
+// ★ บอกว่ายังมีรายการให้เลื่อน
+var _cnt_all = (tab == 0) ? array_length(buy_ids) : array_length(sell_list);
+if (_cnt_all > vis_rows) {
+    draw_set_halign(fa_center);
+    draw_set_color(c_ltgray);
+    draw_text_transformed(px + pw / 2, row_y0 + vis_rows * row_h + 4, "ล้อเมาส์เพื่อเลื่อน (" + string(scroll + 1) + "-" + string(min(_cnt_all, scroll + vis_rows)) + " จาก " + string(_cnt_all) + ")", 0.55, 0.55, 0);
+    draw_set_halign(fa_left);
 }
 
 // ปุ่มปิด

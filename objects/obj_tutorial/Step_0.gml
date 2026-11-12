@@ -51,7 +51,7 @@ if (!instance_exists(obj_player)) {
 }
 
 var _busy = instance_exists(obj_dialogue) || instance_exists(obj_cutscene) || instance_exists(obj_fade)
-         || instance_exists(obj_shop) || instance_exists(obj_skilltree) || instance_exists(obj_gameover);
+         || instance_exists(obj_shop) || instance_exists(obj_skilltree) || instance_exists(obj_gameover) || instance_exists(obj_status);
 
 // =====================================================================
 // บทเรียนกลิ้งหลบ

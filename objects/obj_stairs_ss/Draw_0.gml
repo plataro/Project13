@@ -22,7 +22,7 @@ for (var _i = 0; _i < _n; _i++) {
 // ลูกศรบอกตรงปลายบันไดเมื่อผู้เล่นอยู่ใกล้
 var _p = instance_find(obj_player_ss, 0);
 if (_p != noone && _p.on_stairs == noone) {
-    var _near = (abs(_p.x - x) < 28 && abs(_p.y - y) < 12) || (abs(_p.x - top_x) < 28 && abs(_p.y - top_y) < 12);
+    var _near = (abs(_p.x - x) < 28 && abs(_p.y - y) < 12);   // ★ ป้ายเฉพาะปลายล่าง (ปลายบนเดินลงเองอยู่แล้ว)
     if (_near) {
         draw_set_font(fnt_dialog);
         draw_set_halign(fa_center);

@@ -3,6 +3,8 @@ draw_shadow(x, y, 22, 8);
 var _body = make_color_rgb(110, 70, 140);
 if (shop_type == "smith") _body = make_color_rgb(190, 100, 40);
 if (shop_type == "buyer") _body = make_color_rgb(60, 150, 100);
+if (shop_type == "jeweler") _body = make_color_rgb(60, 160, 190);
+if (shop_type == "alchemist") _body = make_color_rgb(150, 60, 160);
 draw_set_color(_body);
 draw_rectangle(round(x) - 18, round(y) - 70, round(x) + 18, round(y) - 6, false);
 draw_set_color(make_color_rgb(235, 200, 160));
@@ -14,7 +16,7 @@ draw_set_color(c_white);
 draw_text_transformed(round(x), round(y) - 112, shop_name, 0.6, 0.6, 0);
 if (near && !instance_exists(obj_shop)) {
     draw_set_color(c_yellow);
-    draw_text_transformed(round(x), round(y) - 132, "[E] เปิดร้าน", 0.6, 0.6, 0);
+    draw_text_transformed(round(x), round(y) - 132, (room == rm_shop_ss) ? "[E] ซื้อขาย" : "[E] เข้าร้าน", 0.6, 0.6, 0);
 }
 
 draw_set_halign(fa_left);

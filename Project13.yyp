@@ -90,6 +90,7 @@
     {"id":{"name":"obj_tutorial","path":"objects/obj_tutorial/obj_tutorial.yy",},},
     {"id":{"name":"obj_wall_ss","path":"objects/obj_wall_ss/obj_wall_ss.yy",},},
     {"id":{"name":"obj_wall","path":"objects/obj_wall/obj_wall.yy",},},
+    {"id":{"name":"obj_status","path":"objects/obj_status/obj_status.yy",},},
     {"id":{"name":"obj_bullet_ss","path":"objects/obj_bullet_ss/obj_bullet_ss.yy",},},
     {"id":{"name":"obj_lever_ss","path":"objects/obj_lever_ss/obj_lever_ss.yy",},},
     {"id":{"name":"obj_breakable_ss","path":"objects/obj_breakable_ss/obj_breakable_ss.yy",},},
@@ -105,6 +106,7 @@
     {"id":{"name":"rm_menu","path":"rooms/rm_menu/rm_menu.yy",},},
     {"id":{"name":"rm_the_final_ss","path":"rooms/rm_the_final_ss/rm_the_final_ss.yy",},},
     {"id":{"name":"rm_the_sanctuary_ss","path":"rooms/rm_the_sanctuary_ss/rm_the_sanctuary_ss.yy",},},
+    {"id":{"name":"rm_shop_ss","path":"rooms/rm_shop_ss/rm_shop_ss.yy",},},
     {"id":{"name":"rm_the_village","path":"rooms/rm_the_village/rm_the_village.yy",},},
     {"id":{"name":"scr_anim","path":"scripts/scr_anim/scr_anim.yy",},},
     {"id":{"name":"scr_camera_ss","path":"scripts/scr_camera_ss/scr_camera_ss.yy",},},
@@ -174,6 +176,7 @@
     {"roomId":{"name":"rm_the_final_ss","path":"rooms/rm_the_final_ss/rm_the_final_ss.yy",},},
     {"roomId":{"name":"rm_boss","path":"rooms/rm_boss/rm_boss.yy",},},
     {"roomId":{"name":"rm_end","path":"rooms/rm_end/rm_end.yy",},},
+    {"roomId":{"name":"rm_shop_ss","path":"rooms/rm_shop_ss/rm_shop_ss.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

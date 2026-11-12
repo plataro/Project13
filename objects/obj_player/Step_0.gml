@@ -1,6 +1,11 @@
 // มาจากประตูอีกฝั่ง: ไปเกิดหน้าประตูที่ชื่อตรงกัน (ทำครั้งเดียวในเฟรมแรก)
 if (arrive_pending) {
     arrive_pending = false;
+    // ★ ออกจากร้าน = เกิดหน้าร้านนั้น
+    if (global.arrive == "shop" && variable_global_exists("shop_visit") && is_struct(global.shop_visit)) {
+        x = global.shop_visit.rx;
+        y = global.shop_visit.ry;
+    }
     with (obj_exit) {
         if (door_id == global.arrive) {
             other.x = x + spawn_dx;
@@ -27,7 +32,7 @@ if (keyboard_check_pressed(vk_space)) roll_buffer = roll_buffer_time;
 
 if (global.hitstop > 0) exit;   // hit-stop
 
-if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_shop) || instance_exists(obj_skilltree)) {
+if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_shop) || instance_exists(obj_skilltree) || instance_exists(obj_status)) {
     roll_buffer = 0;
     hsp = 0;
     vsp = 0;
@@ -54,6 +59,47 @@ if (attack_cd > 0) attack_cd--;
 if (shot1_timer > 0) shot1_timer--;
 if (skill2_timer > 0) skill2_timer--;
 if (keyboard_check_pressed(ord("Q"))) player_use_potion();
+if (keyboard_check_pressed(ord("I"))) status_toggle();   // ★ หน้าสถานะ
+
+// ★ บัฟ: F ใช้ไอเท็มที่เลือก / V เปลี่ยน
+var _bl = buff_list();
+if (keyboard_check_pressed(ord("V"))) global.buff_sel = (global.buff_sel + 1) mod array_length(_bl);
+if (keyboard_check_pressed(ord("F"))) {
+    if (buff_use(_bl[global.buff_sel]) == "") float_text(x, y - 120, "ไม่มี " + buff_data(_bl[global.buff_sel]).name, c_gray, 0.8);
+}
+// เวลาบัฟ
+var _bchg = false;
+for (var _bi = array_length(global.buffs) - 1; _bi >= 0; _bi--) {
+    global.buffs[_bi].t--;
+    if (global.buffs[_bi].t <= 0) { array_delete(global.buffs, _bi, 1); _bchg = true; }
+}
+if (_bchg) player_apply_skills();
+
+// ★ สถานะผิดปกติ
+if (st_poison > 0) st_poison--;
+if (st_burn > 0) {
+    if (state == PState.ROLL) {
+        st_burn = 0;
+        float_text(x, y - 110, "ดับไฟ!", c_aqua, 0.8);
+    } else {
+        st_burn--;
+        if (st_burn mod 10 == 0) fx_spark(x, y - 40, 90, 2, c_orange, 60);
+        if (st_burn <= 0) {
+            invuln_timer = 0;
+            take_damage(1, x, y + 1);
+        }
+    }
+}
+if (st_stun > 0) {
+    st_stun--;
+    mvx *= 0.8;
+    mvy *= 0.8;
+    move_and_collide(mvx + kb_x, mvy + kb_y, obj_wall);
+    kb_x *= 0.8;
+    kb_y *= 0.8;
+    update_camera(true);
+    exit;
+}
 if (keyboard_check_pressed(ord("T"))) skilltree_toggle();
 if (keyboard_check_pressed(ord("R")) || mouse_wheel_down()) weapon_cycle(1);
 if (mouse_wheel_up()) weapon_cycle(-1);
@@ -98,6 +144,7 @@ switch (state) {
             dir_y = _ky / _len;
 
             var _tspeed = _running ? run_speed : move_speed;
+            if (st_poison > 0) _tspeed *= 0.7;   // ★ ติดพิษ = ช้าลง
             var _step = _running
                 ? run_accel
                 : ((_spd > move_speed + 0.2) ? slide_friction : walk_accel);

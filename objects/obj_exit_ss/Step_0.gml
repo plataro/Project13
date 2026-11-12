@@ -16,7 +16,7 @@ if (!locked && next_room != noone && !instance_exists(obj_fade) && !instance_exi
     var _hit = place_meeting(x, y, obj_player_ss);
     if (!_hit && _p != noone) _hit = point_in_rectangle(_p.x, _p.y, x - 40, y - 80, x + 104, y + 140);
     if (_hit) {
-        global.arrive = "";   // ออกจากฉาก side-scroll = เกิดที่จุดเริ่มห้องถัดไป
+        global.arrive = arrive_to;   // ออกจากฉาก side-scroll = เกิดที่จุดเริ่มห้องถัดไป (หรือหน้าร้าน)
         var _f = instance_create_depth(0, 0, -10000, obj_fade);
         _f.target_room = next_room;
     }

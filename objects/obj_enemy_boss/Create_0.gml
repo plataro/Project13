@@ -212,10 +212,10 @@ leap_land = function() {
 // =====================================================================
 // ★ จุดปะทุบนพื้น (ใช้กับหนามพุ่ง / อุกกาบาต / คลื่นวงแหวน)
 // =====================================================================
-add_erupt = function(_x, _y, _r, _delay, _dmg) {
+add_erupt = function(_x, _y, _r, _delay, _dmg, _fx = "") {
     if (position_meeting(_x, _y, obj_wall)) return;
     if (!point_in_rectangle(_x, _y, 0, 0, room_width, room_height)) return;
-    array_push(erupts, { x: _x, y: _y, r: _r, t: _delay, t0: _delay, dmg: _dmg });
+    array_push(erupts, { x: _x, y: _y, r: _r, t: _delay, t0: _delay, dmg: _dmg, fx: _fx });
 }
 
 process_erupts = function() {
@@ -227,7 +227,9 @@ process_erupts = function() {
             fx_spark(_e.x, _e.y - 10, 90, 6, c_orange, 120);
             if (_e.r >= 60) _big = true;
             if (instance_exists(obj_player) && player_hit_by_circle(obj_player, _e.x, _e.y - 10, _e.r)) {
+                var _hp0 = obj_player.hp;
                 obj_player.take_damage(enemy_damage_calc(_e.dmg), _e.x, _e.y);
+                if (_e.fx != "" && obj_player.hp < _hp0) player_add_status(_e.fx);   // ★ ติดสถานะ
             }
         }
         if (_e.t <= -12) array_delete(erupts, _i, 1);
@@ -263,7 +265,7 @@ start_meteor = function() {
             _tx += lengthdir_x(_rd, _ra);
             _ty += lengthdir_y(_rd, _ra);
         }
-        add_erupt(_tx, _ty, 64, 46 + _i * 8, 2);
+        add_erupt(_tx, _ty, 64, 46 + _i * 8, 2, "burn");   // ★ อุกกาบาตไฟ
     }
     state = "cast";
     state_timer = 46 + _n * 8 + 12;
@@ -375,7 +377,7 @@ start_boulder = function() {
     for (var _i = 0; _i < _n; _i++) {
         var _tx = obj_player.x + ((_i == 0) ? 0 : lengthdir_x(150, irandom(359)));
         var _ty = obj_player.y + ((_i == 0) ? 0 : lengthdir_y(150, irandom(359)));
-        add_erupt(_tx, _ty, 82, 56 + _i * 14, 3);
+        add_erupt(_tx, _ty, 82, 56 + _i * 14, 3, "stun");   // ★ หินทับ = มึน
     }
     state = "cast";
     state_timer = 56 + _n * 14 + 12;
@@ -774,6 +776,7 @@ ai = function() {
                     _vb.direction = _va + (_v - (_vn - 1) / 2) * 14;
                     _vb.image_angle = _vb.direction;
                     _vb.speed = 6.5;
+                    if (variant == "mage") _vb.fx = "burn";   // ★ เวทไฟ
                 }
                 volley_n++;
                 state_timer = 16;

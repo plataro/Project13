@@ -168,6 +168,17 @@ if (global.debug) {
     draw_set_color(c_white);
 }
 
+// ★ ไอคอนสถานะผิดปกติเหนือหัว
+if (st_burn > 0 || st_poison > 0 || st_stun > 0) {
+    var _sr = enemy_hurt_rect(id);
+    var _ix = x - 14;
+    var _iy = _sr[1] - 30 - z;
+    if (st_burn > 0)   { draw_set_color(c_orange); draw_triangle(_ix - 6, _iy + 6, _ix + 6, _iy + 6, _ix, _iy - 8 + sin(current_time / 60) * 2, false); _ix += 16; }
+    if (st_poison > 0) { draw_set_color(make_color_rgb(140, 220, 90)); draw_circle(_ix, _iy + 1, 6, false); _ix += 16; }
+    if (st_stun > 0)   { draw_set_color(c_yellow); draw_circle(_ix + lengthdir_x(5, current_time / 4), _iy + lengthdir_y(3, current_time / 4), 4, false); }
+    draw_set_color(c_white);
+}
+
 // ★ หลอดเลือดบนหัว (แสดงหลังโดนตี แล้วจางหายเมื่อไม่โดนต่อ 3 วินาที)
 if (hp_shown < hp) hp_shown = hp;
 else hp_shown = lerp(hp_shown, hp, 0.08);

@@ -15,6 +15,8 @@ msg = "";
 msg_timer = 0;
 open_delay = 5;      // กันปุ่ม E ที่เปิดร้านถูกนับซ้ำ
 hover_row = -1;
+scroll = 0;          // ★ เลื่อนรายการ (ล้อเมาส์) เมื่อสินค้าเยอะ
+vis_rows = 4;
 
 shop_type = "general";
 shop_title = "พ่อค้า";
@@ -38,6 +40,14 @@ setup = function(_type, _title) {
             can_buy = false;
             sell_mul = 1.4;
             tab = 1;
+            break;
+        case "jeweler":   // ★ เครื่องประดับ
+            buy_ids = acc_list();
+            can_sell = false;
+            break;
+        case "alchemist": // ★ บัฟ
+            buy_ids = buff_list();
+            can_sell = false;
             break;
     }
 }

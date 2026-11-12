@@ -16,11 +16,15 @@ var _click = (open_delay <= 0) && mouse_check_button_pressed(mb_left);
 
 refresh_sell();
 
-// แถวที่เมาส์ชี้
+// แถวที่เมาส์ชี้ (รองรับเลื่อนด้วยล้อเมาส์)
 hover_row = -1;
 var _count = (tab == 0) ? array_length(buy_ids) : array_length(sell_list);
-for (var _i = 0; _i < _count; _i++) {
-    var _ry = row_y0 + _i * row_h;
+var _maxs = max(0, _count - vis_rows);
+if (mouse_wheel_down()) scroll = min(scroll + 1, _maxs);
+if (mouse_wheel_up()) scroll = max(scroll - 1, 0);
+scroll = clamp(scroll, 0, _maxs);
+for (var _i = scroll; _i < min(_count, scroll + vis_rows); _i++) {
+    var _ry = row_y0 + (_i - scroll) * row_h;
     if (point_in_rectangle(_mx, _my, row_x, _ry, row_x + row_w, _ry + row_h - 6)) hover_row = _i;
 }
 

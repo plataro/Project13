@@ -87,7 +87,9 @@ function player_apply_skills() {
     skill2_cooldown   = 150;
 
     roll_cooldown     = round(22 * (skill_has("g1") ? 0.7 : 1));
-    run_speed         = skill_has("g2") ? 7.3 : 6.5;
+    var _ps = player_stats();   // ★ ความเร็วจากเครื่องประดับ/บัฟ
+    move_speed        = 4 * _ps.spd;
+    run_speed         = (skill_has("g2") ? 7.3 : 6.5) * _ps.spd;
     run_accel         = skill_has("g2") ? 0.4 : 0.28;
     potion_heal       = skill_has("g3") ? 3 : 2;
 

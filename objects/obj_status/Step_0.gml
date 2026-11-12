@@ -1,0 +1,28 @@
+if (open_delay > 0) open_delay--;
+var _mx = device_mouse_x_to_gui(0);
+var _my = device_mouse_y_to_gui(0);
+var _close_btn = point_in_rectangle(_mx, _my, px + pw - 150, py + ph - 50, px + pw - 20, py + ph - 14);
+
+if (open_delay <= 0 && (keyboard_check_pressed(ord("I")) || keyboard_check_pressed(vk_escape)
+    || (mouse_check_button_pressed(mb_left) && _close_btn))) {
+    global.status_closed_at = current_time;
+    io_clear();
+    instance_destroy();
+    exit;
+}
+
+// รายการเครื่องประดับที่มี (คลิก = สวม/ถอด)
+hover_acc = "";
+var _list = acc_list();
+var _row = 0;
+for (var _i = 0; _i < array_length(_list); _i++) {
+    if (!acc_owned(_list[_i])) continue;
+    var _ry = py + 214 + _row * 30;
+    if (point_in_rectangle(_mx, _my, px + 440, _ry - 2, px + pw - 24, _ry + 26)) hover_acc = _list[_i];
+    _row++;
+}
+if (open_delay <= 0 && hover_acc != "" && mouse_check_button_pressed(mb_left)) {
+    acc_toggle(hover_acc);
+    apply_difficulty();
+    if (instance_exists(obj_player)) { obj_player.max_hp = global.max_hp; obj_player.hp = min(obj_player.hp, obj_player.max_hp); }
+}

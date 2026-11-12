@@ -20,11 +20,11 @@ if (keyboard_check_pressed(ord("L"))) {   // พลังยิง +1 และ�
 }
 
 var _go = noone;
-if (keyboard_check_pressed(ord("B"))) {
+if (keyboard_check_pressed(vk_pagedown)) {   // ★ ห้องถัดไป (เดิม B)
     var _i = level_index();   // อยู่เมนูจะได้ -1 แล้วไปด่าน 1
     _go = global.levels[min(_i + 1, array_length(global.levels) - 1)];
 }
-if (keyboard_check_pressed(ord("V"))) {
+if (keyboard_check_pressed(vk_pageup)) {     // ★ ห้องก่อนหน้า (เดิม V ชนกับปุ่มเลือกบัฟ)
     var _i2 = level_index();
     _go = global.levels[max(_i2 - 1, 0)];
 }

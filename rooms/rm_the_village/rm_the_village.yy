@@ -93,6 +93,14 @@
     {
       "name": "inst_2368A498",
       "path": "rooms/rm_the_village/rm_the_village.yy"
+    },
+    {
+      "name": "inst_CA3A9B66",
+      "path": "rooms/rm_the_village/rm_the_village.yy"
+    },
+    {
+      "name": "inst_C122ECBB",
+      "path": "rooms/rm_the_village/rm_the_village.yy"
     }
   ],
   "isDnd": false,
@@ -704,6 +712,60 @@
           "scaleY": 16.875,
           "x": 1920.0,
           "y": 0.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_CA3A9B66",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_CA3A9B66",
+          "objectId": {
+            "name": "obj_shopkeeper",
+            "path": "objects/obj_shopkeeper/obj_shopkeeper.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 416.0,
+          "y": 440.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_C122ECBB",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": true,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_C122ECBB",
+          "objectId": {
+            "name": "obj_shopkeeper",
+            "path": "objects/obj_shopkeeper/obj_shopkeeper.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "x": 920.0,
+          "y": 690.0
         }
       ],
       "layers": [],

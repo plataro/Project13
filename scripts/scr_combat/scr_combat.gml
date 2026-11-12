@@ -194,13 +194,13 @@ function enemy_attack_base(_name) {
                      circles: [],
                      rects: [ [0, 120, -42, 42] ] };
         // ===== ยักษ์ค้อน: ช้าแต่หนัก =====
-        case "brute_smash":  // ทุบค้อนลงข้างหน้า
-            return { windup: 40, active: 8, recover: 50, dmg: 3, lift: 50,
+        case "brute_smash":  // ทุบค้อนลงข้างหน้า (โดน = มึน)
+            return { fx: "stun", windup: 40, active: 8, recover: 50, dmg: 3, lift: 50,
                      lock: 12, lead: 0, turn: 0,
                      lunge_speed: 2, lunge_frames: 6,
                      circles: [ [96, 0, 78] ] };
-        case "brute_pound":  // ทุบพื้นรอบตัว
-            return { windup: 50, active: 8, recover: 60, dmg: 2, lift: 40,
+        case "brute_pound":  // ทุบพื้นรอบตัว (โดน = มึน)
+            return { fx: "stun", windup: 50, active: 8, recover: 60, dmg: 2, lift: 40,
                      lock: 0, lead: 0, turn: 0,
                      lunge_speed: 0, lunge_frames: 0,
                      circles: [ [0, 0, 150] ] };
@@ -288,6 +288,7 @@ function orb_ai() {
             _b.direction = _a0 + _i * 45;
             _b.image_angle = _b.direction;
             _b.speed = 4;
+            _b.fx = "burn";   // ★ ลูกไฟ
         }
         fx_spark(x, y - 40, 0, 18, c_orange, 180);
         fx_shake(2);

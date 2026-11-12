@@ -12,7 +12,7 @@ if (!variable_instance_exists(id, "diff_applied")) {
     max_attackers = _df.attackers + _tr.attackers;
 }
 
-if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade) || instance_exists(obj_skilltree)) exit;
+if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade) || instance_exists(obj_skilltree) || instance_exists(obj_status)) exit;
 if (global.hitstop > 0) exit;   // hit-stop
 
 if (flash > 0) flash--;
@@ -69,9 +69,22 @@ vsp = 0;
 // นับถอยหลังช่วงรอเฉพาะตอนผู้เล่นประชิดแล้ว (เดินเข้าหาอยู่ = ยังไม่นับ)
 if (engage_grace > 0 && alert_timer > 0 && _pdist <= engage_range) engage_grace--;
 
+// ★ สถานะผิดปกติ: ไฟไหม้/พิษ ดาเมจต่อเนื่อง
+if (st_burn > 0) {
+    st_burn--;
+    if (st_burn mod 30 == 0) enemy_status_damage(id, 0.25, c_orange);
+}
+if (st_poison > 0) {
+    st_poison--;
+    if (st_poison mod 45 == 0) enemy_status_damage(id, 0.15, make_color_rgb(140, 220, 90));
+}
+
 var _busy = (atk_state != "") || (variable_instance_exists(id, "state") && state != "chase");
-if (alert_timer > 0 || _busy) {
+if (st_stun > 0) {
+    st_stun--;   // ★ สตัน: ไม่ทำอะไร
+} else if (alert_timer > 0 || _busy) {
     ai();
+    if (st_poison > 0) { hsp *= 0.7; vsp *= 0.7; }   // ★ พิษ = ช้าลง
 } else {
     // ไม่เห็นผู้เล่น: คืนคิวโจมตี แล้วเดินกลับจุดเกิด
     if (has_token) release_token(60);

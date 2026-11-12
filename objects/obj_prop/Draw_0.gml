@@ -164,6 +164,54 @@ switch (kind) {
         break;
     }
 
+    // ===== ★ ของในร้าน (side-scroll) =====
+    case "shelf": {    // ชั้นวางของติดผนัง (x, y) = ฐาน
+        draw_set_color(make_color_rgb(90, 60, 38));
+        draw_rectangle(x - 90, y - 220, x + 90, y, false);
+        draw_set_color(make_color_rgb(60, 40, 26));
+        draw_rectangle(x - 82, y - 212, x + 82, y - 8, false);
+        for (var _sh = 0; _sh < 3; _sh++) {
+            var _sy = y - 70 - _sh * 66;
+            draw_set_color(make_color_rgb(120, 85, 52));
+            draw_rectangle(x - 86, _sy, x + 86, _sy + 8, false);
+            // ของบนชั้น (ขวด / กล่อง) สีสุ่มตาม seed
+            for (var _it = 0; _it < 5; _it++) {
+                var _ix = x - 66 + _it * 33;
+                var _c = make_color_hsv((seed * 37 + _sh * 50 + _it * 23) mod 255, 140, 200);
+                draw_set_color(_c);
+                if ((_it + _sh + seed) mod 2 == 0) { draw_rectangle(_ix - 7, _sy - 26, _ix + 7, _sy, false); draw_rectangle(_ix - 3, _sy - 32, _ix + 3, _sy - 26, false); }
+                else draw_rectangle(_ix - 11, _sy - 18, _ix + 11, _sy, false);
+            }
+        }
+        break;
+    }
+    case "counter": {  // เคาน์เตอร์ร้าน กว้าง h (ใช้ h เป็นความกว้าง)
+        var _cw2 = h;
+        draw_set_color(make_color_rgb(110, 75, 45));
+        draw_rectangle(x - _cw2 / 2, y - 80, x + _cw2 / 2, y, false);
+        draw_set_color(make_color_rgb(145, 100, 60));
+        draw_rectangle(x - _cw2 / 2 - 10, y - 90, x + _cw2 / 2 + 10, y - 78, false);
+        draw_set_color(make_color_rgb(90, 60, 36));
+        for (var _pl = x - _cw2 / 2 + 30; _pl < x + _cw2 / 2; _pl += 60) draw_rectangle(_pl, y - 70, _pl + 4, y - 6, false);
+        break;
+    }
+    case "lamp": {     // โคมแขวน (x, y) = จุดแขวนบนเพดาน
+        draw_set_color(make_color_rgb(70, 60, 50));
+        draw_line_width(x, y, x, y + 60, 2);
+        draw_set_color(make_color_rgb(120, 90, 50));
+        draw_rectangle(x - 14, y + 60, x + 14, y + 84, false);
+        gpu_set_blendmode(bm_add);
+        draw_set_alpha(0.2 + 0.05 * sin(current_time / 200 + seed));
+        draw_set_color(make_color_rgb(255, 190, 110));
+        draw_circle(x, y + 74, 90, false);
+        draw_set_alpha(0.9);
+        draw_set_color(make_color_rgb(255, 220, 140));
+        draw_rectangle(x - 9, y + 64, x + 9, y + 80, false);
+        draw_set_alpha(1);
+        gpu_set_blendmode(bm_normal);
+        break;
+    }
+
     // ===== ป้ายไม้ =====
     case "sign": {
         draw_set_color(make_color_rgb(110, 75, 40));

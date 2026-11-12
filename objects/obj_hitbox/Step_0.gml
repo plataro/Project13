@@ -57,6 +57,7 @@ if (age >= step_data.active_from && age <= step_data.active_to) {
                     last_hit_id = _me;
                     var _hr = player_hit(_d.dmg);
                     take_damage(_hr[0], _kd, _hr[1]);
+                    player_on_hit(id);   // ★ ติดสถานะตามเครื่องประดับ/บัฟ
                     var _m = max(1, sqrt(mass));   // ตัวหนัก (บอส) กระเด็นน้อยกว่า
                     kb_x = lengthdir_x(_d.kb / _m, _kd);
                     kb_y = lengthdir_y(_d.kb / _m, _kd);

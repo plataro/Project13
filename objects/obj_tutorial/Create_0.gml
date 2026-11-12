@@ -38,6 +38,14 @@ ctx_list = [
       when: function() { return global.save.weapon == "hammer" && instance_exists(obj_player); } },
     { key: "ctx_tree", keys: ["T"], codes: [ord("T")], text: "เปิดต้นไม้สกิล (ใช้แต้ม SP อัปพลัง)", timeout: 0,
       when: function() { return flag_get("tree_unlocked") && instance_exists(obj_player); } },
+    { key: "ctx_status", keys: ["I"], codes: [ord("I")], text: "ดูสถานะ / สวมเครื่องประดับ", timeout: 0,
+      when: function() { return room == rm_the_village && instance_exists(obj_player); } },
+    { key: "ctx_buff", keys: ["F", "V"], codes: [ord("F")], text: "ใช้ไอเท็มบัฟ (V = เลือกชนิด)", timeout: 0,
+      when: function() {
+          var _bl = buff_list();
+          for (var _i = 0; _i < array_length(_bl); _i++) if (variable_struct_exists(global.save.buff_items, _bl[_i]) && global.save.buff_items[$ _bl[_i]] > 0) return instance_exists(obj_player);
+          return false;
+      } },
     { key: "ctx_pause", keys: ["P"], codes: [ord("P")], text: "หยุดเกม / ตั้งค่า", timeout: 300,
       when: function() { return variable_struct_exists(global.story_seen, "tut_dodge") && instance_exists(obj_player); } }
 ];

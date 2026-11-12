@@ -51,6 +51,21 @@ function weapon_modify_combo(_d, _n) {
 // ข้อมูลสินค้า (ราคาและเงื่อนไขขึ้นกับสถานะปัจจุบัน)
 function shop_item_info(_id) {
     var _s = global.save;
+    // ★ เครื่องประดับ
+    var _ac = acc_data(_id);
+    if (!is_undefined(_ac)) {
+        var _own = acc_owned(_id);
+        return { name: _ac.name + (acc_equipped(_id) ? "  [สวมอยู่]" : ""),
+                 desc: _own ? (_ac.desc + " · คลิกเพื่อ" + (acc_equipped(_id) ? "ถอด" : "สวม")) : _ac.desc,
+                 price: _own ? 0 : _ac.price, ok: true, why: "" };
+    }
+    // ★ ไอเท็มบัฟ
+    var _bf = buff_data(_id);
+    if (!is_undefined(_bf)) {
+        var _n = variable_struct_exists(_s.buff_items, _id) ? _s.buff_items[$ _id] : 0;
+        return { name: _bf.name, desc: _bf.desc + " · มี " + string(_n) + "/5 (F ใช้ · V เลือก)",
+                 price: _bf.price, ok: _n < 5, why: "ถือได้สูงสุด 5" };
+    }
     var _b = _s.hp_bonus;
     var _bag = _s.potion_max - 3;
 
@@ -94,6 +109,23 @@ function shop_buy(_id) {
     if (_s.gold < _info.price) return "เหรียญไม่พอ";
 
     _s.gold -= _info.price;
+
+    // ★ เครื่องประดับ: ซื้อแล้วสวมเลยถ้าช่องว่าง / มีแล้ว = สวมหรือถอด
+    if (!is_undefined(acc_data(_id))) {
+        if (acc_owned(_id)) acc_toggle(_id);
+        else {
+            _s.acc[$ _id] = true;
+            if (array_length(_s.acc_eq) < 2) acc_toggle(_id);
+        }
+        apply_difficulty();
+        if (instance_exists(obj_player)) { obj_player.max_hp = global.max_hp; obj_player.hp = min(obj_player.hp, obj_player.max_hp); }
+        return "";
+    }
+    // ★ ไอเท็มบัฟ
+    if (!is_undefined(buff_data(_id))) {
+        _s.buff_items[$ _id] = (variable_struct_exists(_s.buff_items, _id) ? _s.buff_items[$ _id] : 0) + 1;
+        return "";
+    }
 
     switch (_id) {
         case "potion":
@@ -151,4 +183,188 @@ function weapon_cycle(_dir) {
             return;
         }
     }
+}
+
+// =====================================================================
+// ★ เครื่องประดับ (ร้านช่างอัญมณี) สวมได้ 2 ช่อง เปลี่ยนที่หน้าสถานะ (ปุ่ม I)
+// atk = ATK +% · crit = คริ +% · critdmg = แรงคริ +% · spd = ความเร็ว +% · def = ลดดาเมจ · hp = หัวใจ
+// burn / poison / stun = โอกาสติดสถานะให้ศัตรูตอนตีโดน
+// =====================================================================
+function acc_list() {
+    return ["ring_power", "neck_hunter", "ear_slayer", "brace_wind", "charm_stone", "heart_stone", "amulet_fire", "fang_snake", "seal_thunder"];
+}
+
+function acc_data(_id) {
+    switch (_id) {
+        case "ring_power":   return { name: "แหวนพละกำลัง",   desc: "ATK +15%",                    price: 180, atk: 0.15 };
+        case "neck_hunter":  return { name: "สร้อยนักล่า",     desc: "โอกาสคริ +10%",                price: 160, crit: 0.10 };
+        case "ear_slayer":   return { name: "ต่างหูพิฆาต",     desc: "ดาเมจคริ +40%",                price: 200, critdmg: 0.4 };
+        case "brace_wind":   return { name: "กำไลสายลม",       desc: "ความเร็ว +10%",                price: 150, spd: 0.10 };
+        case "charm_stone":  return { name: "เครื่องรางหินผา", desc: "ลดดาเมจที่ได้รับ -1 (ขั้นต่ำ 1)", price: 420, def: 1 };
+        case "heart_stone":  return { name: "หัวใจศิลา",        desc: "หัวใจสูงสุด +1",               price: 380, hp: 1 };
+        case "amulet_fire":  return { name: "จี้เพลิง",          desc: "ตีโดน 20% ติดไฟไหม้",           price: 240, burn: 0.20 };
+        case "fang_snake":   return { name: "เขี้ยวอสรพิษ",     desc: "ตีโดน 25% ติดพิษ (ช้าลง)",       price: 220, poison: 0.25 };
+        case "seal_thunder": return { name: "ตราสายฟ้า",       desc: "ตีโดน 10% ทำให้ศัตรูสตัน",      price: 320, stun: 0.10 };
+    }
+    return undefined;
+}
+
+function acc_owned(_id) {
+    return variable_struct_exists(global.save.acc, _id);
+}
+function acc_equipped(_id) {
+    return array_contains(global.save.acc_eq, _id);
+}
+// สวม/ถอด (ช่องเต็มแล้ว = แทนที่ช่องแรก)
+function acc_toggle(_id) {
+    var _eq = global.save.acc_eq;
+    var _i = array_get_index(_eq, _id);
+    if (_i >= 0) array_delete(_eq, _i, 1);
+    else {
+        if (array_length(_eq) >= 2) array_delete(_eq, 0, 1);
+        array_push(_eq, _id);
+    }
+    if (instance_exists(obj_player)) with (obj_player) player_apply_skills();
+}
+
+// =====================================================================
+// ★ บัฟชั่วคราว (ร้านนักปรุงยา) กด F ใช้ / V เลือก   ใช้แล้วอยู่ 60 วิ
+// =====================================================================
+function buff_list() {
+    return ["buff_atk", "buff_def", "buff_spd", "buff_fire", "cleanse"];
+}
+
+function buff_data(_id) {
+    switch (_id) {
+        case "buff_atk":  return { name: "ยาพละกำลัง",  desc: "ATK +25% 60 วิ",                  price: 40, t: 3600, col: make_color_rgb(255, 120, 80) };
+        case "buff_def":  return { name: "ยาผิวเหล็ก",  desc: "ลดดาเมจที่ได้รับ -1 60 วิ",         price: 55, t: 3600, col: make_color_rgb(150, 170, 200) };
+        case "buff_spd":  return { name: "ยาสายลม",     desc: "ความเร็ว +20% 60 วิ",              price: 35, t: 3600, col: make_color_rgb(140, 230, 200) };
+        case "buff_fire": return { name: "น้ำมันเพลิง", desc: "ตีโดน 50% ติดไฟไหม้ 60 วิ",         price: 45, t: 3600, col: make_color_rgb(255, 170, 40) };
+        case "cleanse":   return { name: "ยาล้างพิษ",   desc: "ล้างไฟไหม้ พิษ ทันที",               price: 20, t: 0,    col: make_color_rgb(200, 255, 200) };
+    }
+    return undefined;
+}
+
+function buff_active(_id) {
+    for (var _i = 0; _i < array_length(global.buffs); _i++) if (global.buffs[_i].id == _id) return true;
+    return false;
+}
+
+// ใช้ไอเท็มบัฟ คืนข้อความ
+function buff_use(_id) {
+    var _s = global.save;
+    var _n = variable_struct_exists(_s.buff_items, _id) ? _s.buff_items[$ _id] : 0;
+    if (_n <= 0) return "";
+    _s.buff_items[$ _id] = _n - 1;
+    var _d = buff_data(_id);
+    if (_id == "cleanse") {
+        if (instance_exists(obj_player)) with (obj_player) { st_burn = 0; st_poison = 0; }
+    } else {
+        // ใช้ซ้ำ = รีเวลา ไม่ซ้อน
+        for (var _i = array_length(global.buffs) - 1; _i >= 0; _i--) if (global.buffs[_i].id == _id) array_delete(global.buffs, _i, 1);
+        array_push(global.buffs, { id: _id, t: _d.t, t0: _d.t });
+    }
+    if (instance_exists(obj_player)) {
+        with (obj_player) player_apply_skills();
+        float_text(obj_player.x, obj_player.y - 120, _d.name + "!", _d.col, 1.1);
+    }
+    return _d.name;
+}
+global.buffs = [];
+global.buff_sel = 0;
+
+// =====================================================================
+// ★ สถานะรวมของผู้เล่น (อาวุธ + เครื่องประดับ + บัฟ)
+// =====================================================================
+function player_stats() {
+    var _st = { atk: 1, crit: 0.08, critdmg: 1.6, spd: 1, def: global.save.armor, hp: 0, burn: 0, poison: 0, stun: 0 };
+    var _eq = global.save.acc_eq;
+    for (var _i = 0; _i < array_length(_eq); _i++) {
+        var _a = acc_data(_eq[_i]);
+        if (is_undefined(_a)) continue;
+        if (variable_struct_exists(_a, "atk"))     _st.atk += _a.atk;
+        if (variable_struct_exists(_a, "crit"))    _st.crit += _a.crit;
+        if (variable_struct_exists(_a, "critdmg")) _st.critdmg += _a.critdmg;
+        if (variable_struct_exists(_a, "spd"))     _st.spd += _a.spd;
+        if (variable_struct_exists(_a, "def"))     _st.def += _a.def;
+        if (variable_struct_exists(_a, "hp"))      _st.hp += _a.hp;
+        if (variable_struct_exists(_a, "burn"))    _st.burn += _a.burn;
+        if (variable_struct_exists(_a, "poison"))  _st.poison += _a.poison;
+        if (variable_struct_exists(_a, "stun"))    _st.stun += _a.stun;
+    }
+    if (buff_active("buff_atk"))  _st.atk += 0.25;
+    if (buff_active("buff_def"))  _st.def += 1;
+    if (buff_active("buff_spd"))  _st.spd += 0.20;
+    if (buff_active("buff_fire")) _st.burn += 0.5;
+    return _st;
+}
+
+// ตีโดนศัตรู: สุ่มติดสถานะตามเครื่องประดับ/บัฟ
+function player_on_hit(_e) {
+    if (!instance_exists(_e) || variable_instance_exists(_e, "is_orb")) return;
+    var _st = player_stats();
+    if (_st.burn > 0 && random(1) < _st.burn) enemy_add_status(_e, "burn");
+    if (_st.poison > 0 && random(1) < _st.poison) enemy_add_status(_e, "poison");
+    if (_st.stun > 0 && random(1) < _st.stun) enemy_add_status(_e, "stun");
+}
+
+// =====================================================================
+// ★ สถานะผิดปกติของศัตรู
+// burn = ไฟไหม้ 3 ครั้ง ทุก 0.5 วิ (25% ATK) · poison = พิษ 5 ครั้ง ทุก 0.75 วิ (15% ATK) + ช้าลง 30%
+// stun = หยุดทำอะไร 1 วิ (บอก 0.4 วิ)
+// =====================================================================
+function enemy_add_status(_e, _kind) {
+    with (_e) {
+        var _boss = (object_index == obj_enemy_boss);
+        switch (_kind) {
+            case "burn":   st_burn = 90;  break;
+            case "poison": st_poison = 225; break;
+            case "stun":
+                if (_boss && variable_instance_exists(id, "state") && (state == "ult" || state == "ult_boom")) break;
+                st_stun = _boss ? 24 : 60;
+                if (atk_state == "windup") { atk_state = ""; atk_cur = undefined; telegraph = false; }
+                float_text(x, y - 120, "สตัน!", c_yellow, 0.9);
+                break;
+        }
+    }
+}
+
+// ดาเมจจากสถานะ (ไม่มีคริ ไม่สะดุ้ง) ตัวเลขสีตามสถานะ
+function enemy_status_damage(_e, _mul, _col) {
+    with (_e) {
+        if (variable_instance_exists(id, "shield") && shield > 0) return;
+        if (variable_instance_exists(id, "invuln") && invuln > 0) return;
+        var _d = max(1, round(player_atk() * _mul));
+        hp -= _d;
+        hp_bar_timer = 180;
+        if (global.show_dmg) {
+            var _r = enemy_hurt_rect(id);
+            var _t = spawn_damage_text((_r[0] + _r[2]) / 2 + irandom_range(-10, 10), _r[1] + 10, _d);
+            if (_t != noone) { _t.col = _col; _t.size = 0.8; }
+        }
+    }
+}
+
+// =====================================================================
+// ★ สถานะผิดปกติของผู้เล่น (จากท่าโจมตีศัตรู)
+// burn = ไฟติดตัว 2.5 วิ แล้วเสีย 1 หัวใจ (กลิ้งเพื่อดับไฟ) · poison = ช้าลง 30% 4 วิ · stun = ขยับไม่ได้ 0.5 วิ
+// =====================================================================
+function player_add_status(_kind) {
+    if (!instance_exists(obj_player)) return;
+    with (obj_player) {
+        switch (_kind) {
+            case "burn":   if (st_burn <= 0) float_text(x, y - 120, "ไฟไหม้! กลิ้งเพื่อดับ", c_orange, 0.9); st_burn = 150; break;
+            case "poison": st_poison = 240; float_text(x, y - 120, "ติดพิษ! ช้าลง", make_color_rgb(140, 220, 90), 0.9); break;
+            case "stun":   st_stun = 30; break;
+        }
+    }
+}
+
+// ★ เปิด/ปิดหน้าสถานะ (ปุ่ม I)
+function status_toggle() {
+    if (instance_exists(obj_status)) return;
+    if (variable_global_exists("status_closed_at") && current_time - global.status_closed_at < 250) return;
+    if (instance_exists(obj_dialogue) || instance_exists(obj_fade) || instance_exists(obj_shop)
+        || instance_exists(obj_skilltree) || instance_exists(obj_gameover)) return;
+    instance_create_depth(0, 0, -12500, obj_status);
 }

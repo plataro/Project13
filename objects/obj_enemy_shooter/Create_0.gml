@@ -32,6 +32,7 @@ ai = function() {
             _b.direction = _a;
             _b.image_angle = _a;
             _b.speed = bullet_speed;
+            if (level_tier() == 2) _b.fx = "poison";   // ★ ตัวยิงในเหมือง: กระสุนพิษ
         }
         exit;
     }
