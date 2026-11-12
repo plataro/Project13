@@ -8,7 +8,7 @@ if (!is_undefined(global.boss_intro)) {
         global.boss_intro = undefined;
     } else if (!instance_exists(obj_dialogue) && !instance_exists(obj_fade)) {
         _bi.t++;
-        if (_bi.t > 40 && _bi.t < 150 && (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left))) _bi.t = 150;
+        if (_bi.t > 40 && _bi.t < 150 && (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left) || input_pad_pressed(gp_face1))) _bi.t = 150;
         global.hitstop = max(global.hitstop, 2);   // หยุดทุกอย่างระหว่างเปิดตัว
 
         // ตำแหน่งกล้อง: ผู้เล่น <-> บอส
@@ -82,7 +82,7 @@ if (!seen("tut_dodge")) {
     if (freeze) {
         freeze_t++;
         global.hitstop = max(global.hitstop, 2);   // หยุดทุกอย่างค้างไว้ (ผู้เล่นยังจำปุ่มกลิ้งได้)
-        if (keyboard_check_pressed(vk_space)) {
+        if (input_pressed("roll")) {
             freeze = false;
             global.hitstop = 0;
             watch = 50;
@@ -148,18 +148,18 @@ if (is_undefined(ctx)) {
         }
     } else if (!_busy) {
         var _ok = false;
-        for (var _k = 0; _k < array_length(ctx.codes); _k++) {
-            var _code = ctx.codes[_k];
-            if (_code == vk_shift) { if (keyboard_check(vk_shift)) _ok = true; }
-            else if (_code == -1) { if (mouse_check_button_pressed(mb_left)) _ok = true; }
-            else if (_code == -2) { if (mouse_wheel_up() || mouse_wheel_down()) _ok = true; }
-            else if (_code == -3) { if (obj_player.state == PState.CHARGE && obj_player.charge_t >= obj_player.charge_time) _ok = true; }   // ชาร์จเต็มสักครั้ง
-            else if (keyboard_check_pressed(_code)) _ok = true;
+        // ★ ถามเป็นการกระทำ (คีย์บอร์ด/จอย/ปุ่มที่ผู้เล่นตั้งเอง)
+        for (var _k = 0; _k < array_length(ctx.acts); _k++) {
+            var _act = ctx.acts[_k];
+            if (_act == "charge") { if (obj_player.state == PState.CHARGE && obj_player.charge_t >= obj_player.charge_time) _ok = true; }   // ชาร์จเต็มสักครั้ง
+            else if (_act == "run") { if (input_check("run")) _ok = true; }
+            else if (_act == "weapon") { if (input_pressed("weapon") || mouse_wheel_up() || mouse_wheel_down()) _ok = true; }
+            else if (input_pressed(_act)) _ok = true;
         }
         if (ctx.timeout > 0 && ctx_t >= ctx.timeout) _ok = true;
         // ★ มีเป้าหมายจริง: กดแล้วยังไม่ผ่าน = ค้างป้ายไว้ + ย้ำ
         if (variable_struct_exists(ctx, "goal")) {
-            if (!variable_struct_exists(ctx, "run_only") || keyboard_check(vk_shift)) ctx_dist += point_distance(ctx_px, ctx_py, obj_player.x, obj_player.y);
+            if (!variable_struct_exists(ctx, "run_only") || input_check("run")) ctx_dist += point_distance(ctx_px, ctx_py, obj_player.x, obj_player.y);
             ctx_px = obj_player.x;
             ctx_py = obj_player.y;
             var _g = method(self, ctx.goal)();

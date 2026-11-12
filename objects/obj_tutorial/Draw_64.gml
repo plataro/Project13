@@ -82,7 +82,7 @@ if (freeze) {
     draw_rectangle(0, 0, 960, 540, false);
     draw_set_alpha(1);
     ui_text_bold(480, 150, L("ศัตรูกำลังจะโจมตี!", "Enemy is about to attack!"), 0.85, make_color_rgb(255, 120, 100));
-    tut_slot_callout(5, ["Space"], L("กลิ้งหลบ", "Dodge roll"), L("ระหว่างกลิ้งจะไม่โดนโจมตี (กดทิศค้าง = เลือกทาง)", "Invincible while rolling (hold a direction to aim)"), UI_MUTED, false, _fa, 0);
+    tut_slot_callout(5, [input_label("roll")], L("กลิ้งหลบ", "Dodge roll"), L("ระหว่างกลิ้งจะไม่โดนโจมตี (กดทิศค้าง = เลือกทาง)", "Invincible while rolling (hold a direction to aim)"), UI_MUTED, false, _fa, 0);
 }
 
 // ===== ข้อความสั้น =====
@@ -94,13 +94,22 @@ if (msg_t > 0 && is_undefined(global.boss_intro)) {
 }
 
 // ===== ★ ป้ายสอนเล่น: ย้ายมาบนกลางจอ (ไม่ทับช่องสกิลด้านล่าง) =====
+// ★ ชื่อปุ่มตามอุปกรณ์/ปุ่มที่ตั้งเอง
+var _ckeys = [];
+if (!is_undefined(ctx)) {
+    for (var _ka = 0; _ka < array_length(ctx.acts); _ka++) {
+        var _an = ctx.acts[_ka];
+        if (_an == "charge") _ckeys[_ka] = L("ค้าง ", "Hold ") + input_label("attack");
+        else _ckeys[_ka] = input_label(_an);
+    }
+}
 // ===== ★ สอนใช้สกิล: ชี้ที่ช่องสกิลล่างจอทีละอัน =====
 var _slot_mode = !is_undefined(ctx) && variable_struct_exists(ctx, "slot") && ctx.slot >= 0 && instance_exists(obj_player);
 if (_slot_mode && ctx_a > 0.02 && is_undefined(global.boss_intro) && !freeze) {
     var _sub = variable_struct_exists(ctx, "sub") ? ctx.sub : "";
     var _subc = UI_MUTED;
     if (ctx_tries > 0 && variable_struct_exists(ctx, "retry")) { _sub = ctx.retry; _subc = make_color_rgb(255, 150, 120); }
-    tut_slot_callout(ctx.slot, ctx.keys, ctx.text, _sub, _subc, ctx_done > 0, ctx_a, ctx_shake);
+    tut_slot_callout(ctx.slot, _ckeys, ctx.text, _sub, _subc, ctx_done > 0, ctx_a, ctx_shake);
 }
 
 if (!_slot_mode && !is_undefined(ctx) && ctx_a > 0.02 && is_undefined(global.boss_intro)) {
@@ -110,8 +119,8 @@ if (!_slot_mode && !is_undefined(ctx) && ctx_a > 0.02 && is_undefined(global.bos
     // ความกว้าง: ปุ่มแต่ละอัน + ข้อความ
     var _kws = [];
     var _sumk = 0;
-    for (var _k = 0; _k < array_length(ctx.keys); _k++) {
-        var _kw = max(26, string_width(ctx.keys[_k]) * _s + 14);
+    for (var _k = 0; _k < array_length(_ckeys); _k++) {
+        var _kw = max(26, string_width(_ckeys[_k]) * _s + 14);
         _kws[_k] = _kw;
         _sumk += _kw + 6;
     }
@@ -120,13 +129,13 @@ if (!_slot_mode && !is_undefined(ctx) && ctx_a > 0.02 && is_undefined(global.bos
     ui_panel(_x1, _y - 18, _x1 + _w, _y + 18, ctx_a);
     draw_set_alpha(ctx_a);
     var _cx = _x1 + 14;
-    for (var _k2 = 0; _k2 < array_length(ctx.keys); _k2++) {
+    for (var _k2 = 0; _k2 < array_length(_ckeys); _k2++) {
         draw_set_color(_done ? make_color_rgb(40, 110, 50) : make_color_rgb(150, 120, 70));
         draw_rectangle(_cx, _y - 10, _cx + _kws[_k2], _y + 13, false);
         draw_set_color(_done ? make_color_rgb(150, 240, 150) : make_color_rgb(250, 235, 200));
         draw_rectangle(_cx, _y - 12, _cx + _kws[_k2], _y + 10, false);
         draw_set_color(make_color_rgb(40, 30, 20));
-        draw_text_transformed(_cx + _kws[_k2] / 2, _y - 1, ctx.keys[_k2], _s, _s, 0);
+        draw_text_transformed(_cx + _kws[_k2] / 2, _y - 1, _ckeys[_k2], _s, _s, 0);
         _cx += _kws[_k2] + 6;
     }
     draw_set_halign(fa_left);

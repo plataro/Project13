@@ -336,6 +336,7 @@ function settings_load() {
     global.lang = ini_read_string("settings", "lang", "th");
     if (global.lang != "en") global.lang = "th";
     ini_close();
+    input_load();   // ★ ปุ่มที่ผู้เล่นตั้งเอง
     settings_apply();
 }
 

@@ -1,3 +1,4 @@
+pad_sel = -1;
 lines = [];
 index = 0;
 chars = 0;
@@ -55,6 +56,7 @@ load_line = function() {
     total = string_length(wrapped);
     choice_t = 0;
     sel = -1;
+    pad_sel = -1;   // ★ ตัวเลือกที่เลือกด้วยจอย
 
     // ให้ตัวละครออกจากฉาก
     if (variable_struct_exists(_l, "hide")) {

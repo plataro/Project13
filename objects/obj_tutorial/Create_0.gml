@@ -33,13 +33,13 @@ seen = function(_key) {
 // ★ สร้างรายการใหม่ทุกครั้งที่เปลี่ยนภาษา (ข้อความใช้ L())
 build_ctx = function() {
     ctx_list = [
-        { key: "ctx_move", slot: 0, keys: ["Shift"], codes: [vk_shift], text: L("วิ่ง", "Run"), sub: L("เดินด้วย W A S D แล้วกด Shift ค้างไว้", "Move with W A S D and hold Shift"), timeout: 0,
+        { key: "ctx_move", slot: 0, acts: ["run"], text: L("วิ่ง", "Run"), sub: L("เดินด้วย W A S D แล้วกด Shift ค้างไว้", "Move with W A S D and hold Shift"), timeout: 0,
           run_only: true,   // นับระยะเฉพาะตอนกด Shift
           goal: function() { return ctx_dist >= 220; },
           when: function() { return instance_exists(obj_player); } },
-        { key: "ctx_atk", slot: 1, keys: [L("คลิกซ้าย", "Left Click")], codes: [-1], text: L("โจมตี", "Attack"), sub: L("คลิกต่อเนื่อง = คอมโบ 4 ท่า", "Keep clicking = 4-hit combo"), timeout: 0,
+        { key: "ctx_atk", slot: 1, acts: ["attack"], text: L("โจมตี", "Attack"), sub: L("คลิกต่อเนื่อง = คอมโบ 4 ท่า", "Keep clicking = 4-hit combo"), timeout: 0,
           when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "tut_dodge"); } },   // ★ สอนตีหลังสอนหลบ (ตีศัตรูตัวที่เพิ่งหลบได้เลย)
-        { key: "ctx_shot", slot: 3, keys: ["1"], codes: [ord("1")], text: L("ยิงลูกไฟไปทางเมาส์", "Shoot a fireball at the mouse"), sub: L("ยิงเป้าให้โดนทุกอันเพื่อเปิดประตู", "Hit every target to open the gate"), timeout: 0,
+        { key: "ctx_shot", slot: 3, acts: ["shoot1"], text: L("ยิงลูกไฟไปทางเมาส์", "Shoot a fireball at the mouse"), sub: L("ยิงเป้าให้โดนทุกอันเพื่อเปิดประตู", "Hit every target to open the gate"), timeout: 0,
           retry: L("ยังไม่โดนครบ! เล็งเมาส์ที่เป้าแล้วกด 1 อีกที", "Not all hit! Aim at a target and press 1 again"),
           goal: function() {
               if (!instance_exists(obj_target)) return true;
@@ -48,25 +48,25 @@ build_ctx = function() {
               return _all;
           },
           when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "ctx_atk"); } },
-        { key: "ctx_potion", slot: 6, keys: ["Q"], codes: [ord("Q")], text: L("ดื่มยาฟื้นเลือด", "Drink a potion"), sub: L("ฟื้น 2 หัวใจ ซื้อเพิ่มได้ที่ร้าน", "Heals 2 hearts. Buy more at shops"), timeout: 0,
+        { key: "ctx_potion", slot: 6, acts: ["potion"], text: L("ดื่มยาฟื้นเลือด", "Drink a potion"), sub: L("ฟื้น 2 หัวใจ ซื้อเพิ่มได้ที่ร้าน", "Heals 2 hearts. Buy more at shops"), timeout: 0,
           when: function() { return instance_exists(obj_player) && obj_player.hp <= obj_player.max_hp - 2 && global.save.potions > 0; } },
-        { key: "ctx_skill2", slot: 4, keys: ["2"], codes: [ord("2")], text: L("ยิงกระจายสามทิศ", "Triple spread shot"), sub: L("ปลดสกิลแล้ว! คูลดาวน์นานกว่าปุ่ม 1", "Unlocked! Longer cooldown than 1"), timeout: 0,
+        { key: "ctx_skill2", slot: 4, acts: ["shoot2"], text: L("ยิงกระจายสามทิศ", "Triple spread shot"), sub: L("ปลดสกิลแล้ว! คูลดาวน์นานกว่าปุ่ม 1", "Unlocked! Longer cooldown than 1"), timeout: 0,
           when: function() { return global.save.shot_lv >= 2 && instance_exists(obj_player); } },
-        { key: "ctx_weapon", keys: ["R", L("ล้อเมาส์", "Mouse Wheel")], codes: [ord("R"), -2], text: L("สลับอาวุธ", "Switch weapon"), timeout: 0,
+        { key: "ctx_weapon", acts: ["weapon"], text: L("สลับอาวุธ", "Switch weapon"), timeout: 0,
           when: function() { return array_length(variable_struct_get_names(global.save.weapons)) > 0 && instance_exists(obj_player); } },
-        { key: "ctx_charge", slot: 2, keys: [L("คลิกซ้ายค้าง", "Hold Left Click")], codes: [-3], text: L("ชาร์จค้อน", "Charge hammer"), sub: L("ค้างจนเกจเต็มแล้วปล่อย ทุ่มลงพื้นรอบตัว", "Hold until full, release to slam around you"), timeout: 0,
+        { key: "ctx_charge", slot: 2, acts: ["charge"], text: L("ชาร์จค้อน", "Charge hammer"), sub: L("ค้างจนเกจเต็มแล้วปล่อย ทุ่มลงพื้นรอบตัว", "Hold until full, release to slam around you"), timeout: 0,
           when: function() { return global.save.weapon == "hammer" && instance_exists(obj_player); } },
-        { key: "ctx_tree", keys: ["T"], codes: [ord("T")], text: L("เปิดต้นไม้สกิล (ใช้แต้ม SP อัปพลัง)", "Open the skill tree (spend SP to power up)"), timeout: 0,
+        { key: "ctx_tree", acts: ["tree"], text: L("เปิดต้นไม้สกิล (ใช้แต้ม SP อัปพลัง)", "Open the skill tree (spend SP to power up)"), timeout: 0,
           when: function() { return flag_get("tree_unlocked") && instance_exists(obj_player); } },
-        { key: "ctx_status", keys: ["I"], codes: [ord("I")], text: L("ดูสถานะ / สวมเครื่องประดับ", "Status / equip accessories"), timeout: 0,
+        { key: "ctx_status", acts: ["status"], text: L("ดูสถานะ / สวมเครื่องประดับ", "Status / equip accessories"), timeout: 0,
           when: function() { return room == rm_the_village && instance_exists(obj_player); } },
-        { key: "ctx_buff", slot: 7, keys: ["F"], codes: [ord("F")], text: L("ใช้ไอเท็มบัฟ", "Use buff item"), sub: L("กด V เพื่อเปลี่ยนชนิดบัฟ", "Press V to switch buff type"), timeout: 0,
+        { key: "ctx_buff", slot: 7, acts: ["buff_use"], text: L("ใช้ไอเท็มบัฟ", "Use buff item"), sub: L("กด V เพื่อเปลี่ยนชนิดบัฟ", "Press V to switch buff type"), timeout: 0,
           when: function() {
               var _bl = buff_list();
               for (var _i = 0; _i < array_length(_bl); _i++) if (variable_struct_exists(global.save.buff_items, _bl[_i]) && global.save.buff_items[$ _bl[_i]] > 0) return instance_exists(obj_player);
               return false;
           } },
-        { key: "ctx_pause", keys: ["P"], codes: [ord("P")], text: L("หยุดเกม / ตั้งค่า", "Pause / settings"), timeout: 300,
+        { key: "ctx_pause", acts: ["pause"], text: L("หยุดเกม / ตั้งค่า", "Pause / settings"), timeout: 300,
           when: function() { return variable_struct_exists(global.story_seen, "tut_dodge") && instance_exists(obj_player); } }
     ];
 }

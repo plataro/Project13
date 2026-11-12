@@ -117,6 +117,7 @@
     {"id":{"name":"scr_fx","path":"scripts/scr_fx/scr_fx.yy",},},
     {"id":{"name":"scr_globals","path":"scripts/scr_globals/scr_globals.yy",},},
     {"id":{"name":"scr_hub","path":"scripts/scr_hub/scr_hub.yy",},},
+    {"id":{"name":"scr_input","path":"scripts/scr_input/scr_input.yy",},},
     {"id":{"name":"scr_loot","path":"scripts/scr_loot/scr_loot.yy",},},
     {"id":{"name":"scr_shop","path":"scripts/scr_shop/scr_shop.yy",},},
     {"id":{"name":"scr_skills","path":"scripts/scr_skills/scr_skills.yy",},},

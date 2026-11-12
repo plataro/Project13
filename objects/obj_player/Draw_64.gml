@@ -144,15 +144,19 @@ if (!_ui_busy) {
     // [ปุ่ม, ไอคอน, คูลดาวน์ 0-1, ล็อก, จำนวน, กำลังทำงาน]
     var _atk_cd = (attack_cd > 0) ? attack_cd / max(1, (combo == 9) ? charge_end_lag : attack_end_lag) : 0;
     var _s1_cd = (shot1_reload_timer > 0) ? shot1_reload_timer / shot1_reload : ((shot1_timer > 0) ? shot1_timer / shot1_gap : 0);
-    var _running = (state == PState.MOVE) && keyboard_check(vk_shift) && (abs(hsp) + abs(vsp) > 0.5);
+    var _running = (state == PState.MOVE) && input_check("run") && (abs(hsp) + abs(vsp) > 0.5);
+    // ★ ชื่อปุ่มตามอุปกรณ์/ปุ่มที่ตั้งเอง
+    var _mouse_atk = (global.input_dev != "pad" && global.bind_kb.attack[0] == -1);
+    var _lab_atk = _mouse_atk ? L("คลิก", "Click") : input_label("attack");
+    var _lab_hold = _mouse_atk ? L("ค้าง", "Hold") : (L("ค้าง ", "Hold ") + input_label("attack"));
     var _slots = [
-        ["Shift", "run", 0, false, "", _running],
-        [L("คลิก", "Click"),  _ham ? "hammer" : "sword", _atk_cd, false, (state == PState.ATTACK && combo > 0 && combo < 9) ? string(combo) : "", state == PState.ATTACK],
-        [L("ค้าง", "Hold"),  "charge", 0, !_ham, "", state == PState.CHARGE],
-        ["1",     "fire", _s1_cd, false, string(shot1_ammo), false],
-        ["2",     "fire3", skill2_unlocked ? skill2_timer / skill2_cooldown : 0, !skill2_unlocked, "", false],
-        ["Space", "roll", (roll_cd_timer > 0) ? roll_cd_timer / max(1, roll_cooldown) : 0, false, "", state == PState.ROLL],
-        ["Q",     "potion", 0, global.save.potions <= 0, string(global.save.potions), false]
+        [input_label("run"), "run", 0, false, "", _running],
+        [_lab_atk,  _ham ? "hammer" : "sword", _atk_cd, false, (state == PState.ATTACK && combo > 0 && combo < 9) ? string(combo) : "", state == PState.ATTACK],
+        [_lab_hold,  "charge", 0, !_ham, "", state == PState.CHARGE],
+        [input_label("shoot1"), "fire", _s1_cd, false, string(shot1_ammo), false],
+        [input_label("shoot2"), "fire3", skill2_unlocked ? skill2_timer / skill2_cooldown : 0, !skill2_unlocked, "", false],
+        [input_label("roll"), "roll", (roll_cd_timer > 0) ? roll_cd_timer / max(1, roll_cooldown) : 0, false, "", state == PState.ROLL],
+        [input_label("potion"), "potion", 0, global.save.potions <= 0, string(global.save.potions), false]
     ];
     for (var _i = 0; _i < _n; _i++) {
         var _sl = _slots[_i];
@@ -182,8 +186,8 @@ if (!_ui_busy) {
         var _fxs = _x0 + _n * (_sz + _gap) + 8;
         ui_panel(_fxs, _y0 + 4, _fxs + 150, _y0 + _sz - 4, 0.9);
         draw_set_valign(fa_middle);
-        ui_text_bold(_fxs + 10, _y0 + _sz / 2 - 7, "[F] " + buff_data(_bid).name, 0.42, buff_data(_bid).col);
-        ui_text(_fxs + 10, _y0 + _sz / 2 + 9, "x" + string(_bn) + L("   [V] เปลี่ยน", "   [V] switch"), 0.38, UI_MUTED);
+        ui_text_bold(_fxs + 10, _y0 + _sz / 2 - 7, "[" + input_label("buff_use") + "] " + buff_data(_bid).name, 0.42, buff_data(_bid).col);
+        ui_text(_fxs + 10, _y0 + _sz / 2 + 9, "x" + string(_bn) + "   [" + input_label("buff_next") + "] " + L("เปลี่ยน", "switch"), 0.38, UI_MUTED);
         draw_set_valign(fa_top);
     }
 }

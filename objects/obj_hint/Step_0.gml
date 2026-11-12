@@ -27,11 +27,14 @@ if (_near && !done && a > 0.6) {
             // ★ -4 = ขึ้นบันไดแล้ว, -5 / -6 = กด A / D ระหว่างอยู่บนบันได (ต้องขึ้นบันไดก่อนถึงนับ)
             var _onst = instance_exists(obj_player_ss) && obj_player_ss.on_stairs != noone;
             if (_code == -4) _hit = _onst;
-            else if (_code == -5) _hit = _onst && keyboard_check(ord("A"));
-            else if (_code == -6) _hit = _onst && keyboard_check(ord("D"));
-            else if (_code == -1) _hit = mouse_check_button_pressed(mb_left);
-            else if (_code == -2) _hit = mouse_wheel_up() || mouse_wheel_down();
-            else _hit = keyboard_check_pressed(_code);
+            else if (_code == -5) _hit = _onst && input_move_x() < -0.3;
+            else if (_code == -6) _hit = _onst && input_move_x() > 0.3;
+            else if (_code == -2) _hit = mouse_wheel_up() || mouse_wheel_down() || input_pressed("weapon");
+            else {
+                // ★ แปลงปุ่มเดิมเป็นการกระทำ (รองรับจอย + ปุ่มที่ตั้งเอง)
+                var _act = input_code_act(_code);
+                _hit = (_act != "") ? (input_pressed(_act) || (_act == "run" && input_check("run"))) : keyboard_check_pressed(_code);
+            }
             if (_hit) _it.g[_j] = true;
             _total++;
             if (_it.g[_j]) _have++;

@@ -3,7 +3,7 @@ var _mx = device_mouse_x_to_gui(0);
 var _my = device_mouse_y_to_gui(0);
 var _close_btn = point_in_rectangle(_mx, _my, close_x1, close_y1, close_x2, close_y2);
 
-if (open_delay <= 0 && (keyboard_check_pressed(ord("I")) || keyboard_check_pressed(vk_escape)
+if (open_delay <= 0 && (input_pressed("status") || input_ui_back()
     || (mouse_check_button_pressed(mb_left) && _close_btn))) {
     global.status_closed_at = current_time;
     io_clear();

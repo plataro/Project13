@@ -1,4 +1,5 @@
 // Begin Step: ทำก่อนทุก object (เปิดเมนูแล้วผู้เล่นจะไม่ฟัน/กลิ้งตามคลิกนั้น)
+input_update();   // ★ อ่านจอย/อุปกรณ์ล่าสุด ครั้งเดียวต่อเฟรม
 var _mx = device_mouse_x_to_gui(0);
 var _my = device_mouse_y_to_gui(0);
 var _click = mouse_check_button_pressed(mb_left);
@@ -23,7 +24,7 @@ if (os_browser != browser_not_a_browser) {
 if (!open) {
     if (!can_pause()) exit;
 
-    var _key = keyboard_check_pressed(ord("P"));
+    var _key = input_pressed("pause");
     // Esc: ไม่แย่งกับร้านค้า / ต้นไม้สกิล / คัตซีน ที่ใช้ Esc ปิดอยู่แล้ว
     if (keyboard_check_pressed(vk_escape)
         && !instance_exists(obj_shop) && !instance_exists(obj_skilltree) && !instance_exists(obj_cutscene)) _key = true;
@@ -42,7 +43,7 @@ var _items = get_items();
 var _n = array_length(_items);
 
 // ปิด / ย้อนกลับ
-if (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(ord("P"))) {
+if (keyboard_check_pressed(vk_escape) || input_pressed("pause") || input_pad_pressed(gp_face2)) {
     if (screen == 1) close_settings();
     else if (screen == 2) { screen = 0; sel = 2; }
     else if (!menu_mode) do_resume();
@@ -50,11 +51,11 @@ if (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(ord("P"))) {
 }
 
 // เลื่อนด้วยคีย์บอร์ด
-if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) sel = (sel + 1) mod _n;
-if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) sel = (sel - 1 + _n) mod _n;
+if (input_ui_down()) sel = (sel + 1) mod _n;
+if (input_ui_up()) sel = (sel - 1 + _n) mod _n;
 if (screen == 1 && sel < 5) {
-    if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) change_setting(sel, 1);
-    if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) change_setting(sel, -1);
+    if (input_ui_right()) change_setting(sel, 1);
+    if (input_ui_left()) change_setting(sel, -1);
 }
 
 // เมาส์
@@ -74,6 +75,6 @@ sel = clamp(sel, 0, _n - 1);
 if (_hit >= 0) {
     sel = _hit;
     confirm(_hit);
-} else if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_space)) {
+} else if (input_ui_confirm()) {
     confirm(sel);
 }

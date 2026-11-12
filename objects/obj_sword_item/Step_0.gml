@@ -15,7 +15,7 @@ if (start_t >= 0) {
 
 // กด E ตอนอยู่ใกล้ หรือเดินทับดาบก็หยิบได้เลย
 var _touch = (_p != noone) && !instance_exists(obj_fade) && !instance_exists(obj_dialogue) && abs(_p.x - x) < 36 && abs(_p.y - y) < 80;
-if ((_near && keyboard_check_pressed(ord("E"))) || _touch) {
+if ((_near && input_pressed("interact")) || _touch) {
     flag_set("sword");
     picked = true;
     loot_toast(L("ดาบ", "Sword"), c_white, "sword");

@@ -9,7 +9,7 @@ else if (instance_exists(obj_player_ss)) _p = obj_player_ss.id;
 
 near = (_p != noone) && !opened && trial_state == 0 && point_distance(x, y, _p.x, _p.y) < 90;
 
-var _press = near && keyboard_check_pressed(ord("E"))
+var _press = near && input_pressed("interact")
     && !instance_exists(obj_dialogue) && !instance_exists(obj_fade)
     && !instance_exists(obj_shop) && !instance_exists(obj_skilltree);
 

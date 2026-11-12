@@ -8,7 +8,7 @@ var _mx = device_mouse_x_to_gui(0);
 var _my = device_mouse_y_to_gui(0);
 var _on_close = point_in_rectangle(_mx, _my, close_x1, close_y1, close_x2, close_y2);
 
-if (open_delay <= 0 && (keyboard_check_pressed(ord("T")) || keyboard_check_pressed(vk_escape)
+if (open_delay <= 0 && (input_pressed("tree") || input_ui_back()
     || (mouse_check_button_pressed(mb_left) && _on_close))) {
     global.tree_closed_at = current_time;   // กัน obj_player เปิดซ้ำในเฟรมเดียวกัน
     instance_destroy();

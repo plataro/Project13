@@ -15,8 +15,8 @@ if (!closing) {
     chars = min(total, chars + 0.7);
 
     var _ok = t > 25;   // กันกดค้างจากหน้าก่อนหน้า
-    var _next = _ok && (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E")) || keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left));
-    if (_ok && (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_tab))) closing = true;   // ★ Tab ข้ามได้ด้วย (บน itch กด Esc แล้วหลุดเต็มจอ)
+    var _next = _ok && (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E")) || keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left) || input_pad_pressed(gp_face1));
+    if (_ok && (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_tab) || input_pad_pressed(gp_start))) closing = true;   // ★ Tab ข้ามได้ด้วย (บน itch กด Esc แล้วหลุดเต็มจอ)
 
     if (_next) {
         if (chars < total) chars = total;

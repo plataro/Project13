@@ -9,9 +9,9 @@ if (save_lang != global.lang) {
     if (has_save) save_text = save_summary();
 }
 
-var _enter = keyboard_check_pressed(vk_enter);
+var _enter = input_ui_confirm();   // ★ Enter / Space / จอย A
 var _click = mouse_check_button_pressed(mb_left);
-var _back = keyboard_check_pressed(vk_escape);
+var _back = input_ui_back();
 
 // หน้าวิธีเล่น / เครดิต: กดอะไรก็ได้เพื่อกลับ
 if (screen == 1 || screen == 2) {
@@ -62,8 +62,8 @@ if (screen == 0) {
 
 var _n = array_length(items);
 
-if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) sel = (sel + 1) mod _n;
-if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) sel = (sel - 1 + _n) mod _n;
+if (input_ui_down()) sel = (sel + 1) mod _n;
+if (input_ui_up()) sel = (sel - 1 + _n) mod _n;
 
 var _mx = device_mouse_x_to_gui(0);
 var _my = device_mouse_y_to_gui(0);

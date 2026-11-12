@@ -28,7 +28,7 @@ if (hp <= 0) {
 }
 
 // ★ จำปุ่มกลิ้งไว้ก่อนเช็ก hit-stop (เดิมกดตอนจอหยุดตอนโดนตี ปุ่มหายเลย = กดแล้วไม่กลิ้ง)
-if (keyboard_check_pressed(vk_space)) roll_buffer = roll_buffer_time;
+if (input_pressed("roll")) roll_buffer = roll_buffer_time;
 
 if (global.hitstop > 0) exit;   // hit-stop
 
@@ -42,13 +42,11 @@ if (instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exist
     exit;
 }
 
-var _kx = (keyboard_check(ord("D")) || keyboard_check(vk_right))
-        - (keyboard_check(ord("A")) || keyboard_check(vk_left));
-var _ky = (keyboard_check(ord("S")) || keyboard_check(vk_down))
-        - (keyboard_check(ord("W")) || keyboard_check(vk_up));
+var _kx = input_move_x();   // ★ คีย์บอร์ด / สติ๊กซ้าย
+var _ky = input_move_y();
 var _len = point_distance(0, 0, _kx, _ky);
 
-aim = point_direction(x, y - aim_height, mouse_x, mouse_y);
+aim = input_aim(x, y - aim_height, point_direction(0, 0, dir_x, dir_y));   // ★ เมาส์ / สติ๊กขวา (+ช่วยเล็ง)
 
 // ตัวจับเวลา
 if (roll_cd_timer > 0) roll_cd_timer--;
@@ -58,13 +56,13 @@ if (roll_buffer > 0) roll_buffer--;
 if (attack_cd > 0) attack_cd--;
 if (shot1_timer > 0) shot1_timer--;
 if (skill2_timer > 0) skill2_timer--;
-if (keyboard_check_pressed(ord("Q"))) player_use_potion();
-if (keyboard_check_pressed(ord("I"))) status_toggle();   // ★ หน้าสถานะ
+if (input_pressed("potion")) player_use_potion();
+if (input_pressed("status")) status_toggle();   // ★ หน้าสถานะ
 
 // ★ บัฟ: F ใช้ไอเท็มที่เลือก / V เปลี่ยน
 var _bl = buff_list();
-if (keyboard_check_pressed(ord("V"))) global.buff_sel = (global.buff_sel + 1) mod array_length(_bl);
-if (keyboard_check_pressed(ord("F"))) {
+if (input_pressed("buff_next")) global.buff_sel = (global.buff_sel + 1) mod array_length(_bl);
+if (input_pressed("buff_use")) {
     if (buff_use(_bl[global.buff_sel]) == "") float_text(x, y - 120, L("ไม่มี ", "No ") + buff_data(_bl[global.buff_sel]).name, c_gray, 0.8);
 }
 // เวลาบัฟ
@@ -100,8 +98,8 @@ if (st_stun > 0) {
     update_camera(true);
     exit;
 }
-if (keyboard_check_pressed(ord("T"))) skilltree_toggle();
-if (keyboard_check_pressed(ord("R")) || mouse_wheel_down()) weapon_cycle(1);
+if (input_pressed("tree")) skilltree_toggle();
+if (input_pressed("weapon")) weapon_cycle(1);
 if (mouse_wheel_up()) weapon_cycle(-1);
 
 if (shot1_reload_timer > 0) {
@@ -136,7 +134,7 @@ switch (state) {
         }
 
         // เดิน / วิ่ง พร้อมแรงเฉื่อย
-        var _running = keyboard_check(vk_shift) && _len > 0;
+        var _running = input_check("run") && _len > 0;
         var _spd = point_distance(0, 0, mvx, mvy);
 
         if (_len > 0) {
@@ -188,7 +186,7 @@ switch (state) {
         else if (charge_hold > 0) {
             if (global.save.weapon != "hammer") {
                 charge_hold = 0;
-            } else if (mouse_check_button(mb_left)) {
+            } else if (input_check("attack")) {
                 charge_hold++;
                 if (charge_hold >= charge_hold_need) {
                     charge_hold = 0;
@@ -202,13 +200,13 @@ switch (state) {
         }
 
         // โจมตี
-        else if (mouse_check_button_pressed(mb_left) && attack_cd <= 0) {
+        else if (input_pressed("attack") && attack_cd <= 0) {
             if (global.save.weapon == "hammer" && combo_window <= 0) charge_hold = 1;   // รอดูว่าจะกดค้างไหม
             else start_attack((combo_window > 0) ? min(combo + 1, weapon_combo_max()) : 1);
         }
 
         // สกิล 1
-		else if (keyboard_check(ord("1")) && shot1_timer <= 0 && shot1_ammo > 0) {
+		else if (input_check("shoot1") && shot1_timer <= 0 && shot1_ammo > 0) {
 
 			var _b = instance_create_depth(x, y, depth, obj_bullet);
 
@@ -228,7 +226,7 @@ switch (state) {
 		}
 
                 // สกิล 2
-		else if (keyboard_check(ord("2")) && skill2_timer <= 0 && skill2_unlocked) {
+		else if (input_check("shoot2") && skill2_timer <= 0 && skill2_unlocked) {
 
 			for (var _i = 0; _i < skill2_count; _i++) {
 
@@ -309,7 +307,7 @@ switch (state) {
             break;
         }
 
-        if (!mouse_check_button(mb_left)) {
+        if (!input_check("attack")) {
             if (charge_t >= charge_time) {
                 start_attack(9);                 // ทุ่มชาร์จเต็ม
             } else {
@@ -358,7 +356,7 @@ switch (state) {
         }
 
         // คลิกระหว่างฟันอยู่ = จองท่าถัดไป
-        if (mouse_check_button_pressed(mb_left)) {
+        if (input_pressed("attack")) {
             combo_buffer = true;
         }
 

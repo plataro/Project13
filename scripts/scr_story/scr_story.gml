@@ -200,9 +200,29 @@ function draw_key_hint(_x, _y, _items, _alpha, _t, _tick = false) {
     var _rowh = 34;
     var _pad = 12;
     var _wmax = 0;
+    // ★ ชื่อปุ่มตามอุปกรณ์ที่ใช้อยู่ (คีย์บอร์ด/จอย/ปุ่มที่ตั้งเอง)
+    var _labels = [];
+    for (var _li = 0; _li < _n; _li++) {
+        var _kk = _items[_li].k;
+        var _cc = variable_struct_exists(_items[_li], "c") ? _items[_li].c : [];
+        var _row = [];
+        for (var _lj = 0; _lj < array_length(_kk); _lj++) {
+            var _lab = _kk[_lj];
+            if (_lj < array_length(_cc)) {
+                var _code = _cc[_lj];
+                var _padnow = (global.input_dev == "pad" && global.pad >= 0);
+                if (_code == -4) _lab = _padnow ? L("สติ๊กขึ้น", "Stick Up") : input_label("up");
+                else if (_code == -5 || _code == -6) _lab = _padnow ? L("สติ๊กซ้าย", "L-Stick") : _lab;
+                else if (_code == -2) _lab = input_label("weapon");
+                else _lab = input_code_label(_code, _lab);
+            }
+            _row[_lj] = _lab;
+        }
+        _labels[_li] = _row;
+    }
     for (var _a = 0; _a < _n; _a++) {
         var _w = 0;
-        var _ks = _items[_a].k;
+        var _ks = _labels[_a];
         for (var _b = 0; _b < array_length(_ks); _b++) _w += max(28, string_width(_ks[_b]) * _s + 16) + 5;
         _w += string_width(_items[_a].t) * _s + 4;
         _wmax = max(_wmax, _w);
@@ -225,7 +245,7 @@ function draw_key_hint(_x, _y, _items, _alpha, _t, _tick = false) {
     for (var _c = 0; _c < _n; _c++) {
         var _cy = _y0 + _pad + _c * _rowh + 14;
         var _cx = _x0 + _pad;
-        var _ks2 = _items[_c].k;
+        var _ks2 = _labels[_c];
         for (var _d = 0; _d < array_length(_ks2); _d++) {
             var _kw = max(28, string_width(_ks2[_d]) * _s + 16);
             draw_set_alpha(_alpha * 0.95);

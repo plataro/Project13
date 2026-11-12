@@ -2,8 +2,8 @@ var _solids = global.ss_solids;
 
 // ผู้เล่นยืนข้างลังแล้วกดเดินเข้าหา = ดัน
 if (place_meeting(x, y + 1, _solids)) {
-    var _kd = keyboard_check(ord("D")) || keyboard_check(vk_right);
-    var _ka = keyboard_check(ord("A")) || keyboard_check(vk_left);
+    var _kd = input_move_x() > 0.3;
+    var _ka = input_move_x() < -0.3;
     var _push = 0;
 
     if (_kd && !_ka && instance_place(x - 2, y, obj_player_ss) != noone) _push = push_speed;

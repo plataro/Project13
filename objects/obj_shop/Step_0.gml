@@ -4,7 +4,7 @@ if (msg_timer > 0) {
     if (msg_timer <= 0) msg = "";
 }
 
-if (open_delay <= 0 && (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(ord("E")))) {
+if (open_delay <= 0 && (input_ui_back() || input_pressed("interact"))) {
     save_commit();   // ★ ซื้อ/ขายแล้วเซฟเลย
     instance_destroy();
     exit;

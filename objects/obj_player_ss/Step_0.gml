@@ -23,8 +23,8 @@ if (place_meeting(x, y, _solids)) {
 var _frozen = instance_exists(obj_fade) || instance_exists(obj_dialogue) || instance_exists(obj_skilltree) || instance_exists(obj_cutscene)
            || instance_exists(obj_shop) || instance_exists(obj_status) || respawn_timer > 0;
 if (respawn_timer > 0) respawn_timer--;
-if (!_frozen && keyboard_check_pressed(ord("T"))) skilltree_toggle();
-if (!_frozen && keyboard_check_pressed(ord("I"))) status_toggle();
+if (!_frozen && input_pressed("tree")) skilltree_toggle();
+if (!_frozen && input_pressed("status")) status_toggle();
 
 var _kx = 0;
 var _run = false;
@@ -32,12 +32,12 @@ var _jp = false;
 var _jh = false;
 
 if (!_frozen) {
-    _kx = (keyboard_check(ord("D")) || keyboard_check(vk_right))
-        - (keyboard_check(ord("A")) || keyboard_check(vk_left));
-    _run = keyboard_check(vk_shift);
+    var _mxv = input_move_x();   // ★ คีย์บอร์ด / สติ๊กซ้าย
+    _kx = (abs(_mxv) > 0.3) ? sign(_mxv) : 0;
+    _run = input_check("run");
     // ★ กระโดดด้วย Space เท่านั้น (W / ลูกศรขึ้น ใช้ขึ้นบันได)
-    _jp = keyboard_check_pressed(vk_space);
-    _jh = keyboard_check(vk_space);
+    _jp = input_pressed("roll");   // ★ ปุ่มเดียวกับกลิ้ง (Space / A)
+    _jh = input_check("roll");
 }
 
 if (atk_cd > 0) atk_cd--;
@@ -46,7 +46,7 @@ if (shot_cd > 0) shot_cd--;
 // =====================================================================
 // ★ บันไดเฉียง: ยืนที่ปลายบันไดแล้วกด W
 // =====================================================================
-if (!_frozen && on_stairs == noone && (keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up))) {
+if (!_frozen && on_stairs == noone && input_pressed("up")) {
     var _me = id;
     with (obj_stairs_ss) {
         if (_me.on_stairs != noone) continue;
@@ -124,11 +124,11 @@ if (on_stairs != noone) {
 // =====================================================================
 // ★ ดาบ (คลิกซ้าย ต้องหยิบดาบแล้ว) / ยิง (ปุ่ม 1 ไปทางเมาส์ ยกเว้นในวิหาร)
 // =====================================================================
-if (!_frozen && flag_get("sword") && mouse_check_button_pressed(mb_left) && atk_cd <= 0) {
+if (!_frozen && flag_get("sword") && input_pressed("attack") && atk_cd <= 0) {
     atk_t = 16;
     atk_cd = 22;
     atk_id++;
-    face = (mouse_x >= x) ? 1 : -1;
+    if (global.input_dev == "kb") face = (mouse_x >= x) ? 1 : -1;   // ★ จอย: ฟันไปทางที่หันอยู่
 }
 if (atk_t > 0) {
     atk_t--;
@@ -158,15 +158,15 @@ if (atk_t > 0) {
         }
     }
 }
-if (!_frozen && room != rm_the_sanctuary_ss && keyboard_check_pressed(ord("1")) && shot_cd <= 0) {
-    var _sa = point_direction(x, y - 40, mouse_x, mouse_y);
+if (!_frozen && room != rm_the_sanctuary_ss && input_pressed("shoot1") && shot_cd <= 0) {
+    var _sa = input_aim(x, y - 40, (face > 0) ? 0 : 180);   // ★ เมาส์ / สติ๊กขวา
     var _b = instance_create_depth(x + lengthdir_x(20, _sa), y - 40 + lengthdir_y(20, _sa), depth - 1, obj_bullet_ss);
     _b.direction = _sa;
     _b.image_angle = _sa;
     _b.vx = lengthdir_x(11, _sa);   // ★ ขยับเองใน Step ของกระสุน (เดิมใช้ speed แล้วค้างอยู่กับที่)
     _b.vy = lengthdir_y(11, _sa);
     shot_cd = 26;
-    face = (mouse_x >= x) ? 1 : -1;
+    face = (lengthdir_x(1, _sa) >= 0) ? 1 : -1;
 }
 
 // ---- สถานะพื้น / coyote / buffer ----

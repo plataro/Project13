@@ -130,11 +130,11 @@ function draw_hud_money() {
 
     // อาวุธ / เกราะ
     var _multi = array_length(variable_struct_get_names(_s.weapons)) > 0;   // มีอาวุธมากกว่า 1 ชิ้นถึงโชว์ [R]
-    ui_text(_x1 + 14, _cy + 22, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? (L("  |  เกราะ ", "  |  Armor ") + string(_s.armor)) : ""), 0.45, UI_TEXT);
+    ui_text(_x1 + 14, _cy + 22, (_multi ? "[" + input_label("weapon") + "] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? (L("  |  เกราะ ", "  |  Armor ") + string(_s.armor)) : ""), 0.45, UI_TEXT);
 
     // แต้มสกิล
     if (_s.sp > 0) {
-        ui_text(_x1 + 14, _cy + 44, (flag_get("tree_unlocked") ? L("[T] แต้มสกิล ", "[T] Skill Points ") : L("แต้มสกิล ", "Skill Points ")) + string(_s.sp), 0.45, make_color_rgb(255, 220, 90));
+        ui_text(_x1 + 14, _cy + 44, (flag_get("tree_unlocked") ? "[" + input_label("tree") + "] " + L("แต้มสกิล ", "Skill Points ") : L("แต้มสกิล ", "Skill Points ")) + string(_s.sp), 0.45, make_color_rgb(255, 220, 90));
     }
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
