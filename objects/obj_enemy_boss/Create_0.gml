@@ -24,8 +24,8 @@ if (!is_final) {
     else variant = "mage";
 }
 hp_mult = 1;
-boss_name = "ราชามังกร";                  // ★ ชื่อที่ขึ้นตอนเปิดตัว
-boss_title = "ผู้ปกครองท้องฟ้าสีเลือด";
+boss_name = L("ราชามังกร", "The Dragon King");                  // ★ ชื่อที่ขึ้นตอนเปิดตัว
+boss_title = L("ผู้ปกครองท้องฟ้าสีเลือด", "Ruler of the Crimson Sky");
 intro_done = false;
 claw_chain = 0;
 claw_side = 1;
@@ -34,21 +34,21 @@ tp_x = x;
 tp_y = y;
 switch (variant) {
     case "beast":
-        boss_name = "พยัคฆ์ทมิฬ";
-        boss_title = "เจ้าป่าผู้กระหายเลือด";
+        boss_name = L("พยัคฆ์ทมิฬ", "Shadow Tiger");
+        boss_title = L("เจ้าป่าผู้กระหายเลือด", "Bloodthirsty Lord of the Forest");
         move_speed = 2.4;
         tint = make_color_rgb(215, 150, 110);
         break;
     case "brute":
-        boss_name = "กุมภัณฑ์ศิลา";
-        boss_title = "ยักษ์ค้อนแห่งเหมืองร้าง";
+        boss_name = L("กุมภัณฑ์ศิลา", "Stone Ogre");
+        boss_title = L("ยักษ์ค้อนแห่งเหมืองร้าง", "Hammer Giant of the Abandoned Mine");
         move_speed = 1.0;
         hp_mult = 1.6;               // ★ เลือดเยอะกว่าตัวอื่น
         tint = make_color_rgb(170, 140, 120);
         break;
     case "mage":
-        boss_name = "เวทารุณ";
-        boss_title = "จอมเวทผู้เฝ้าหอคอย";
+        boss_name = L("เวทารุณ", "Vetharun");
+        boss_title = L("จอมเวทผู้เฝ้าหอคอย", "Archmage of the Tower");
         move_speed = 1.4;
         tint = make_color_rgb(165, 150, 255);
         engage_range = 100000;       // รักษาระยะอยู่แล้ว ช่วงรอจังหวะแรกนับตลอด
@@ -105,7 +105,7 @@ raise_shield = function() {
     shield_hp = 3 + phase;   // ★ ฟันกี่ทีแตก (เฟส 1 = 4, 2 = 5, 3 = 6)
     shield_hp_max = shield_hp;
     bullet_heat = 0;
-    float_text(x, y - 200, "เกราะ!", make_color_rgb(110, 190, 255), 1.3);
+    float_text(x, y - 200, L("เกราะ!", "Shield!"), make_color_rgb(110, 190, 255), 1.3);
     fx_spark(x, y - 70, 0, 18, make_color_rgb(110, 190, 255), 180);
 }
 
@@ -113,7 +113,7 @@ end_shield = function(_broken) {
     shield = 0;
     shield_cd = (phase >= 3) ? 420 : 600;
     if (_broken) {
-        float_text(x, y - 200, "เกราะแตก!", c_yellow, 1.4);
+        float_text(x, y - 200, L("เกราะแตก!", "Shield broken!"), c_yellow, 1.4);
         fx_shake(6);
         fx_spark(x, y - 70, 0, 30, make_color_rgb(110, 190, 255), 180);
         // เสียหลัก = ช่วงรางวัลให้รุมฟัน (ถ้าไม่ได้ออกท่า/กระโดดอยู่)
@@ -314,7 +314,7 @@ start_ult = function() {
     telegraph = true;
     with (obj_enemy_bullet) instance_destroy();
     with (obj_enemy_hitbox) instance_destroy();
-    float_text(x, y - 220, "ไม้ตาย!", c_red, 1.8);
+    float_text(x, y - 220, L("ไม้ตาย!", "Ultimate!"), c_red, 1.8);
     fx_shake(6);
 }
 
@@ -326,7 +326,7 @@ ult_interrupt = function() {
     flash = 12;
     fx_shake(9);
     fx_spark(x, y - 80, 90, 36, c_yellow, 180);
-    float_text(x, y - 220, "ขัดจังหวะสำเร็จ! บอสมึนงง", c_yellow, 1.5);
+    float_text(x, y - 220, L("ขัดจังหวะสำเร็จ! บอสมึนงง", "Interrupted! Boss stunned"), c_yellow, 1.5);
 }
 
 // ---- เรียกลูกน้อง (หาจุดที่ไม่ติดกำแพง) ----
@@ -434,7 +434,7 @@ start_orbs = function() {
         _o.ai = method(_o, orb_ai);
         fx_spark(_ox, _oy - 40, 90, 10, c_orange, 180);
     }
-    float_text(x, y - 200, "ลูกไฟ! ทำลายก่อนมันระเบิด", c_orange, 1.1);
+    float_text(x, y - 200, L("ลูกไฟ! ทำลายก่อนมันระเบิด", "Fire orb! Destroy it before it explodes"), c_orange, 1.1);
     state = "recover";
     state_timer = 30;
 }
@@ -519,7 +519,7 @@ enter_phase = function(_n) {
         move_speed = 2.7;
         summon(obj_enemy_dasher, 2, false);
     }
-    float_text(x, y - 200, is_final ? ("เฟส " + string(_n)) : "โกรธแล้ว!", c_red, 1.6);
+    float_text(x, y - 200, is_final ? (L("เฟส ", "Phase ") + string(_n)) : L("โกรธแล้ว!", "Enraged!"), c_red, 1.6);
 }
 
 ai = function() {

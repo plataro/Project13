@@ -18,7 +18,7 @@ if (hp <= 0 && room != rm_boss) {
     award_sp_once(room_get_name(room), 2, x, y);
     var _atk0 = player_atk();
     flag_set("boss_" + room_get_name(room));   // จำว่าปราบแล้ว (ใช้ปลดล็อกทางและกันเกิดซ้ำ)
-    if (player_atk() > _atk0) float_text(x, y - 230, "พลังโจมตี " + string(_atk0) + " > " + string(player_atk()), c_yellow, 1.4);
+    if (player_atk() > _atk0) float_text(x, y - 230, L("พลังโจมตี ", "Attack ") + string(_atk0) + " > " + string(player_atk()), c_yellow, 1.4);
 }
 
 // ตายตามบอส (ไม่ดรอป): ลูกน้องที่บอสเรียกมา และทุกตัวในห้องบอสสุดท้าย

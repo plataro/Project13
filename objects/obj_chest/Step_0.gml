@@ -23,7 +23,7 @@ else if (!opened) {
             trial_state = 1;
             trial_wave = 0;
             trial_t = 45;
-            float_text(x, y - 110, "บททดสอบเริ่ม!", make_color_rgb(200, 120, 255), 1.4);
+            float_text(x, y - 110, L("บททดสอบเริ่ม!", "Trial begins!"), make_color_rgb(200, 120, 255), 1.4);
         }
     } else if (global.hitstop <= 0 && !instance_exists(obj_dialogue) && !instance_exists(obj_fade)) {
         if (_p == noone || point_distance(x, y, _p.x, _p.y) > trial_r) {
@@ -35,7 +35,7 @@ else if (!opened) {
                 trial_state = 0;
                 fx_shake(6);
                 open_chest();
-                float_text(x, y - 200, "ผ่านบททดสอบ!", c_yellow, 1.5);
+                float_text(x, y - 200, L("ผ่านบททดสอบ!", "Trial cleared!"), c_yellow, 1.5);
             } else {
                 trial_wave++;
                 trial_spawn(trial_wave);

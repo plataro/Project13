@@ -5,8 +5,8 @@ locked = ((!ignore_boss) && (instance_number(obj_enemy_boss) > 0 || instance_exi
 lock_msg = "";
 if (locked) {
     if (next_room == noone) lock_msg = "";
-    else if ((!ignore_boss) && instance_number(obj_enemy_boss) > 0) lock_msg = "ปราบบอสก่อน";
-    else lock_msg = "ยังไปไม่ได้";
+    else if ((!ignore_boss) && instance_number(obj_enemy_boss) > 0) lock_msg = L("ปราบบอสก่อน", "Defeat the boss first");
+    else lock_msg = L("ยังไปไม่ได้", "Can't go yet");
 }
 
 // ล็อกอยู่ = มีหินกั้นปากทาง (กันเดินออกนอกฉาก)

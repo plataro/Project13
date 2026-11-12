@@ -6,13 +6,13 @@ function item_kinds() {
 function weapon_data(_id) {
     switch (_id) {
         case "greatsword":
-            return { name: "ดาบใหญ่", combo: 4, dmg: 2, time: 1.3, rad: 1.25, kb: 1.4, lunge: 0.8, price: 220,
-                     desc: "ดาเมจ x2 | ช้าลงนิดหน่อย | กวาดกว้างและไกลขึ้น" };
+            return { name: L("ดาบใหญ่", "Greatsword"), combo: 4, dmg: 2, time: 1.3, rad: 1.25, kb: 1.4, lunge: 0.8, price: 220,
+                     desc: L("ดาเมจ x2 | ช้าลงนิดหน่อย | กวาดกว้างและไกลขึ้น", "Damage x2 | A bit slower | Wider, longer sweeps") };
         case "hammer":
-            return { name: "ค้อน", combo: 3, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 520,
-                     desc: "คอมโบ 3 ท่า | ทุบหนัก ช้า | ท่าจบทุบพื้นเป็นคลื่นกระแทก" };
+            return { name: L("ค้อน", "Hammer"), combo: 3, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 520,
+                     desc: L("คอมโบ 3 ท่า | ทุบหนัก ช้า | ท่าจบทุบพื้นเป็นคลื่นกระแทก", "3-hit combo | Heavy, slow | Finisher slams a shockwave") };
     }
-    return { name: "ดาบ", combo: 4, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 0, desc: "สมดุล เร็ว" };
+    return { name: L("ดาบ", "Sword"), combo: 4, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 0, desc: L("สมดุล เร็ว", "Balanced, fast") };
 }
 
 function weapon_owned(_id) {
@@ -55,46 +55,46 @@ function shop_item_info(_id) {
     var _ac = acc_data(_id);
     if (!is_undefined(_ac)) {
         var _own = acc_owned(_id);
-        return { name: _ac.name + (acc_equipped(_id) ? "  [สวมอยู่]" : ""),
-                 desc: _own ? (_ac.desc + " | คลิกเพื่อ" + (acc_equipped(_id) ? "ถอด" : "สวม")) : _ac.desc,
+        return { name: _ac.name + (acc_equipped(_id) ? L("  [สวมอยู่]", "  [Equipped]") : ""),
+                 desc: _own ? (_ac.desc + L(" | คลิกเพื่อ", " | Click to ") + (acc_equipped(_id) ? L("ถอด", "remove") : L("สวม", "equip"))) : _ac.desc,
                  price: _own ? 0 : _ac.price, ok: true, why: "" };
     }
     // ★ ไอเท็มบัฟ
     var _bf = buff_data(_id);
     if (!is_undefined(_bf)) {
         var _n = variable_struct_exists(_s.buff_items, _id) ? _s.buff_items[$ _id] : 0;
-        return { name: _bf.name, desc: _bf.desc + " | มี " + string(_n) + "/5 (F ใช้ | V เลือก)",
-                 price: _bf.price, ok: _n < 5, why: "ถือได้สูงสุด 5" };
+        return { name: _bf.name, desc: _bf.desc + L(" | มี ", " | Have ") + string(_n) + L("/5 (F ใช้ | V เลือก)", "/5 (F use | V select)"),
+                 price: _bf.price, ok: _n < 5, why: L("ถือได้สูงสุด 5", "Max 5") };
     }
     var _b = _s.hp_bonus;
     var _bag = _s.potion_max - 3;
 
     switch (_id) {
         case "potion":
-            return { name: "ยาฟื้นเลือด",
-                     desc: "ฟื้น 2 หัวใจ กด Q ใช้ | ถืออยู่ " + string(_s.potions) + "/" + string(potion_cap()),
-                     price: 15, ok: _s.potions < potion_cap(), why: "ถือเต็มแล้ว" };
+            return { name: L("ยาฟื้นเลือด", "Healing Potion"),
+                     desc: L("ฟื้น 2 หัวใจ กด Q ใช้ | ถืออยู่ ", "Heals 2 hearts, press Q | Carrying ") + string(_s.potions) + "/" + string(potion_cap()),
+                     price: 15, ok: _s.potions < potion_cap(), why: L("ถือเต็มแล้ว", "Full") };
         case "heart":
-            return { name: "หัวใจเพิ่ม",
-                     desc: "เลือดสูงสุด +1 (ซื้อแล้ว " + string(_b) + "/3)",
-                     price: 60 + 40 * _b, ok: _b < 3, why: "ซื้อครบแล้ว" };
+            return { name: L("หัวใจเพิ่ม", "Extra Heart"),
+                     desc: L("เลือดสูงสุด +1 (ซื้อแล้ว ", "Max HP +1 (bought ") + string(_b) + "/3)",
+                     price: 60 + 40 * _b, ok: _b < 3, why: L("ซื้อครบแล้ว", "Sold out") };
         case "bag":
-            return { name: "กระเป๋ายา",
-                     desc: "ถือยาได้เพิ่ม +1 (ซื้อแล้ว " + string(_bag) + "/2)",
-                     price: 50 + 30 * _bag, ok: _bag < 2, why: "ขยายสุดแล้ว" };
+            return { name: L("กระเป๋ายา", "Potion Bag"),
+                     desc: L("ถือยาได้เพิ่ม +1 (ซื้อแล้ว ", "Carry +1 potion (bought ") + string(_bag) + "/2)",
+                     price: 50 + 30 * _bag, ok: _bag < 2, why: L("ขยายสุดแล้ว", "Maxed") };
         case "greatsword":
         case "hammer":
             var _w = weapon_data(_id);
             var _own = weapon_owned(_id);
             return { name: _w.name,
-                     desc: _own ? ("มีแล้ว | คลิกเพื่อสวมใส่" + ((_s.weapon == _id) ? " (ใช้อยู่)" : "")) : _w.desc,
+                     desc: _own ? (L("มีแล้ว | คลิกเพื่อสวมใส่", "Owned | Click to equip") + ((_s.weapon == _id) ? L(" (ใช้อยู่)", " (in use)") : "")) : _w.desc,
                      price: _own ? 0 : _w.price, ok: true, why: "" };
         case "armor1":
-            return { name: "เกราะหนัง", desc: "ลดดาเมจที่ได้รับ -1 (ขั้นต่ำ 1)",
-                     price: 300, ok: _s.armor < 1, why: "มีแล้ว" };
+            return { name: L("เกราะหนัง", "Leather Armor"), desc: L("ลดดาเมจที่ได้รับ -1 (ขั้นต่ำ 1)", "Damage taken -1 (min 1)"),
+                     price: 300, ok: _s.armor < 1, why: L("มีแล้ว", "Owned") };
         case "armor2":
-            return { name: "เกราะเหล็ก", desc: "ลดดาเมจที่ได้รับ -2 (ขั้นต่ำ 1)",
-                     price: 650, ok: _s.armor == 1, why: (_s.armor >= 2) ? "มีแล้ว" : "ต้องมีเกราะหนังก่อน" };
+            return { name: L("เกราะเหล็ก", "Iron Armor"), desc: L("ลดดาเมจที่ได้รับ -2 (ขั้นต่ำ 1)", "Damage taken -2 (min 1)"),
+                     price: 650, ok: _s.armor == 1, why: (_s.armor >= 2) ? L("มีแล้ว", "Owned") : L("ต้องมีเกราะหนังก่อน", "Need Leather Armor first") };
     }
     return undefined;
 }
@@ -104,9 +104,9 @@ function shop_buy(_id) {
     var _info = shop_item_info(_id);
     var _s = global.save;
 
-    if (is_undefined(_info)) return "ไม่มีสินค้า";
+    if (is_undefined(_info)) return L("ไม่มีสินค้า", "No such item");
     if (!_info.ok) return _info.why;
-    if (_s.gold < _info.price) return "เหรียญไม่พอ";
+    if (_s.gold < _info.price) return L("เหรียญไม่พอ", "Not enough gold");
 
     _s.gold -= _info.price;
 
@@ -196,15 +196,15 @@ function acc_list() {
 
 function acc_data(_id) {
     switch (_id) {
-        case "ring_power":   return { name: "แหวนพละกำลัง",   desc: "ATK +15%",                    price: 180, atk: 0.15 };
-        case "neck_hunter":  return { name: "สร้อยนักล่า",     desc: "โอกาสคริ +10%",                price: 160, crit: 0.10 };
-        case "ear_slayer":   return { name: "ต่างหูพิฆาต",     desc: "ดาเมจคริ +40%",                price: 200, critdmg: 0.4 };
-        case "brace_wind":   return { name: "กำไลสายลม",       desc: "ความเร็ว +10%",                price: 150, spd: 0.10 };
-        case "charm_stone":  return { name: "เครื่องรางหินผา", desc: "ลดดาเมจที่ได้รับ -1 (ขั้นต่ำ 1)", price: 420, def: 1 };
-        case "heart_stone":  return { name: "หัวใจศิลา",        desc: "หัวใจสูงสุด +1",               price: 380, hp: 1 };
-        case "amulet_fire":  return { name: "จี้เพลิง",          desc: "ตีโดน 20% ติดไฟไหม้",           price: 240, burn: 0.20 };
-        case "fang_snake":   return { name: "เขี้ยวอสรพิษ",     desc: "ตีโดน 25% ติดพิษ (ช้าลง)",       price: 220, poison: 0.25 };
-        case "seal_thunder": return { name: "ตราสายฟ้า",       desc: "ตีโดน 10% ทำให้ศัตรูสตัน",      price: 320, stun: 0.10 };
+        case "ring_power":   return { name: L("แหวนพละกำลัง", "Ring of Might"),   desc: "ATK +15%",                    price: 180, atk: 0.15 };
+        case "neck_hunter":  return { name: L("สร้อยนักล่า", "Hunter's Necklace"),     desc: L("โอกาสคริ +10%", "Crit chance +10%"),                price: 160, crit: 0.10 };
+        case "ear_slayer":   return { name: L("ต่างหูพิฆาต", "Slayer's Earring"),     desc: L("ดาเมจคริ +40%", "Crit damage +40%"),                price: 200, critdmg: 0.4 };
+        case "brace_wind":   return { name: L("กำไลสายลม", "Wind Bracelet"),       desc: L("ความเร็ว +10%", "Speed +10%"),                price: 150, spd: 0.10 };
+        case "charm_stone":  return { name: L("เครื่องรางหินผา", "Stone Charm"), desc: L("ลดดาเมจที่ได้รับ -1 (ขั้นต่ำ 1)", "Damage taken -1 (min 1)"), price: 420, def: 1 };
+        case "heart_stone":  return { name: L("หัวใจศิลา", "Stone Heart"),        desc: L("หัวใจสูงสุด +1", "Max hearts +1"),               price: 380, hp: 1 };
+        case "amulet_fire":  return { name: L("จี้เพลิง", "Flame Pendant"),          desc: L("ตีโดน 20% ติดไฟไหม้", "20% on hit: Burn"),           price: 240, burn: 0.20 };
+        case "fang_snake":   return { name: L("เขี้ยวอสรพิษ", "Serpent Fang"),     desc: L("ตีโดน 25% ติดพิษ (ช้าลง)", "25% on hit: Poison (slow)"),       price: 220, poison: 0.25 };
+        case "seal_thunder": return { name: L("ตราสายฟ้า", "Thunder Seal"),       desc: L("ตีโดน 10% ทำให้ศัตรูสตัน", "10% on hit: Stun"),      price: 320, stun: 0.10 };
     }
     return undefined;
 }
@@ -236,11 +236,11 @@ function buff_list() {
 
 function buff_data(_id) {
     switch (_id) {
-        case "buff_atk":  return { name: "ยาพละกำลัง",  desc: "ATK +25% 60 วิ",                  price: 40, t: 3600, col: make_color_rgb(255, 120, 80) };
-        case "buff_def":  return { name: "ยาผิวเหล็ก",  desc: "ลดดาเมจที่ได้รับ -1 60 วิ",         price: 55, t: 3600, col: make_color_rgb(150, 170, 200) };
-        case "buff_spd":  return { name: "ยาสายลม",     desc: "ความเร็ว +20% 60 วิ",              price: 35, t: 3600, col: make_color_rgb(140, 230, 200) };
-        case "buff_fire": return { name: "น้ำมันเพลิง", desc: "ตีโดน 50% ติดไฟไหม้ 60 วิ",         price: 45, t: 3600, col: make_color_rgb(255, 170, 40) };
-        case "cleanse":   return { name: "ยาล้างพิษ",   desc: "ล้างไฟไหม้ พิษ ทันที",               price: 20, t: 0,    col: make_color_rgb(200, 255, 200) };
+        case "buff_atk":  return { name: L("ยาพละกำลัง", "Might Tonic"),  desc: L("ATK +25% 60 วิ", "ATK +25% for 60s"),                  price: 40, t: 3600, col: make_color_rgb(255, 120, 80) };
+        case "buff_def":  return { name: L("ยาผิวเหล็ก", "Ironskin Tonic"),  desc: L("ลดดาเมจที่ได้รับ -1 60 วิ", "Damage taken -1 for 60s"),         price: 55, t: 3600, col: make_color_rgb(150, 170, 200) };
+        case "buff_spd":  return { name: L("ยาสายลม", "Swift Tonic"),     desc: L("ความเร็ว +20% 60 วิ", "Speed +20% for 60s"),              price: 35, t: 3600, col: make_color_rgb(140, 230, 200) };
+        case "buff_fire": return { name: L("น้ำมันเพลิง", "Fire Oil"), desc: L("ตีโดน 50% ติดไฟไหม้ 60 วิ", "50% on hit: Burn for 60s"),         price: 45, t: 3600, col: make_color_rgb(255, 170, 40) };
+        case "cleanse":   return { name: L("ยาล้างพิษ", "Antidote"),   desc: L("ล้างไฟไหม้ พิษ ทันที", "Instantly cures Burn & Poison"),               price: 20, t: 0,    col: make_color_rgb(200, 255, 200) };
     }
     return undefined;
 }
@@ -323,7 +323,7 @@ function enemy_add_status(_e, _kind) {
                 if (_boss && variable_instance_exists(id, "state") && (state == "ult" || state == "ult_boom")) break;
                 st_stun = _boss ? 24 : 60;
                 if (atk_state == "windup") { atk_state = ""; atk_cur = undefined; telegraph = false; }
-                float_text(x, y - 120, "สตัน!", c_yellow, 0.9);
+                float_text(x, y - 120, L("สตัน!", "Stunned!"), c_yellow, 0.9);
                 break;
         }
     }
@@ -354,8 +354,8 @@ function player_add_status(_kind) {
     if (!instance_exists(obj_player)) return;
     with (obj_player) {
         switch (_kind) {
-            case "burn":   if (st_burn <= 0) float_text(x, y - 120, "ไฟไหม้! กลิ้งเพื่อดับ", c_orange, 0.9); st_burn = 150; break;
-            case "poison": st_poison = 240; float_text(x, y - 120, "ติดพิษ! ช้าลง", make_color_rgb(140, 220, 90), 0.9); break;
+            case "burn":   if (st_burn <= 0) float_text(x, y - 120, L("ไฟไหม้! กลิ้งเพื่อดับ", "Burning! Roll to put out"), c_orange, 0.9); st_burn = 150; break;
+            case "poison": st_poison = 240; float_text(x, y - 120, L("ติดพิษ! ช้าลง", "Poisoned! Slowed"), make_color_rgb(140, 220, 90), 0.9); break;
             case "stun":   st_stun = 30; break;
         }
     }

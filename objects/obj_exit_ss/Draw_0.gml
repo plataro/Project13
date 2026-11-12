@@ -23,7 +23,7 @@ var _ay = _y1 - 10;
 draw_set_color(locked ? c_gray : c_yellow);
 draw_triangle(_ax + 14, _ay - 12, _ax - 6, _ay - 24, _ax - 6, _ay, false);
 var _t = room_title(next_room);
-if (locked) _t += "  (ยังไปไม่ได้)";
+if (locked) _t += L("  (ยังไปไม่ได้)", "  (locked)");
 draw_set_color(c_black);
 draw_text_transformed(_ax + 1, _ay - 27, _t, 0.6, 0.6, 0);
 draw_set_color(locked ? c_ltgray : c_yellow);

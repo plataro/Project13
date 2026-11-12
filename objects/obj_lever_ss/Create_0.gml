@@ -11,5 +11,5 @@ hit = function() {
     on = true;
     fx_spark(x, y - 30, 90, 12, c_yellow, 160);
     fx_shake(2);
-    float_text(x, y - 90, "แกร๊ก!", c_yellow, 1);
+    float_text(x, y - 90, L("แกร๊ก!", "Click!"), c_yellow, 1);
 }

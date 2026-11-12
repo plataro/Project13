@@ -65,7 +65,7 @@ if (keyboard_check_pressed(ord("I"))) status_toggle();   // ★ หน้าส�
 var _bl = buff_list();
 if (keyboard_check_pressed(ord("V"))) global.buff_sel = (global.buff_sel + 1) mod array_length(_bl);
 if (keyboard_check_pressed(ord("F"))) {
-    if (buff_use(_bl[global.buff_sel]) == "") float_text(x, y - 120, "ไม่มี " + buff_data(_bl[global.buff_sel]).name, c_gray, 0.8);
+    if (buff_use(_bl[global.buff_sel]) == "") float_text(x, y - 120, L("ไม่มี ", "No ") + buff_data(_bl[global.buff_sel]).name, c_gray, 0.8);
 }
 // เวลาบัฟ
 var _bchg = false;
@@ -80,7 +80,7 @@ if (st_poison > 0) st_poison--;
 if (st_burn > 0) {
     if (state == PState.ROLL) {
         st_burn = 0;
-        float_text(x, y - 110, "ดับไฟ!", c_aqua, 0.8);
+        float_text(x, y - 110, L("ดับไฟ!", "Fire out!"), c_aqua, 0.8);
     } else {
         st_burn--;
         if (st_burn mod 10 == 0) fx_spark(x, y - 40, 90, 2, c_orange, 60);

@@ -41,9 +41,9 @@ open_chest = function() {
             shot1_ammo = shot1_max;
             shot1_reload_timer = 0;
         }
-        float_text(x, y - 130, "พลังยิงเพิ่มขึ้น!", make_color_rgb(200, 120, 255), 1.4);
-        loot_toast("ลูกไฟ " + string(_sd.ammo) + " นัด", make_color_rgb(255, 150, 60), "fire");
-        if (_lv0 < 2 && global.save.shot_lv >= 2) loot_toast("ปลดสกิล 2: ยิงสามทิศ", c_yellow, "fire3");
+        float_text(x, y - 130, L("พลังยิงเพิ่มขึ้น!", "Fireball powered up!"), make_color_rgb(200, 120, 255), 1.4);
+        loot_toast(L("ลูกไฟ ", "Fireball ") + string(_sd.ammo) + L(" นัด", " shots"), make_color_rgb(255, 150, 60), "fire");
+        if (_lv0 < 2 && global.save.shot_lv >= 2) loot_toast(L("ปลดสกิล 2: ยิงสามทิศ", "Skill 2 unlocked: Triple shot"), c_yellow, "fire3");
         fx_spark(x, y - 30, 90, 22, make_color_rgb(200, 120, 255), 120);
     }
 }
@@ -70,7 +70,7 @@ trial_fail = function() {
     }
     trial_state = 0;
     trial_wave = 0;
-    float_text(x, y - 110, "ออกนอกเขต บททดสอบล้มเหลว", c_orange, 1.1);
+    float_text(x, y - 110, L("ออกนอกเขต บททดสอบล้มเหลว", "Left the area. Trial failed"), c_orange, 1.1);
 }
 
 // เรียกศัตรูรอบที่ _w (1-3) จำนวนเพิ่มตามด่าน
@@ -106,5 +106,5 @@ trial_spawn = function(_w) {
         fx_spark(_sx, _sy - 30, 90, 14, make_color_rgb(150, 70, 255), 180);
     }
     fx_shake(4);
-    float_text(x, y - 120, "รอบ " + string(_w) + " / " + string(trial_waves), make_color_rgb(200, 120, 255), 1.3);
+    float_text(x, y - 120, L("รอบ ", "Wave ") + string(_w) + " / " + string(trial_waves), make_color_rgb(200, 120, 255), 1.3);
 }

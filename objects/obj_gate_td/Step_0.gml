@@ -10,7 +10,7 @@ if (!opening) {
     }
     if (_total > 0 && _hit >= _total) {
         opening = true;
-        float_text(x + sprite_width / 2, y - 20, "ทางเปิดแล้ว!", make_color_rgb(150, 255, 150), 1.2);
+        float_text(x + sprite_width / 2, y - 20, L("ทางเปิดแล้ว!", "The way is open!"), make_color_rgb(150, 255, 150), 1.2);
         fx_shake(3);
     }
 } else {

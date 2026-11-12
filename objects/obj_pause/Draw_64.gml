@@ -69,7 +69,8 @@ else if (screen == 2) _title = L("กลับหน้าหลัก?", "Retur
 ui_text_bold(480, 152, _title, 0.9, UI_GOLD);
 draw_set_color(UI_GOLD_DARK);
 draw_line_width(400, 176, 560, 176, 2);
-if (screen == 2) ui_text(480, 194, L("เล่นต่อได้จากจุดที่เข้าห้องนี้ (เซฟอัตโนมัติ)", "Continue later from this area's entrance (autosave)"), 0.48, UI_MUTED);
+var _wt = L("เล่นต่อได้จากจุดที่เข้าห้องนี้ (เซฟอัตโนมัติ)", "Continue later from this area's entrance (autosave)");
+if (screen == 2) ui_text(480, 194, _wt, ui_fit(_wt, 0.48, 316), UI_MUTED);
 
 for (var _i = 0; _i < _n; _i++) {
     var _y = row_y(_i);

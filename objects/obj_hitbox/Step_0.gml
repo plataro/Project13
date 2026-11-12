@@ -35,7 +35,7 @@ if (age >= step_data.active_from && age <= step_data.active_to) {
                 var _ty = _py + lengthdir_y(_tc[0], _ang) + lengthdir_y(_tc[1], _ang + 90) - _lift;
                 if (point_distance(_tx, _ty, x, y - 48) < _tc[2] + 18) {
                     tink_id = _me;
-                    float_text(x, y - 90, "ฟันไม่ได้ ต้องยิง! [1]", c_orange, 0.9);
+                    float_text(x, y - 90, L("ฟันไม่ได้ ต้องยิง! [1]", "Can't cut it, shoot it! [1]"), c_orange, 0.9);
                     fx_spark(x, y - 48, _ang + 180, 4, c_white);
                     break;
                 }

@@ -2,25 +2,25 @@
 function skill_nodes() {
     return [
         // ---- ดาบ ----
-        { key: "b1", branch: 0, tier: 0, name: "คมกริบ",        desc: "ท่าสุดท้ายของคอมโบแรงขึ้น +1",            cost: 1, req: "" },
-        { key: "b2", branch: 0, tier: 1, name: "วงดาบกว้าง",     desc: "ระยะฟันทุกท่ากว้างขึ้น 15%",               cost: 1, req: "b1" },
-        { key: "b3", branch: 0, tier: 2, name: "จังหวะต่อเนื่อง", desc: "มีเวลาต่อคอมโบนานขึ้น",                    cost: 1, req: "b2" },
-        { key: "b4", branch: 0, tier: 3, name: "ก้าวพุ่ง",       desc: "ท่าที่พุ่งไปข้างหน้าพุ่งไกลขึ้น 30%",        cost: 1, req: "b3" },
-        { key: "b5", branch: 0, tier: 4, name: "มือไว",          desc: "ทุกท่าฟันเร็วขึ้น 10%",                     cost: 2, req: "b4" },
+        { key: "b1", branch: 0, tier: 0, name: L("คมกริบ", "Keen Edge"),        desc: L("ท่าสุดท้ายของคอมโบแรงขึ้น +1", "Combo finisher damage +1"),            cost: 1, req: "" },
+        { key: "b2", branch: 0, tier: 1, name: L("วงดาบกว้าง", "Wide Arc"),     desc: L("ระยะฟันทุกท่ากว้างขึ้น 15%", "All swings reach 15% wider"),               cost: 1, req: "b1" },
+        { key: "b3", branch: 0, tier: 2, name: L("จังหวะต่อเนื่อง", "Flowing Rhythm"), desc: L("มีเวลาต่อคอมโบนานขึ้น", "Longer window to chain combos"),                    cost: 1, req: "b2" },
+        { key: "b4", branch: 0, tier: 3, name: L("ก้าวพุ่ง", "Lunge Step"),       desc: L("ท่าที่พุ่งไปข้างหน้าพุ่งไกลขึ้น 30%", "Lunging moves travel 30% farther"),        cost: 1, req: "b3" },
+        { key: "b5", branch: 0, tier: 4, name: L("มือไว", "Quick Hands"),          desc: L("ทุกท่าฟันเร็วขึ้น 10%", "All swings 10% faster"),                     cost: 2, req: "b4" },
 
         // ---- ยิง ----
-        { key: "a1", branch: 1, tier: 0, name: "แม็กเสริม",      desc: "สกิล 1 ยิงได้เพิ่ม 1 นัด",                  cost: 1, req: "" },
-        { key: "a2", branch: 1, tier: 1, name: "รีโหลดไว",       desc: "รอรีโหลดสกิล 1 สั้นลง 25%",                 cost: 1, req: "a1" },
-        { key: "a3", branch: 1, tier: 2, name: "กระสุนไว",       desc: "กระสุนพุ่งเร็วขึ้น 30% เล็งโดนง่ายขึ้น",       cost: 1, req: "a2" },
-        { key: "a4", branch: 1, tier: 3, name: "กระสุนทะลุ",     desc: "กระสุนทะลุศัตรูได้ 1 ตัว",                  cost: 2, req: "a3" },
-        { key: "a5", branch: 1, tier: 4, name: "ห้าทิศ",         desc: "สกิล 2 ยิง 5 ลูก (จาก 3)",                  cost: 1, req: "a4" },
+        { key: "a1", branch: 1, tier: 0, name: L("แม็กเสริม", "Extra Mag"),      desc: L("สกิล 1 ยิงได้เพิ่ม 1 นัด", "Skill 1 gets +1 shot"),                  cost: 1, req: "" },
+        { key: "a2", branch: 1, tier: 1, name: L("รีโหลดไว", "Fast Reload"),       desc: L("รอรีโหลดสกิล 1 สั้นลง 25%", "Skill 1 reloads 25% faster"),                 cost: 1, req: "a1" },
+        { key: "a3", branch: 1, tier: 2, name: L("กระสุนไว", "Swift Shot"),       desc: L("กระสุนพุ่งเร็วขึ้น 30% เล็งโดนง่ายขึ้น", "Shots fly 30% faster, easier to hit"),       cost: 1, req: "a2" },
+        { key: "a4", branch: 1, tier: 3, name: L("กระสุนทะลุ", "Piercing Shot"),     desc: L("กระสุนทะลุศัตรูได้ 1 ตัว", "Shots pierce 1 enemy"),                  cost: 2, req: "a3" },
+        { key: "a5", branch: 1, tier: 4, name: L("ห้าทิศ", "Five Ways"),         desc: L("สกิล 2 ยิง 5 ลูก (จาก 3)", "Skill 2 fires 5 shots (was 3)"),                  cost: 1, req: "a4" },
 
         // ---- ร่างกาย ----
-        { key: "g1", branch: 2, tier: 0, name: "เท้าเบา",        desc: "คูลดาวน์กลิ้งสั้นลง 30%",                   cost: 1, req: "" },
-        { key: "g2", branch: 2, tier: 1, name: "ลมใต้เท้า",      desc: "วิ่งเร็วขึ้นและออกตัวไวขึ้น",                 cost: 1, req: "g1" },
-        { key: "g3", branch: 2, tier: 2, name: "ยาแรง",          desc: "ยาฟื้นเลือดเพิ่ม 1 หัวใจ (เป็น 3)",          cost: 1, req: "g2" },
-        { key: "g4", branch: 2, tier: 3, name: "กระเป๋ายา",       desc: "ถือยาได้เพิ่ม 1 ขวด",                       cost: 1, req: "g3" },
-        { key: "g5", branch: 2, tier: 4, name: "ใจสู้",          desc: "หัวใจสูงสุด +1",                            cost: 2, req: "g4" }
+        { key: "g1", branch: 2, tier: 0, name: L("เท้าเบา", "Light Feet"),        desc: L("คูลดาวน์กลิ้งสั้นลง 30%", "Roll cooldown 30% shorter"),                   cost: 1, req: "" },
+        { key: "g2", branch: 2, tier: 1, name: L("ลมใต้เท้า", "Tailwind"),      desc: L("วิ่งเร็วขึ้นและออกตัวไวขึ้น", "Run faster and accelerate quicker"),                 cost: 1, req: "g1" },
+        { key: "g3", branch: 2, tier: 2, name: L("ยาแรง", "Strong Brew"),          desc: L("ยาฟื้นเลือดเพิ่ม 1 หัวใจ (เป็น 3)", "Potions heal +1 heart (3 total)"),          cost: 1, req: "g2" },
+        { key: "g4", branch: 2, tier: 3, name: L("กระเป๋ายา", "Potion Pouch"),       desc: L("ถือยาได้เพิ่ม 1 ขวด", "Carry +1 potion"),                       cost: 1, req: "g3" },
+        { key: "g5", branch: 2, tier: 4, name: L("ใจสู้", "Fighting Spirit"),          desc: L("หัวใจสูงสุด +1", "Max hearts +1"),                            cost: 2, req: "g4" }
     ];
 }
 
@@ -58,10 +58,10 @@ function skill_unlock(_key) {
     var _n = skill_find(_key);
     var _s = global.save;
 
-    if (is_undefined(_n)) return "ไม่พบสกิล";
-    if (skill_has(_key)) return "ปลดแล้ว";
-    if (_n.req != "" && !skill_has(_n.req)) return "ต้องปลดสกิลก่อนหน้า";
-    if (_s.sp < _n.cost) return "แต้มสกิลไม่พอ";
+    if (is_undefined(_n)) return L("ไม่พบสกิล", "Skill not found");
+    if (skill_has(_key)) return L("ปลดแล้ว", "Already unlocked");
+    if (_n.req != "" && !skill_has(_n.req)) return L("ต้องปลดสกิลก่อนหน้า", "Unlock the previous skill first");
+    if (_s.sp < _n.cost) return L("แต้มสกิลไม่พอ", "Not enough skill points");
 
     _s.sp -= _n.cost;
     _s.skills[$ _key] = true;

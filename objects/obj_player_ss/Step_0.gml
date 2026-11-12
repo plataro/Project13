@@ -153,7 +153,7 @@ if (atk_t > 0) {
         with (obj_target) {
             if (!hit && tink_id != _sid && point_in_rectangle(x, y - 48, _ax1, _ay1, _ax2, _ay2)) {
                 tink_id = _sid;
-                float_text(x, y - 90, "ฟันไม่ได้ ต้องยิง! [1]", c_orange, 0.9);
+                float_text(x, y - 90, L("ฟันไม่ได้ ต้องยิง! [1]", "Can't cut it, shoot it! [1]"), c_orange, 0.9);
             }
         }
     }

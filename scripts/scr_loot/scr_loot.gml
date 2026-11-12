@@ -1,9 +1,9 @@
 // ข้อมูลของสะสม (ขายกลับได้) สี/ภาพชั่วคราว ใส่ภาพจริงที่ช่อง spr ทีหลัง
 function item_data(_kind) {
     switch (_kind) {
-        case "fang":  return { name: "เขี้ยวป่า",    price: 4,  col: c_white,                       spr: -1 };
-        case "ore":   return { name: "แร่เหมือง",     price: 9,  col: make_color_rgb(110, 150, 220), spr: -1 };
-        case "shard": return { name: "เศษคริสตัล",   price: 16, col: make_color_rgb(190, 90, 255),  spr: -1 };
+        case "fang":  return { name: L("เขี้ยวป่า", "Wild Fang"),    price: 4,  col: c_white,                       spr: -1 };
+        case "ore":   return { name: L("แร่เหมือง", "Mine Ore"),     price: 9,  col: make_color_rgb(110, 150, 220), spr: -1 };
+        case "shard": return { name: L("เศษคริสตัล", "Crystal Shard"),   price: 16, col: make_color_rgb(190, 90, 255),  spr: -1 };
     }
     return undefined;
 }
@@ -75,7 +75,7 @@ function pickup_collect(_kind, _value, _x, _y) {
         case "potion":
             if (_s.potions >= potion_cap()) return false;
             _s.potions++;
-            loot_toast("ยาฟื้นเลือด", make_color_rgb(255, 110, 110), "potion");
+            loot_toast(L("ยาฟื้นเลือด", "Healing Potion"), make_color_rgb(255, 110, 110), "potion");
             return true;
 
         default:

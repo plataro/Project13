@@ -38,6 +38,13 @@ if (!is_undefined(global.boss_intro)) {
     }
 }
 
+// ★ เปลี่ยนภาษา = สร้างรายการบทสอนใหม่ (ป้ายที่โชว์อยู่ชี้ไปตัวใหม่ key เดียวกัน)
+if (ctx_lang != global.lang) {
+    ctx_lang = global.lang;
+    var _old = is_undefined(ctx) ? "" : ctx.key;
+    build_ctx();
+    if (_old != "") for (var _ci = 0; _ci < array_length(ctx_list); _ci++) if (ctx_list[_ci].key == _old) ctx = ctx_list[_ci];
+}
 if (msg_t > 0) msg_t--;
 if (ctx_shake > 0) ctx_shake--;
 
@@ -85,10 +92,10 @@ if (!seen("tut_dodge")) {
         watch--;
         if (obj_player.hp < watch_hp) {
             watch = 0;
-            show_msg("โดนซะแล้ว! รอจังหวะใหม่แล้วกลิ้งอีกที", c_orange);
+            show_msg(L("โดนซะแล้ว! รอจังหวะใหม่แล้วกลิ้งอีกที", "Got hit! Wait for the next attack and roll again"), c_orange);
         } else if (watch <= 0) {
             global.story_seen[$ "tut_dodge"] = true;
-            show_msg("หลบได้! ระหว่างกลิ้งจะไม่โดนโจมตี", make_color_rgb(150, 255, 150));
+            show_msg(L("หลบได้! ระหว่างกลิ้งจะไม่โดนโจมตี", "Dodged! You can't be hit while rolling"), make_color_rgb(150, 255, 150));
         }
     } else if (!_busy && global.hitstop <= 0) {
         // ศัตรูบทเรียนกำลังจะฟัน (ล็อกทิศแล้ว) = หยุดเกม
