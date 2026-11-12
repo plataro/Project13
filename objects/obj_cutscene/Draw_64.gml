@@ -100,7 +100,7 @@ if (idx < array_length(slides)) {
     }
 
     draw_set_halign(fa_right);
-    ui_text(944, 8, "Esc ข้าม", 0.45, UI_MUTED);
+    ui_text(944, 8, "Tab / Esc ข้าม", 0.45, UI_MUTED);
     draw_set_halign(fa_left);
 }
 

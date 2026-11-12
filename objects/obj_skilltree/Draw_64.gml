@@ -104,7 +104,7 @@ if (hover_key != "") {
     var _hn = skill_find(hover_key);
     ui_text(px + pw / 2, _dy, _hn.desc, 0.52, UI_TEXT);
 } else {
-    ui_text(px + pw / 2, _dy, "ชี้ที่สกิลเพื่อดูรายละเอียด · คลิกเพื่อปลด · T / Esc ปิด", 0.46, UI_MUTED);
+    ui_text(px + pw / 2, _dy, "ชี้ที่สกิลเพื่อดูรายละเอียด | คลิกเพื่อปลด | T / Esc ปิด", 0.46, UI_MUTED);
 }
 if (msg != "") ui_text_bold(px + pw / 2 - 40, py + ph - 26, msg, 0.5, make_color_rgb(255, 225, 120));
 

@@ -80,8 +80,8 @@ for (var _i = 0; _i < _n; _i++) {
 
 // คำแนะนำด้านล่าง
 var _hint = (screen == 1)
-    ? "คลิก หรือ A/D ปรับค่า  ·  Esc / P กลับ"
-    : "คลิก หรือ W/S + Enter  ·  Esc / P " + ((screen == 0 && !menu_mode) ? "เล่นต่อ" : "กลับ");
+    ? "คลิก หรือ A/D ปรับค่า  |  Esc / P กลับ"
+    : "คลิก หรือ W/S + Enter  |  Esc / P " + ((screen == 0 && !menu_mode) ? "เล่นต่อ" : "กลับ");
 ui_text(480, _py2 - 22, _hint, 0.42, UI_MUTED);
 
 draw_set_halign(fa_left);

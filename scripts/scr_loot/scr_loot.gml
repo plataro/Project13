@@ -130,7 +130,7 @@ function draw_hud_money() {
 
     // อาวุธ / เกราะ
     var _multi = array_length(variable_struct_get_names(_s.weapons)) > 0;   // มีอาวุธมากกว่า 1 ชิ้นถึงโชว์ [R]
-    ui_text(_x1 + 14, _cy + 22, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  ·  เกราะ " + string(_s.armor)) : ""), 0.45, UI_TEXT);
+    ui_text(_x1 + 14, _cy + 22, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  |  เกราะ " + string(_s.armor)) : ""), 0.45, UI_TEXT);
 
     // แต้มสกิล
     if (_s.sp > 0) {

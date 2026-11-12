@@ -48,7 +48,7 @@ draw_set_font(fnt_dialog);
 draw_set_halign(fa_center);
 if (trial && !opened && trial_state == 1) {
     draw_set_color(make_color_rgb(210, 150, 255));
-    draw_text_transformed(_x, _y - 74, "รอบ " + string(max(1, trial_wave)) + " / " + string(trial_waves) + "  ·  อย่าออกนอกวง", 0.6, 0.6, 0);
+    draw_text_transformed(_x, _y - 74, "รอบ " + string(max(1, trial_wave)) + " / " + string(trial_waves) + "  |  อย่าออกนอกวง", 0.6, 0.6, 0);
 }
 draw_set_halign(fa_left);
 draw_set_color(c_white);

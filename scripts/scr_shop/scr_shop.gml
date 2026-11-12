@@ -7,10 +7,10 @@ function weapon_data(_id) {
     switch (_id) {
         case "greatsword":
             return { name: "ดาบใหญ่", combo: 4, dmg: 2, time: 1.3, rad: 1.25, kb: 1.4, lunge: 0.8, price: 220,
-                     desc: "ดาเมจ x2 · ช้าลงนิดหน่อย · กวาดกว้างและไกลขึ้น" };
+                     desc: "ดาเมจ x2 | ช้าลงนิดหน่อย | กวาดกว้างและไกลขึ้น" };
         case "hammer":
             return { name: "ค้อน", combo: 3, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 520,
-                     desc: "คอมโบ 3 ท่า · ทุบหนัก ช้า · ท่าจบทุบพื้นเป็นคลื่นกระแทก" };
+                     desc: "คอมโบ 3 ท่า | ทุบหนัก ช้า | ท่าจบทุบพื้นเป็นคลื่นกระแทก" };
     }
     return { name: "ดาบ", combo: 4, dmg: 1, time: 1, rad: 1, kb: 1, lunge: 1, price: 0, desc: "สมดุล เร็ว" };
 }
@@ -56,14 +56,14 @@ function shop_item_info(_id) {
     if (!is_undefined(_ac)) {
         var _own = acc_owned(_id);
         return { name: _ac.name + (acc_equipped(_id) ? "  [สวมอยู่]" : ""),
-                 desc: _own ? (_ac.desc + " · คลิกเพื่อ" + (acc_equipped(_id) ? "ถอด" : "สวม")) : _ac.desc,
+                 desc: _own ? (_ac.desc + " | คลิกเพื่อ" + (acc_equipped(_id) ? "ถอด" : "สวม")) : _ac.desc,
                  price: _own ? 0 : _ac.price, ok: true, why: "" };
     }
     // ★ ไอเท็มบัฟ
     var _bf = buff_data(_id);
     if (!is_undefined(_bf)) {
         var _n = variable_struct_exists(_s.buff_items, _id) ? _s.buff_items[$ _id] : 0;
-        return { name: _bf.name, desc: _bf.desc + " · มี " + string(_n) + "/5 (F ใช้ · V เลือก)",
+        return { name: _bf.name, desc: _bf.desc + " | มี " + string(_n) + "/5 (F ใช้ | V เลือก)",
                  price: _bf.price, ok: _n < 5, why: "ถือได้สูงสุด 5" };
     }
     var _b = _s.hp_bonus;
@@ -72,7 +72,7 @@ function shop_item_info(_id) {
     switch (_id) {
         case "potion":
             return { name: "ยาฟื้นเลือด",
-                     desc: "ฟื้น 2 หัวใจ กด Q ใช้ · ถืออยู่ " + string(_s.potions) + "/" + string(potion_cap()),
+                     desc: "ฟื้น 2 หัวใจ กด Q ใช้ | ถืออยู่ " + string(_s.potions) + "/" + string(potion_cap()),
                      price: 15, ok: _s.potions < potion_cap(), why: "ถือเต็มแล้ว" };
         case "heart":
             return { name: "หัวใจเพิ่ม",
@@ -87,7 +87,7 @@ function shop_item_info(_id) {
             var _w = weapon_data(_id);
             var _own = weapon_owned(_id);
             return { name: _w.name,
-                     desc: _own ? ("มีแล้ว · คลิกเพื่อสวมใส่" + ((_s.weapon == _id) ? " (ใช้อยู่)" : "")) : _w.desc,
+                     desc: _own ? ("มีแล้ว | คลิกเพื่อสวมใส่" + ((_s.weapon == _id) ? " (ใช้อยู่)" : "")) : _w.desc,
                      price: _own ? 0 : _w.price, ok: true, why: "" };
         case "armor1":
             return { name: "เกราะหนัง", desc: "ลดดาเมจที่ได้รับ -1 (ขั้นต่ำ 1)",

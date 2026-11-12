@@ -73,7 +73,7 @@ var _rows = [
     ["ดาเมจคริ",      "x" + string_format(_st.critdmg, 1, 1), make_color_rgb(255, 170, 70)],
     ["ความเร็ว",      string(round(_st.spd * 100)) + "%", make_color_rgb(140, 230, 160)],
     ["ลดดาเมจรับ",     "-" + string(_st.def), make_color_rgb(150, 170, 200)],
-    ["พลังยิง",       string(_sd.ammo) + " นัด · x" + string(_sd.dmg), make_color_rgb(255, 150, 60)],
+    ["พลังยิง",       string(_sd.ammo) + " นัด | x" + string(_sd.dmg), make_color_rgb(255, 150, 60)],
     ["ติดสถานะศัตรู",  ((_st.burn > 0) ? ("ไฟ " + string(round(_st.burn * 100)) + "% ") : "") + ((_st.poison > 0) ? ("พิษ " + string(round(_st.poison * 100)) + "% ") : "") + ((_st.stun > 0) ? ("สตัน " + string(round(_st.stun * 100)) + "%") : "") + ((_st.burn + _st.poison + _st.stun) <= 0 ? "-" : ""), make_color_rgb(200, 140, 255)]
 ];
 var _sx1 = px + 204;
@@ -182,7 +182,7 @@ for (var _j = 0; _j < array_length(_bl); _j++) {
     _anyi = true;
 }
 if (!_anyi) ui_text(px + 140, _by + 40, "-", 0.45, UI_MUTED);
-ui_text(px + 22, py + ph - 26, "F ใช้บัฟ · V เปลี่ยน", 0.4, UI_MUTED);
+ui_text(px + 22, py + ph - 26, "F ใช้บัฟ | V เปลี่ยน", 0.4, UI_MUTED);
 
 // ปุ่มปิด
 var _mx = device_mouse_x_to_gui(0);
@@ -190,7 +190,7 @@ var _my = device_mouse_y_to_gui(0);
 
 // ★ กล่องคำอธิบายเครื่องประดับที่ชี้ (ข้างเมาส์)
 if (hover_acc != "") {
-    var _dsc = acc_data(hover_acc).desc + (acc_equipped(hover_acc) ? "  · คลิกเพื่อถอด" : "  · คลิกเพื่อสวม");
+    var _dsc = acc_data(hover_acc).desc + (acc_equipped(hover_acc) ? "  | คลิกเพื่อถอด" : "  | คลิกเพื่อสวม");
     var _tw2 = string_width(_dsc) * 0.42 + 20;
     var _tx1 = clamp(_mx - _tw2 - 10, 4, 956 - _tw2);
     var _ty1 = _my + 14;

@@ -1,6 +1,7 @@
 global.max_hp = 5;
 global.player_hp = global.max_hp;
 global.debug = false;
+#macro SHOW_DEBUG_MENU true   // ★ ก่อนอัปโหลดขึ้น itch ให้เปลี่ยนเป็น false (ซ่อนปุ่ม Debug Mode ในเมนูหลัก)
 global.god = false;
 global.difficulty = 1;   // 0 = ง่าย, 1 = ปานกลาง, 2 = ยาก
 
@@ -36,15 +37,15 @@ function difficulty_data(_i = global.difficulty) {
         case 0:   // ง่าย
             return { name: "ง่าย", player_hp: 8,
                      enemy_hp: 0.7, enemy_dmg: 0.5, windup: 1.3, enemy_speed: 0.9, attackers: 1,
-                     desc: "เลือด 8 · ศัตรูอ่อนและช้ากว่า ดาเมจน้อย เตรียมโจมตีนาน หลบง่าย" };
+                     desc: "เลือด 8 | ศัตรูอ่อนและช้ากว่า ดาเมจน้อย เตรียมโจมตีนาน หลบง่าย" };
         case 2:   // ยาก
             return { name: "ยาก", player_hp: 4,
                      enemy_hp: 1.5, enemy_dmg: 1, windup: 0.8, enemy_speed: 1.15, attackers: 3,
-                     desc: "เลือด 4 · ศัตรูทนและเร็วกว่า บุกพร้อมกัน 3 ตัว สัญญาณเตือนสั้นลง" };
+                     desc: "เลือด 4 | ศัตรูทนและเร็วกว่า บุกพร้อมกัน 3 ตัว สัญญาณเตือนสั้นลง" };
         default:  // ปานกลาง
             return { name: "ปานกลาง", player_hp: 5,
                      enemy_hp: 1, enemy_dmg: 1, windup: 1, enemy_speed: 1, attackers: 2,
-                     desc: "เลือด 5 · สมดุล เล่นตามที่ออกแบบไว้" };
+                     desc: "เลือด 5 | สมดุล เล่นตามที่ออกแบบไว้" };
     }
 }
 
@@ -165,7 +166,7 @@ function save_summary() {
     var _r = asset_get_index(_d.room);
     var _nm = (_r != -1 && room_exists(_r)) ? room_title(_r) : "";
     if (_nm == "") _nm = _d.room;
-    return difficulty_data(_d.difficulty).name + "  ·  " + _nm;
+    return difficulty_data(_d.difficulty).name + "  |  " + _nm;
 }
 
 function save_read_raw() {

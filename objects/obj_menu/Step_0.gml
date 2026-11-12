@@ -37,7 +37,7 @@ if (screen == 0) {
     array_push(items, "วิธีเล่น");  array_push(acts, "howto");
     array_push(items, "เครดิต");    array_push(acts, "credits");
     array_push(items, "ตั้งค่า");    array_push(acts, "settings");
-    array_push(items, global.debug ? "Debug Mode: เปิด" : "Debug Mode: ปิด"); array_push(acts, "debug");
+    if (SHOW_DEBUG_MENU) { array_push(items, global.debug ? "Debug Mode: เปิด" : "Debug Mode: ปิด"); array_push(acts, "debug"); }
     if (global.debug) { array_push(items, "เลือกฉาก"); array_push(acts, "scenes"); }
 } else if (screen == 4) {
     items = ["ง่าย", "ปานกลาง", "ยาก", "กลับ"];

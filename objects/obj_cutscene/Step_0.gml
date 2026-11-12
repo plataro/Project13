@@ -16,7 +16,7 @@ if (!closing) {
 
     var _ok = t > 25;   // กันกดค้างจากหน้าก่อนหน้า
     var _next = _ok && (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E")) || keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left));
-    if (_ok && keyboard_check_pressed(vk_escape)) closing = true;
+    if (_ok && (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_tab))) closing = true;   // ★ Tab ข้ามได้ด้วย (บน itch กด Esc แล้วหลุดเต็มจอ)
 
     if (_next) {
         if (chars < total) chars = total;

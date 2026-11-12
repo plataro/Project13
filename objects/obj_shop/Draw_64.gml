@@ -112,7 +112,7 @@ if (tab == 0) {
         ui_icon("gem", row_x + 26, _ry2 + (row_h - 6) / 2, 11, _item.col);
 
         ui_text_bold(row_x + 56, _ry2 + 16, _item.name + "  x" + string(_cnt), 0.5, UI_TEXT, false);
-        ui_text(row_x + 56, _ry2 + 36, "คลิก = ขาย 1 ชิ้น · Shift+คลิก = ขายทั้งหมด", 0.4, UI_MUTED);
+        ui_text(row_x + 56, _ry2 + 36, "คลิก = ขาย 1 ชิ้น | Shift+คลิก = ขายทั้งหมด", 0.4, UI_MUTED);
 
         draw_set_halign(fa_right);
         ui_text_bold(row_x + row_w - 30, _ry2 + (row_h - 6) / 2, "+" + string(round(_item.price * sell_mul)), 0.5, make_color_rgb(255, 215, 90));
