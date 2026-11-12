@@ -170,9 +170,43 @@ start_roll = function(_kx, _ky, _len) {
     }
 }
 
+
+// ★ อัปเดตกล้อง: _zoom = true ปรับซูมด้วย (เรียกครั้งเดียวต่อเฟรม), false = แค่ตามตำแหน่ง
+// ไม่ล็อกกล้องที่ขอบห้องแล้ว (นอกห้องมีกำแพงกรอบไว้ให้เห็นเต็มจอ) ตัวละครจะอยู่กลางจอเสมอ
+update_camera = function(_zoom) {
+    if (!is_undefined(global.boss_intro)) return;   // ระหว่างเปิดตัวบอส obj_tutorial คุมกล้อง
+    var _cam = view_camera[0];
+
+    if (!variable_instance_exists(id, "camera_base_w")) {
+        camera_base_w = camera_get_view_width(_cam);
+        camera_base_h = camera_get_view_height(_cam);
+        camera_zoom = 1;
+    }
+
+    if (_zoom) {
+        var _camera_spd = point_distance(0, 0, mvx, mvy);
+        var _zoom_target = 1.0;
+        if (state == PState.MOVE && _camera_spd > move_speed + 0.5) _zoom_target = 1.03;
+        var _zspd = (_zoom_target > camera_zoom) ? 0.035 : 0.05;
+        camera_zoom = lerp(camera_zoom, _zoom_target, _zspd);
+        if (abs(camera_zoom - _zoom_target) < 0.0005) camera_zoom = _zoom_target;
+    }
+
+    var _cw = round(camera_base_w * camera_zoom);
+    var _ch = round(_cw * camera_base_h / camera_base_w);
+    camera_set_view_size(_cam, _cw, _ch);
+
+    var _cam_x = floor(x - _cw / 2);
+    var _cam_y = floor(y - chest - _ch / 2);
+
+    var _shk = global.shake;
+    camera_set_view_pos(_cam, _cam_x + round(random_range(-_shk, _shk)), _cam_y + round(random_range(-_shk, _shk)));
+}
+
 player_apply_skills();
 save_snapshot_new_room();
 arrive_pending = (global.arrive != "");   // ย้ายไปจุดเกิดของประตูใน Step (รอให้ประตูถูกสร้างครบก่อน)
 instance_create_depth(0, 0, -15000, obj_title_card);
 if (!instance_exists(obj_fx)) instance_create_depth(0, 0, -19000, obj_fx);
 if (!instance_exists(obj_pause)) instance_create_depth(0, 0, -14000, obj_pause);   // เผื่อเริ่มเทสจากห้องอื่นที่ไม่ใช่เมนู
+update_camera(false);   // ★ เข้าห้องมากล้องอยู่ที่ตัวละครทันที (เดิมเริ่มที่มุมซ้ายบน)

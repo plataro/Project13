@@ -16,10 +16,10 @@ if (!is_undefined(global.boss_intro)) {
         var _cw = camera_get_view_width(_cam);
         var _ch = camera_get_view_height(_cam);
         var _p = obj_player;
-        var _px = clamp(floor(_p.x - _cw / 2), 0, max(0, room_width - _cw));
-        var _py = clamp(floor(_p.y - _p.chest - _ch / 2), 0, max(0, room_height - _ch));
-        var _bx = clamp(floor(_bi.boss.x - _cw / 2), 0, max(0, room_width - _cw));
-        var _by = clamp(floor(_bi.boss.y - 90 - _ch / 2), 0, max(0, room_height - _ch));
+        var _px = floor(_p.x - _cw / 2);
+        var _py = floor(_p.y - _p.chest - _ch / 2);
+        var _bx = floor(_bi.boss.x - _cw / 2);
+        var _by = floor(_bi.boss.y - 90 - _ch / 2);
         var _k;
         if (_bi.t < 30) _k = _bi.t / 30;
         else if (_bi.t < 150) _k = 1;

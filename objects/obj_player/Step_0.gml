@@ -10,6 +10,9 @@ if (arrive_pending) {
 }
 
 
+// ★ กล้องตามตัวทุกเฟรม แม้เฟรมที่ออกจาก Step ก่อน (จอหยุด / บทสนทนา / เฟด)
+update_camera(false);
+
 if (hp <= 0) {
     if (!instance_exists(obj_gameover)) instance_create_depth(0, 0, -9000, obj_gameover);
     hsp = 0;
@@ -396,50 +399,6 @@ depth = -y;
 
 
 // ==========================================
-// CAMERA + DYNAMIC ZOOM
+// CAMERA (ฟังก์ชันอยู่ใน Create: update_camera)
 // ==========================================
-
-var _cam = view_camera[0];
-
-// เก็บขนาดกล้องตั้งต้นเพียงครั้งเดียว
-if (!variable_instance_exists(id, "camera_base_w")) {
-    camera_base_w = camera_get_view_width(_cam);
-    camera_base_h = camera_get_view_height(_cam);
-    camera_zoom = 1;
-}
-
-// ตรวจจับความเร็ว
-var _camera_spd = point_distance(0, 0, mvx, mvy);
-
-// เป้าหมายการซูม
-// 1.00 = ระยะปกติ
-// 1.06 = ซูมออก 6%
-var _zoom_target = 1.0;   // ซูมออกตอนวิ่งแค่เล็กน้อย (เดิม 1.06)
-
-if (state == PState.MOVE && _camera_spd > move_speed + 0.5) {
-    _zoom_target = 1.03;
-}
-
-// ค่อย ๆ เปลี่ยนระยะซูมให้นุ่ม: เข้าช้ากว่าออกเล็กน้อย + ทำให้ความเร็วซูมสมูท (ease)
-var _zspd = (_zoom_target > camera_zoom) ? 0.035 : 0.05;
-camera_zoom = lerp(camera_zoom, _zoom_target, _zspd);
-if (abs(camera_zoom - _zoom_target) < 0.0005) camera_zoom = _zoom_target;
-
-// คงสัดส่วนภาพ: คำนวณความกว้างแล้วหาความสูงจากสัดส่วนเดิม (กันขอบสั่นเพราะปัดเศษคนละทาง)
-var _cw = round(camera_base_w * camera_zoom);
-var _ch = round(_cw * camera_base_h / camera_base_w);
-
-camera_set_view_size(_cam, _cw, _ch);
-
-// ติดตามตำแหน่งผู้เล่นเหมือนเดิม
-var _cam_x = floor(x - _cw / 2);
-var _cam_y = floor(y - chest - _ch / 2);
-
-// จำกัดขอบเขตห้อง
-_cam_x = clamp(_cam_x, 0, max(0, room_width - _cw));
-_cam_y = clamp(_cam_y, 0, max(0, room_height - _ch));
-
-// กล้องสั่น (global.shake ลดลงเองใน obj_fx)
-var _shk = global.shake;
-camera_set_view_pos(_cam, _cam_x + round(random_range(-_shk, _shk)), _cam_y + round(random_range(-_shk, _shk)));
-
+update_camera(true);

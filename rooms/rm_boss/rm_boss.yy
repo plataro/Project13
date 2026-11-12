@@ -45,6 +45,22 @@
     {
       "name": "inst_F2ED66FF",
       "path": "rooms/rm_boss/rm_boss.yy"
+    },
+    {
+      "name": "inst_6932676E",
+      "path": "rooms/rm_boss/rm_boss.yy"
+    },
+    {
+      "name": "inst_D76E6161",
+      "path": "rooms/rm_boss/rm_boss.yy"
+    },
+    {
+      "name": "inst_7EE18ABB",
+      "path": "rooms/rm_boss/rm_boss.yy"
+    },
+    {
+      "name": "inst_DC379C4B",
+      "path": "rooms/rm_boss/rm_boss.yy"
     }
   ],
   "isDnd": false,
@@ -332,6 +348,114 @@
           "scaleY": 2.0,
           "x": 1552.0,
           "y": 624.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_6932676E",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_6932676E",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 57.5,
+          "scaleY": 10.0,
+          "x": -640.0,
+          "y": -640.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_D76E6161",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_D76E6161",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 57.5,
+          "scaleY": 10.0,
+          "x": -640.0,
+          "y": 1350.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_7EE18ABB",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_7EE18ABB",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 10.0,
+          "scaleY": 21.09375,
+          "x": -640.0,
+          "y": 0.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_DC379C4B",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_DC379C4B",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 10.0,
+          "scaleY": 21.09375,
+          "x": 2400.0,
+          "y": 0.0
         }
       ],
       "layers": [],

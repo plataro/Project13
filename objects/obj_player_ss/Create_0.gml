@@ -58,3 +58,4 @@ if (room == rm_the_sanctuary_ss && !variable_struct_exists(global.story_seen, "i
     cutscene_start("intro");
 }
 if (!instance_exists(obj_pause)) instance_create_depth(0, 0, -14000, obj_pause);   // เผื่อเริ่มเทสจากห้องอื่นที่ไม่ใช่เมนู
+scr_camera_ss(x, y - 72, 1);   // ★ เข้าห้องมากล้องอยู่ที่ตัวละครทันที

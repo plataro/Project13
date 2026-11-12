@@ -649,6 +649,22 @@
     {
       "name": "inst_A39DF359",
       "path": "rooms/rm_level_3_the_castle/rm_level_3_the_castle.yy"
+    },
+    {
+      "name": "inst_A9A6EFB3",
+      "path": "rooms/rm_level_3_the_castle/rm_level_3_the_castle.yy"
+    },
+    {
+      "name": "inst_F9ACE5E7",
+      "path": "rooms/rm_level_3_the_castle/rm_level_3_the_castle.yy"
+    },
+    {
+      "name": "inst_5018817F",
+      "path": "rooms/rm_level_3_the_castle/rm_level_3_the_castle.yy"
+    },
+    {
+      "name": "inst_C7F13488",
+      "path": "rooms/rm_level_3_the_castle/rm_level_3_the_castle.yy"
     }
   ],
   "isDnd": false,
@@ -5013,6 +5029,114 @@
           "scaleY": 2.0,
           "x": 5056.0,
           "y": 320.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_A9A6EFB3",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_A9A6EFB3",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 110.0,
+          "scaleY": 10.0,
+          "x": -640.0,
+          "y": -640.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_F9ACE5E7",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_F9ACE5E7",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 110.0,
+          "scaleY": 10.0,
+          "x": -640.0,
+          "y": 3240.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_5018817F",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_5018817F",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 10.0,
+          "scaleY": 50.625,
+          "x": -640.0,
+          "y": 0.0
+        },
+        {
+          "$GMRInstance": "v4",
+          "%Name": "inst_C7F13488",
+          "colour": 4294967295,
+          "frozen": false,
+          "hasCreationCode": false,
+          "ignore": false,
+          "imageIndex": 0,
+          "imageSpeed": 1.0,
+          "inheritCode": false,
+          "inheritedItemId": null,
+          "inheritItemSettings": false,
+          "isDnd": false,
+          "name": "inst_C7F13488",
+          "objectId": {
+            "name": "obj_wall",
+            "path": "objects/obj_wall/obj_wall.yy"
+          },
+          "properties": [],
+          "resourceType": "GMRInstance",
+          "resourceVersion": "2.0",
+          "rotation": 0.0,
+          "scaleX": 10.0,
+          "scaleY": 50.625,
+          "x": 5760.0,
+          "y": 0.0
         }
       ],
       "layers": [],
