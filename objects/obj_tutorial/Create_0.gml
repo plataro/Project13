@@ -38,7 +38,7 @@ build_ctx = function() {
           goal: function() { return ctx_dist >= 220; },
           when: function() { return instance_exists(obj_player); } },
         { key: "ctx_atk", slot: 1, keys: [L("คลิกซ้าย", "Left Click")], codes: [-1], text: L("โจมตี", "Attack"), sub: L("คลิกต่อเนื่อง = คอมโบ 4 ท่า", "Keep clicking = 4-hit combo"), timeout: 0,
-          when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "ctx_move"); } },
+          when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "tut_dodge"); } },   // ★ สอนตีหลังสอนหลบ (ตีศัตรูตัวที่เพิ่งหลบได้เลย)
         { key: "ctx_shot", slot: 3, keys: ["1"], codes: [ord("1")], text: L("ยิงลูกไฟไปทางเมาส์", "Shoot a fireball at the mouse"), sub: L("ยิงเป้าให้โดนทุกอันเพื่อเปิดประตู", "Hit every target to open the gate"), timeout: 0,
           retry: L("ยังไม่โดนครบ! เล็งเมาส์ที่เป้าแล้วกด 1 อีกที", "Not all hit! Aim at a target and press 1 again"),
           goal: function() {
@@ -47,7 +47,7 @@ build_ctx = function() {
               with (obj_target) if (!hit) _all = false;
               return _all;
           },
-          when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "tut_dodge"); } },
+          when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "ctx_atk"); } },
         { key: "ctx_potion", slot: 6, keys: ["Q"], codes: [ord("Q")], text: L("ดื่มยาฟื้นเลือด", "Drink a potion"), sub: L("ฟื้น 2 หัวใจ ซื้อเพิ่มได้ที่ร้าน", "Heals 2 hearts. Buy more at shops"), timeout: 0,
           when: function() { return instance_exists(obj_player) && obj_player.hp <= obj_player.max_hp - 2 && global.save.potions > 0; } },
         { key: "ctx_skill2", slot: 4, keys: ["2"], codes: [ord("2")], text: L("ยิงกระจายสามทิศ", "Triple spread shot"), sub: L("ปลดสกิลแล้ว! คูลดาวน์นานกว่าปุ่ม 1", "Unlocked! Longer cooldown than 1"), timeout: 0,
