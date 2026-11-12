@@ -336,6 +336,7 @@ function enemy_status_damage(_e, _mul, _col) {
         if (variable_instance_exists(id, "invuln") && invuln > 0) return;
         var _d = max(1, round(player_atk() * _mul));
         hp -= _d;
+        combo_add(_d, false);   // ★ บวกเข้าดาเมจรวม
         hp_bar_timer = 180;
         if (global.show_dmg) {
             var _r = enemy_hurt_rect(id);

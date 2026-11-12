@@ -1,6 +1,7 @@
 if (global.hitstop > 0) global.hitstop--;
 else if (global.hitstop_cd > 0) global.hitstop_cd--;
 
+combo_step();   // ★ เวลาคอมโบ (หยุดเดินตอนพักเกม)
 global.shake *= 0.86;
 if (global.shake < 0.15) global.shake = 0;
 global.hurt_flash = max(0, global.hurt_flash - 0.04);

@@ -84,6 +84,99 @@ function fx_enemy_hit(_e, _dmg, _dir) {
     fx_spark(_cx, _cy, _dir, 4 + _p * 2, (_p >= 3) ? c_yellow : c_white);
 }
 
+// =====================================================================
+// ★ คอมโบ + ดาเมจรวม (ตีโดนต่อเนื่องภายใน ~2.5 วิ / โดนตีแล้วคอมโบขาด)
+// =====================================================================
+#macro COMBO_TIME 150
+global.combo = { n: 0, dmg: 0, t: 0, pop: 0, fade: 0, brk: 0, best: 0 };
+function combo_add(_dmg, _hit = true) {
+    var _c = global.combo;
+    if (!_hit) {   // ดาเมจต่อเนื่อง (ไฟ/พิษ): บวกเข้ายอดรวมเฉพาะตอนคอมโบยังไม่หมด ไม่ต่อเวลา
+        if (_c.t > 0) _c.dmg += max(0, round(_dmg));
+        return;
+    }
+    if (_c.t <= 0) { _c.n = 0; _c.dmg = 0; }   // คอมโบใหม่
+    _c.n++;
+    _c.pop = 1;
+    _c.dmg += max(0, round(_dmg));
+    _c.t = COMBO_TIME;
+    _c.fade = 30;
+    _c.brk = 0;
+    _c.best = max(_c.best, _c.n);
+}
+function combo_break() {
+    var _c = global.combo;
+    if (_c.n >= 2 && _c.t > 0) _c.brk = 45;   // โชว์ "คอมโบขาด"
+    _c.t = 0;
+}
+function combo_step() {
+    var _c = global.combo;
+    if (_c.t > 0) _c.t--;
+    else if (_c.fade > 0) _c.fade--;
+    if (_c.brk > 0) _c.brk--;
+    _c.pop = max(0, _c.pop - 0.1);
+}
+// ใส่จุลภาคหลักพัน 12345 -> 12,345
+function num_commas(_v) {
+    var _s = string(floor(_v));
+    var _out = "";
+    var _n = string_length(_s);
+    for (var _i = 1; _i <= _n; _i++) {
+        _out += string_char_at(_s, _i);
+        if ((_n - _i) mod 3 == 0 && _i < _n) _out += ",";
+    }
+    return _out;
+}
+// วาดตัวนับคอมโบ (ซ้ายกลางจอ ใต้ HUD ซ้ายบน ไม่ทับอะไร)
+function draw_combo_hud() {
+    var _c = global.combo;
+    var _a = (_c.t > 0) ? 1 : _c.fade / 30;
+    if (_c.brk > 0) _a = 1;
+    if (_c.n < 2 || _a <= 0.01) return;
+    draw_set_font(fnt_dialog);
+    var _x = 22;
+    var _y = 176;
+    var _col = c_white;
+    if (_c.n >= 50) _col = make_color_rgb(255, 90, 140);
+    else if (_c.n >= 25) _col = make_color_rgb(255, 140, 60);
+    else if (_c.n >= 10) _col = make_color_rgb(255, 220, 90);
+    if (_c.brk > 0) _col = make_color_rgb(150, 150, 160);
+    var _sh = (_c.brk > 0) ? irandom_range(-2, 2) : 0;
+    var _s = 1.15 + 0.35 * _c.pop + min(0.35, _c.n * 0.006);
+    var _oa = draw_get_alpha();
+    draw_set_alpha(_a);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_bottom);
+    // ตัวเลขใหญ่ + เรืองตอนเด้ง
+    var _num = string(_c.n);
+    if (_c.pop > 0.3) {
+        gpu_set_blendmode(bm_add);
+        draw_set_alpha(_a * 0.4 * _c.pop);
+        draw_set_color(_col);
+        draw_text_transformed(_x + _sh - 1, _y + 1, _num, _s * 1.06, _s * 1.06, 0);
+        gpu_set_blendmode(bm_normal);
+        draw_set_alpha(_a);
+    }
+    ui_text_bold(_x + _sh, _y, _num, _s, _col);
+    var _nw = string_width(_num) * _s;
+    ui_text_bold(_x + _nw + 8 + _sh, _y - 6, (_c.brk > 0) ? "คอมโบขาด" : "คอมโบ", 0.5, (_c.brk > 0) ? make_color_rgb(255, 110, 110) : UI_GOLD);
+    // เวลาที่เหลือ
+    var _bw = 120;
+    var _k = _c.t / COMBO_TIME;
+    draw_set_color(c_black);
+    draw_rectangle(_x, _y + 3, _x + _bw, _y + 7, false);
+    draw_set_color(_col);
+    if (_k > 0) draw_rectangle(_x, _y + 4, _x + _bw * _k, _y + 6, false);
+    // ดาเมจรวม
+    draw_set_valign(fa_top);
+    ui_text(_x, _y + 11, "ดาเมจรวม", 0.42, UI_MUTED);
+    ui_text_bold(_x + 62, _y + 9, num_commas(_c.dmg), 0.5, make_color_rgb(255, 225, 160));
+    draw_set_alpha(_oa);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    draw_set_color(c_white);
+}
+
 // ศัตรูตาย
 function fx_kill(_x, _y, _big) {
     fx_hitstop(_big ? 10 : 4);
@@ -93,6 +186,7 @@ function fx_kill(_x, _y, _big) {
 
 // ผู้เล่นโดนตี
 function fx_player_hurt(_dmg) {
+    combo_break();
     fx_hitstop(5);
     fx_shake(5 + min(_dmg, 3) * 1.2);
     global.hurt_flash = 1;

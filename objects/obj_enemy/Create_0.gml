@@ -284,6 +284,7 @@ take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
     hp -= _dmg;
     flash = 6;
     fx_enemy_hit(id, _dmg, _dir);
+    combo_add(_dmg);   // ★ นับคอมโบ + ดาเมจรวม
     alert_timer = 300;   // โดนตี = รู้ตัวทันที
 
     // ช่วงรอจังหวะแรก: นับครั้งที่โดนตี ครบแล้วเว้นจังหวะนิดนึงค่อยสวนกลับ (ดูเป็นธรรมชาติ ไม่สวนทันที)
