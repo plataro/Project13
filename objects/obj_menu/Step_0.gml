@@ -44,7 +44,8 @@ if (screen == 0) {
 } else {
     items = [];
     for (var _i = 0; _i < array_length(global.levels); _i++) {
-        array_push(items, room_get_name(global.levels[_i]));
+        var _rt = room_title(global.levels[_i]);
+        array_push(items, (_rt != "") ? _rt : room_get_name(global.levels[_i]));
     }
     array_push(items, "กลับ");
 }

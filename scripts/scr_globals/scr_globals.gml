@@ -137,6 +137,14 @@ function save_commit() {
     save_write_file(_hp);
 }
 
+// ★ เซฟเฉพาะ "สิ่งที่ดู/ผ่านแล้ว" (บทสอน เนื้อเรื่อง) กลางห้อง
+//   ของ/เงินยังเป็นของตอนเข้าห้องเหมือนเดิม แค่โหลดใหม่แล้วไม่ต้องทำบทสอนซ้ำ
+function save_commit_seen() {
+    if (!save_room_ok()) return;
+    global.snap_seen = json_stringify(global.story_seen);
+    save_write_file(global.player_hp);
+}
+
 function save_exists() {
     ini_open(SAVE_FILE);
     var _e = ini_key_exists("save", "data");
@@ -154,7 +162,10 @@ function save_delete() {
 function save_summary() {
     var _d = save_read_raw();
     if (is_undefined(_d)) return "";
-    return difficulty_data(_d.difficulty).name + "  ·  " + _d.room;
+    var _r = asset_get_index(_d.room);
+    var _nm = (_r != -1 && room_exists(_r)) ? room_title(_r) : "";
+    if (_nm == "") _nm = _d.room;
+    return difficulty_data(_d.difficulty).name + "  ·  " + _nm;
 }
 
 function save_read_raw() {

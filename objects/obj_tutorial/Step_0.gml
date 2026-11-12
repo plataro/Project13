@@ -43,6 +43,13 @@ if (msg_t > 0) msg_t--;
 // ต้นไม้สกิลเปิดใช้ได้ตั้งแต่ถึงหมู่บ้านครั้งแรก
 if (room == rm_the_village && !flag_get("tree_unlocked")) flag_set("tree_unlocked");
 
+// ★ ผ่านบทสอน/ดูเนื้อเรื่องแล้ว = เซฟทันที (โหลดใหม่ไม่ต้องทำบทสอนซ้ำ)
+var _seen_n = array_length(variable_struct_get_names(global.story_seen));
+if (_seen_n != seen_count) {
+    if (seen_count >= 0 && _seen_n > seen_count) save_commit_seen();
+    seen_count = _seen_n;
+}
+
 if (!instance_exists(obj_player)) {
     freeze = false;
     watch = 0;
@@ -139,3 +146,4 @@ if (is_undefined(ctx)) {
         if (_ok) ctx_done = 1;
     }
 }
+
