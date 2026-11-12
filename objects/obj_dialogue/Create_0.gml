@@ -16,6 +16,7 @@ pdata = portrait_data();
 
 // ★ ขนาดกล่องและตัวอักษร
 text_scale = 0.72;
+line_scale = text_scale;   // ★ สเกลที่ใช้จริงของบรรทัดนี้ (ย่อเองถ้าข้อความยาวเกินกล่อง)
 box = [110, 408, 850, 522];   // ซ้าย บน ขวา ล่าง
 choice_x1 = 270;
 choice_x2 = 690;
@@ -42,6 +43,14 @@ finish = function() {
 load_line = function() {
     var _l = lines[index];
     wrapped = text_wrap_thai(_l.text, 970);   // ★ ความกว้างตอนสเกล 1 (วาดจริงที่ text_scale)
+    // ★ ยาวเกินความสูงกล่อง = ย่อตัวอักษรลง แล้วตัดบรรทัดใหม่ให้กว้างขึ้นตาม
+    line_scale = text_scale;
+    draw_set_font(fnt_dialog);
+    var _avail = (box[3] - box[1]) - 30;
+    for (var _try = 0; _try < 4 && string_height(wrapped) * line_scale > _avail; _try++) {
+        line_scale *= 0.9;
+        wrapped = text_wrap_thai(_l.text, 970 * text_scale / line_scale);
+    }
     chars = 0;
     total = string_length(wrapped);
     choice_t = 0;

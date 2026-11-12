@@ -146,6 +146,23 @@ vsp += _py * sep_strength;
 
 move_and_collide(hsp + kb_x, vsp + kb_y, obj_wall);
 
+// ★ ศัตรูจากหีบบททดสอบ: อยู่ในวงเสมอ (เดิมถอย/วนรอบจนหลุดวง ผู้เล่นต้องตามออกไปตี)
+if (variable_instance_exists(id, "trial_owner") && instance_exists(trial_owner)) {
+    var _lr = trial_owner.trial_r - 60;
+    var _ld = point_distance(trial_owner.x, trial_owner.y, x, y);
+    if (_ld > _lr) {
+        var _la = point_direction(trial_owner.x, trial_owner.y, x, y);
+        var _nx = trial_owner.x + lengthdir_x(_lr, _la);
+        var _ny = trial_owner.y + lengthdir_y(_lr, _la);
+        if (!place_meeting(_nx, _ny, obj_wall)) { x = _nx; y = _ny; }
+        // ตัดแรงที่พาออกนอกวง
+        var _ox = lengthdir_x(1, _la);
+        var _oy = lengthdir_y(1, _la);
+        var _out = kb_x * _ox + kb_y * _oy;
+        if (_out > 0) { kb_x -= _out * _ox; kb_y -= _out * _oy; }
+    }
+}
+
 // ไม่ยืนทับผู้เล่น (ยังชนทางกายภาพกับผู้เล่นไม่ได้ แต่ดันออกเบา ๆ)
 if (instance_exists(obj_player)) {
     var _pd2 = point_distance(x, y, obj_player.x, obj_player.y);

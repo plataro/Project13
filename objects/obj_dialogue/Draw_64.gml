@@ -83,10 +83,10 @@ if (_nm != "") {
 // 4) ข้อความ (มีเงา)
 draw_set_color(c_black);
 draw_set_alpha(0.6 * _ok);
-draw_text_transformed(_x1 + 23, _y1 + 23, string_copy(wrapped, 1, floor(chars)), text_scale, text_scale, 0);
+draw_text_transformed(_x1 + 23, _y1 + 23, string_copy(wrapped, 1, floor(chars)), line_scale, line_scale, 0);
 draw_set_alpha(_ok);
 draw_set_color(UI_TEXT);
-draw_text_transformed(_x1 + 22, _y1 + 22, string_copy(wrapped, 1, floor(chars)), text_scale, text_scale, 0);
+draw_text_transformed(_x1 + 22, _y1 + 22, string_copy(wrapped, 1, floor(chars)), line_scale, line_scale, 0);
 draw_set_alpha(1);
 
 // 5) ตัวเลือก
