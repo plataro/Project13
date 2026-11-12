@@ -28,6 +28,7 @@ slots = {
     left:  { who: "", emo: "normal", ax: -140, alpha: 0 },
     right: { who: "", emo: "normal", ax: 140,  alpha: 0 }
 };
+open_t = 0;   // ★ แอนิเมชันเปิดกล่อง
 speaker = "";   // "left", "right" หรือ "" (ผู้บรรยาย)
 
 // จบบทสนทนา: ล้างปุ่ม/คลิกเฟรมนี้ ไม่ให้ไปโดนฟันหรือกลิ้งต่อ

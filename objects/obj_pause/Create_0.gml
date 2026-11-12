@@ -160,5 +160,5 @@ confirm = function(_row) {
 
 // ตำแหน่งแถวบนจอ (ใช้ทั้งวาดและเช็กเมาส์)
 row_y = function(_i) {
-    return 210 + _i * 48;
+    return 214 + _i * 40;
 }

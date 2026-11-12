@@ -64,7 +64,7 @@ last_my = _my;
 var _hit = -1;
 for (var _i = 0; _i < _n; _i++) {
     var _y = row_y(_i);
-    if (_mx > 280 && _mx < 680 && _my > _y - 6 && _my < _y + 38) {
+    if (_mx > 320 && _mx < 640 && _my > _y - 6 && _my < _y + 32) {
         if (_moved) sel = _i;
         if (_click) _hit = _i;
     }

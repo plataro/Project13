@@ -54,48 +54,36 @@ draw_set_color(c_black);
 draw_rectangle(0, 0, 960, 540, false);
 draw_set_alpha(1);
 
-// กรอบ
-draw_set_alpha(0.9);
-draw_set_color(make_color_rgb(18, 16, 24));
-draw_roundrect_ext(250, 110, 710, 470, 16, 16, false);
-draw_set_alpha(1);
-draw_set_color(c_white);
-draw_roundrect_ext(250, 110, 710, 470, 16, 16, true);
+// ★ แผงเล็กลง มีขอบ (placeholder)
+var _items = get_items();
+var _n = array_length(_items);
+var _py1 = 120;
+var _py2 = row_y(_n - 1) + 74;
+ui_panel(310, _py1, 650, _py2);
 
 draw_set_halign(fa_center);
-draw_set_valign(fa_top);
-
+draw_set_valign(fa_middle);
 var _title = "หยุดเกม";
 if (screen == 1) _title = "ตั้งค่า";
 else if (screen == 2) _title = "กลับหน้าหลัก?";
-draw_set_color(c_yellow);
-draw_text_transformed(480, 130, _title, 1.3, 1.3, 0);
+ui_text_bold(480, 152, _title, 0.9, UI_GOLD);
+draw_set_color(UI_GOLD_DARK);
+draw_line_width(400, 176, 560, 176, 2);
+if (screen == 2) ui_text(480, 194, "เล่นต่อได้จากจุดที่เข้าห้องนี้ (เซฟอัตโนมัติ)", 0.48, UI_MUTED);
 
-if (screen == 2) {
-    draw_set_color(c_ltgray);
-    draw_text_transformed(480, 178, "เล่นต่อได้จากจุดที่เข้าห้องนี้ (เซฟอัตโนมัติ)", 0.7, 0.7, 0);
-}
-
-var _items = get_items();
-for (var _i = 0; _i < array_length(_items); _i++) {
+for (var _i = 0; _i < _n; _i++) {
     var _y = row_y(_i);
     var _on = (_i == sel);
-    if (_on) {
-        draw_set_alpha(0.25);
-        draw_set_color(c_yellow);
-        draw_roundrect_ext(290, _y - 4, 670, _y + 36, 10, 10, false);
-        draw_set_alpha(1);
-    }
-    draw_set_color(_on ? c_yellow : c_white);
-    draw_text(480, _y, _items[_i]);
+    if (_on) ui_highlight(326, _y - 4, 634, _y + 30);
+    ui_text(480 + (_on ? 4 : 0), _y + 13, _items[_i], 0.6, _on ? c_white : UI_MUTED);
 }
 
 // คำแนะนำด้านล่าง
-draw_set_color(c_gray);
 var _hint = (screen == 1)
-    ? "คลิก หรือ A/D ปรับค่า   ·   Esc / P กลับ"
-    : "คลิก หรือ W/S + Enter   ·   Esc / P " + ((screen == 0 && !menu_mode) ? "เล่นต่อ" : "กลับ");
-draw_text_transformed(480, 440, _hint, 0.6, 0.6, 0);
+    ? "คลิก หรือ A/D ปรับค่า  ·  Esc / P กลับ"
+    : "คลิก หรือ W/S + Enter  ·  Esc / P " + ((screen == 0 && !menu_mode) ? "เล่นต่อ" : "กลับ");
+ui_text(480, _py2 - 22, _hint, 0.42, UI_MUTED);
 
 draw_set_halign(fa_left);
+draw_set_valign(fa_top);
 draw_set_color(c_white);

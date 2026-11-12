@@ -63,7 +63,7 @@ last_my = _my;
 var _clicked = false;
 for (var _j = 0; _j < _n; _j++) {
     var _y = item_y(_j);
-    var _over = (_mx > 330 && _mx < 630 && _my > _y - 5 && _my < _y + 40);
+    var _over = (_mx > 320 && _mx < 640 && _my > _y - 6 && _my < _y + 30);
     if (_over && _moved) sel = _j;
     if (_over && _click) {
         sel = _j;

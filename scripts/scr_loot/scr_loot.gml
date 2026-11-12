@@ -101,45 +101,40 @@ function player_use_potion() {
     return true;
 }
 
-// HUD เหรียญและยา มุมขวาบน (ใช้ทั้งโหมด top-down และ side-scroll)
+// HUD เหรียญ ยา SP อาวุธ มุมขวาบน (ใช้ทั้งโหมด top-down และ side-scroll)
 function draw_hud_money() {
     var _s = global.save;
     draw_set_font(fnt_dialog);
-    draw_set_halign(fa_right);
-    draw_set_valign(fa_middle);
+    var _x2 = 946;
+    var _x1 = 760;
+    var _y1 = 12;
+    var _lines = 2 + ((_s.sp > 0) ? 1 : 0);
+    var _y2 = _y1 + 16 + _lines * 22;
+    ui_panel(_x1, _y1, _x2, _y2, 0.85);
 
     // เหรียญ
+    var _cy = _y1 + 20;
     draw_set_color(c_black);
-    draw_circle(932, 36, 10, false);
-    draw_set_color(c_yellow);
-    draw_circle(932, 36, 8, false);
-    draw_set_color(c_orange);
-    draw_circle(932, 36, 3, false);
-    draw_set_color(c_white);
-    draw_text_transformed(914, 36, string(_s.gold), 1, 1, 0);
-
-    // ยา (ช่องแดง) ปุ่ม Q
-    for (var _i = 0; _i < potion_cap(); _i++) {
-        var _px = 932 - _i * 22;
-        draw_set_color(c_black);
-        draw_rectangle(_px - 17, 62, _px, 80, false);
-        draw_set_color((_i < _s.potions) ? c_red : c_dkgray);
-        draw_rectangle(_px - 16, 63, _px - 1, 79, false);
-    }
-    draw_set_color(c_white);
-    draw_text_transformed(932 - potion_cap() * 22 - 6, 71, "Q", 0.6, 0.6, 0);
-
-
-    if (_s.sp > 0) {
-        draw_set_halign(fa_right);
-        draw_set_color(make_color_rgb(255, 220, 90));
-        draw_text_transformed(932, 96, (flag_get("tree_unlocked") ? "[T] สกิล  SP " : "SP ") + string(_s.sp), 0.6, 0.6, 0);
-    }
-    // อาวุธ/เกราะ (กด R สลับอาวุธ)
+    draw_circle(_x1 + 20, _cy, 9, false);
+    draw_set_color(make_color_rgb(250, 210, 70));
+    draw_circle(_x1 + 20, _cy, 7, false);
+    draw_set_color(make_color_rgb(200, 140, 30));
+    draw_circle(_x1 + 20, _cy, 3, false);
+    draw_set_valign(fa_middle);
+    ui_text_bold(_x1 + 36, _cy, string(_s.gold), 0.55, make_color_rgb(255, 225, 120));
+    // ยา
     draw_set_halign(fa_right);
-    draw_set_color(c_ltgray);
+    ui_text(_x2 - 12, _cy, "ยา " + string(_s.potions) + "/" + string(potion_cap()), 0.45, make_color_rgb(255, 130, 130));
+    draw_set_halign(fa_left);
+
+    // อาวุธ / เกราะ
     var _multi = array_length(variable_struct_get_names(_s.weapons)) > 0;   // มีอาวุธมากกว่า 1 ชิ้นถึงโชว์ [R]
-    draw_text_transformed(932, 116, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  เกราะ " + string(_s.armor)) : ""), 0.6, 0.6, 0);
+    ui_text(_x1 + 14, _cy + 22, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  ·  เกราะ " + string(_s.armor)) : ""), 0.45, UI_TEXT);
+
+    // แต้มสกิล
+    if (_s.sp > 0) {
+        ui_text(_x1 + 14, _cy + 44, (flag_get("tree_unlocked") ? "[T] แต้มสกิล " : "แต้มสกิล ") + string(_s.sp), 0.45, make_color_rgb(255, 220, 90));
+    }
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_color(c_white);
