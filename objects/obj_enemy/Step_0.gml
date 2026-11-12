@@ -17,6 +17,7 @@ if (!variable_instance_exists(id, "diff_applied")) {
 
 if (instance_exists(obj_dialogue) || instance_exists(obj_gameover) || instance_exists(obj_fade) || instance_exists(obj_skilltree) || instance_exists(obj_status)) exit;
 if (global.hitstop > 0) exit;   // hit-stop
+if (object_index == obj_enemy_boss) boss_check_intro();   // ★ เปิดตัวบอสตอนผู้เล่นเข้าห้องบอส
 
 if (flash > 0) flash--;
 

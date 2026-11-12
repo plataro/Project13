@@ -13,7 +13,7 @@ draw_set_valign(fa_middle);
 draw_set_halign(fa_left);
 ui_text_bold(px + 22, py + 24, L("สถานะตัวละคร", "Character Status"), 0.66, UI_GOLD);
 draw_set_halign(fa_right);
-ui_text(px + pw - 22, py + 24, ((global.input_dev == "pad") ? L("B ปิด", "B close") : L("I / Esc ปิด", "I / Esc close")), 0.42, UI_MUTED);
+ui_text(px + pw - 22, py + 24, ((global.input_dev == "pad") ? L("B ปิด", "B close") : (input_label("status") + L(" / Esc ปิด", " / Esc close"))), 0.42, UI_MUTED);
 draw_set_halign(fa_left);
 draw_set_color(UI_GOLD_DARK);
 draw_line(px + 20, py + 42, px + pw - 20, py + 42);

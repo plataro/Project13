@@ -102,6 +102,13 @@ if (input_pressed("tree")) skilltree_toggle();
 if (input_pressed("weapon")) weapon_cycle(1);
 if (mouse_wheel_up()) weapon_cycle(-1);
 
+// ★ ไม่มีศัตรูไล่อยู่ใกล้ ๆ (เช่น ตอนทำปริศนา) = ลูกไฟรีโหลด/ยิงต่อได้ไวมาก
+var _calm = true;
+with (obj_enemy) if (alert_timer > 0 && point_distance(x, y, other.x, other.y) < 900 && !variable_instance_exists(id, "is_orb")) _calm = false;
+if (_calm) {
+    shot1_reload_timer = min(shot1_reload_timer, 8);
+    shot1_timer = min(shot1_timer, 8);
+}
 if (shot1_reload_timer > 0) {
     shot1_reload_timer--;
     if (shot1_reload_timer <= 0) shot1_ammo = shot1_max;

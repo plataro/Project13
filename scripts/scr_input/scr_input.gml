@@ -37,7 +37,7 @@ function input_kb_defaults() {
         buff_next: [ord("V")],
         weapon:    [ord("R"), -5],
         tree:      [ord("T")],
-        status:    [ord("I")],
+        status:    [vk_tab],            // ★ Tab ใกล้มือ (เดิม I)
         pause:     [ord("P")]
     };
 }
@@ -304,6 +304,7 @@ function input_label(_act) {
 // ---------------------------------------------------------------------
 function input_save() {
     ini_open("settings.ini");
+    ini_write_real("keys", "ver", 2);
     var _l = input_rebind_list();
     for (var _i = 0; _i < array_length(_l); _i++) {
         ini_write_real("keys", _l[_i], global.bind_kb[$ _l[_i]][0]);
@@ -315,9 +316,11 @@ function input_load() {
     global.bind_kb = input_kb_defaults();
     global.bind_pad = input_pad_defaults();
     ini_open("settings.ini");
+    var _ver = ini_read_real("keys", "ver", 0);   // ★ ver 2: ปุ่มหน้าสถานะเปลี่ยนจาก I เป็น Tab (เซฟเก่าไม่ทับค่าใหม่)
     var _l = input_rebind_list();
     for (var _i = 0; _i < array_length(_l); _i++) {
         var _a = _l[_i];
+        if (_a == "status" && _ver < 2) continue;
         if (ini_key_exists("keys", _a)) global.bind_kb[$ _a][0] = ini_read_real("keys", _a, global.bind_kb[$ _a][0]);
         if (ini_key_exists("pad", _a)) global.bind_pad[$ _a] = ini_read_real("pad", _a, global.bind_pad[$ _a]);
     }

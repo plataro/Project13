@@ -100,7 +100,7 @@ if (idx < array_length(slides)) {
     }
 
     draw_set_halign(fa_right);
-    ui_text(944, 8, L("Tab / Esc ข้าม", "Tab / Esc skip"), 0.45, UI_MUTED);
+    ui_text(944, 8, ((global.input_dev == "pad") ? L("Start ข้าม", "Start skip") : L("Backspace / Esc ข้าม", "Backspace / Esc skip")), 0.45, UI_MUTED);
     draw_set_halign(fa_left);
 }
 

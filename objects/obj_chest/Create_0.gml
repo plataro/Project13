@@ -5,6 +5,7 @@ sp = 0;
 potion = 0;
 shot_up = 0;     // ★ เพิ่มระดับพลังยิงกี่ขั้น (ใช้กับหีบบททดสอบ)
 acc = "";        // ★ หีบเครื่องประดับพิเศษ: id เครื่องประดับที่ได้ (เช่น "eye_hawk")
+buff = 0;        // ★ ไอเท็มบัฟสุ่มกี่ชิ้น (ถือได้สูงสุดชนิดละ 5)
 trial = false;   // ★ หีบบททดสอบ: กด E แล้วต้องชนะศัตรูที่ถูกเรียกมา 3 รอบถึงได้ของ
 
 opened = false;
@@ -35,6 +36,22 @@ open_chest = function() {
     repeat (potion) {
         if (!pickup_collect("potion", 1, x, y - 20)) {
             if (global.save.potion_max < 5) { global.save.potion_max++; global.save.potions++; loot_toast(L("กระเป๋ายา +1", "Potion bag +1"), make_color_rgb(255, 110, 110), "potion"); }
+        }
+    }
+    // ★ ไอเท็มบัฟสุ่ม (แทนยาในหีบธรรมดา) ชนิดที่เต็มแล้วข้ามไป
+    repeat (buff) {
+        var _bl = buff_list();
+        var _cand = [];
+        for (var _bi = 0; _bi < array_length(_bl); _bi++) {
+            var _have = variable_struct_exists(global.save.buff_items, _bl[_bi]) ? global.save.buff_items[$ _bl[_bi]] : 0;
+            if (_have < 5) array_push(_cand, _bl[_bi]);
+        }
+        if (array_length(_cand) == 0) { global.save.gold += 30; loot_toast("G", make_color_rgb(255, 210, 80), "coin", 30); }
+        else {
+            var _pick = _cand[irandom(array_length(_cand) - 1)];
+            var _n0 = variable_struct_exists(global.save.buff_items, _pick) ? global.save.buff_items[$ _pick] : 0;
+            global.save.buff_items[$ _pick] = _n0 + 1;
+            loot_toast(buff_data(_pick).name, buff_data(_pick).col, "potion");
         }
     }
     // ★ เครื่องประดับพิเศษ (สวมให้เลยถ้ายังมีช่องว่าง)

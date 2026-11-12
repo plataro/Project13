@@ -27,6 +27,27 @@ hp_mult = 1;
 boss_name = L("ราชามังกร", "The Dragon King");                  // ★ ชื่อที่ขึ้นตอนเปิดตัว
 boss_title = L("ผู้ปกครองท้องฟ้าสีเลือด", "Ruler of the Crimson Sky");
 intro_done = false;
+// ★ ห้องบอส: เปิดตัวเมื่อผู้เล่นเดินเข้าห้องนี้ (ไม่ใช่ตอนมองเห็น) / ใช้เป็นจุดกลางตอนหนีจากกำแพง
+arena = [0, 0, room_width, room_height];
+if (room == rm_level_1_the_forest) arena = [4608, 128, 5632, 832];
+else if (room == rm_level_2_the_abandoned_mine) arena = [2240, 512, 2816, 1536];
+else if (room == rm_level_3_the_castle) arena = [3264, 64, 5632, 640];
+if (!is_final) zone = arena;   // ★ มินิบอสไล่เฉพาะตอนผู้เล่นอยู่ในห้องบอส (ไม่ถูกดึงจากห้องข้าง ๆ)
+arena_cx = (arena[0] + arena[2]) / 2;
+arena_cy = (arena[1] + arena[3]) / 2;
+wall_t = 0;          // ★ นับเวลาโดนต้อนติดกำแพง
+escape_cd = 0;
+escape_leap = false;
+burst_n = 0;
+boss_check_intro = function() {
+    if (intro_done || !instance_exists(obj_player)) return;
+    if (instance_exists(obj_dialogue) || instance_exists(obj_fade) || instance_exists(obj_cutscene)) return;
+    if (point_in_rectangle(obj_player.x, obj_player.y, arena[0], arena[1], arena[2], arena[3])) {
+        intro_done = true;
+        alert_timer = 150;
+        boss_intro_start(id, boss_name, boss_title);
+    }
+}
 claw_chain = 0;
 claw_side = 1;
 tp_cd = 0;
@@ -251,6 +272,15 @@ leap_land = function() {
     state = "recover";
     state_timer = 30;
     attack_cd = 20;   // ลงแล้วถ้าผู้เล่นอยู่ใกล้ ฟาดต่อได้ไว
+    // ★ ลงจากการหนีกำแพง: ตั้งเกราะ แล้วยิงกระจายรอบตัว 3 ระลอก
+    if (escape_leap) {
+        escape_leap = false;
+        if (shield <= 0) raise_shield();
+        state = "escape_burst";
+        state_timer = 20;
+        burst_n = 0;
+        telegraph = true;
+    }
 }
 
 // =====================================================================
@@ -571,10 +601,20 @@ ai = function() {
     if (nova_cd > 0) nova_cd--;
     if (tp_cd > 0) tp_cd--;
 
-    // ★ เปิดตัวบอส (ครั้งแรกที่เห็นผู้เล่น)
-    if (!intro_done) {
-        intro_done = true;
-        boss_intro_start(id, boss_name, boss_title);
+    // ★ เปิดตัวบอส: ย้ายไปเช็กตอนผู้เล่นเข้าห้องบอส (boss_check_intro ใน obj_enemy Step)
+    if (escape_cd > 0) escape_cd--;
+    // ★ โดนต้อนติดกำแพงนานเกิน = กระโดดไปกลางห้อง ตั้งเกราะ แล้วยิงกระจายเป็นระลอก
+    if (state == "chase" && atk_state == "" && escape_cd <= 0) {
+        var _nearwall = collision_rectangle(bbox_left - 28, bbox_top - 28, bbox_right + 28, bbox_bottom + 28, obj_wall, false, true) != noone;
+        if (_nearwall && dist_to_player() < 240) wall_t++;
+        else wall_t = max(0, wall_t - 2);
+        if (wall_t > 150) {
+            wall_t = 0;
+            escape_cd = 600;
+            escape_leap = true;
+            start_leap();
+            float_text(x, y - 200, L("ถอยตั้งหลัก!", "Breaking free!"), c_orange, 1.2);
+        }
     }
     if (ult_flash > 0) ult_flash--;
     process_erupts();
@@ -751,7 +791,10 @@ ai = function() {
         // ---- ★ กระโดด: ตามจุดผู้เล่นจนเหลือ 10 เฟรมแล้วล็อก ----
         case "leap_windup":
             state_timer--;
-            if (state_timer > 10 && instance_exists(obj_player)) {
+            if (escape_leap) {   // ★ หนีจากกำแพง: กระโดดไปกลางห้อง
+                leap_tx = arena_cx;
+                leap_ty = arena_cy;
+            } else if (state_timer > 10 && instance_exists(obj_player)) {
                 leap_tx = obj_player.x;
                 leap_ty = obj_player.y;
             } else {
@@ -992,6 +1035,29 @@ ai = function() {
         case "recover":
             state_timer--;
             if (state_timer <= 0) state = "chase";
+            break;
+
+        // ---- ★ หลังหนีกำแพง: ยิงกระสุนกระจายเป็นวง 3 ระลอก (เว้นช่องให้หลบ) ----
+        case "escape_burst":
+            state_timer--;
+            if (state_timer <= 0) {
+                var _bn = 14 + phase * 2;
+                var _off = burst_n * (180 / _bn);
+                for (var _bi = 0; _bi < _bn; _bi++) {
+                    var _eb = instance_create_depth(x, y, depth, obj_enemy_bullet); _eb.from_boss = true;
+                    _eb.direction = _off + _bi * (360 / _bn);
+                    _eb.image_angle = _eb.direction;
+                    _eb.speed = 4;
+                }
+                fx_shake(3);
+                burst_n++;
+                state_timer = 26;
+                if (burst_n >= 3) {
+                    telegraph = false;
+                    state = "recover";
+                    state_timer = 40;
+                }
+            }
             break;
     }
 }
