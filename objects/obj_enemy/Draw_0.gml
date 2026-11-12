@@ -13,6 +13,15 @@ var _ox = telegraph ? irandom_range(-2, 2) : 0;
 var _sw = (bbox_right - bbox_left) * 0.75;
 if (vis > 0.5) draw_shadow(x, y, _sw, _sw * 0.35);
 
+// ★ วงเตือนจุดตกของท่ากระโดด (เข้มขึ้นตอนล็อกจุดแล้ว)
+if (is_array(marker)) {
+    draw_set_alpha(marker[3] ? 0.42 : 0.15 + 0.1 * sin(current_time / 60));
+    draw_set_color(marker[3] ? make_color_rgb(255, 60, 40) : c_red);
+    draw_circle(round(marker[0]), round(marker[1]) - 40, marker[2], false);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
 // วงเตือนพื้นที่โจมตีตอนเตรียมท่า
 if (atk_state == "windup" && !is_undefined(atk_cur)) {
     // ★ ล็อกทิศแล้ว = วงเข้มขึ้นชัด ๆ (สัญญาณว่า "กลิ้งตอนนี้")
@@ -36,12 +45,12 @@ if (atk_state == "windup" && !is_undefined(atk_cur)) {
     draw_set_color(c_white);
 }
 
-draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y), image_xscale, image_yscale, 0, _col, vis);
+draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, _col, vis);
 
 // แฟลชขาวช่วงแรกที่โดนตี (บวกสีขาวทับตัวศัตรู)
 if (flash > 3) {
     gpu_set_blendmode(bm_add);
-    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y), image_xscale, image_yscale, 0, c_white, vis * 0.85);
+    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.85);
     gpu_set_blendmode(bm_normal);
 }
 

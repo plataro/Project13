@@ -63,6 +63,10 @@ engage_grace_time = [100, 75, 50][clamp(global.difficulty, 0, 2)];
 // ★ เวลารอจะเริ่มนับเมื่อผู้เล่นเข้ามาใกล้กว่านี้ (px) เท่านั้น ตอนผู้เล่นกำลังเดินเข้าหา เวลาจะยังไม่ลด
 engage_range = 140;
 
+// ---- ลอยตัว (บอสกระโดด) / วงเตือนบนพื้น [x, y, รัศมี, ล็อกแล้ว] ----
+z = 0;
+marker = undefined;
+
 // ---- สถานะท่าโจมตี ----
 atk_cur = undefined;
 atk_dir = 0;
@@ -269,7 +273,7 @@ ai = function() {
     }
 }
 
-take_damage = function(_dmg, _dir) {
+take_damage = function(_dmg, _dir, _crit = false) {
     hp -= _dmg;
     flash = 6;
     fx_enemy_hit(id, _dmg, _dir);
@@ -287,7 +291,7 @@ take_damage = function(_dmg, _dir) {
 
     // ★ เลขดาเมจลอยเหนือหัว
     var _r = enemy_hurt_rect(id);
-    spawn_damage_text((_r[0] + _r[2]) / 2 + irandom_range(-14, 14), _r[1] + 6, _dmg);
+    spawn_damage_text((_r[0] + _r[2]) / 2 + irandom_range(-14, 14), _r[1] + 6, _dmg, _crit);
 
     // ตีโดนตอนเตรียมโจมตี = ขัดจังหวะ (ศัตรูตัวเล็กเท่านั้น ลบบล็อกนี้ได้ถ้าไม่ชอบ)
     if (object_index != obj_enemy_boss && atk_state == "windup") {

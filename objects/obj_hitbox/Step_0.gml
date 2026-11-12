@@ -32,7 +32,8 @@ if (age >= step_data.active_from && age <= step_data.active_to) {
                 if (!wall_between(_px, _py, _gx, _gy) && enemy_hit_by_circle(id, _gx, _gy - _lift, _c[2])) {
                     var _kd = _d.radial ? point_direction(_px, _py, x, y) : _ang;
                     last_hit_id = _me;
-                    take_damage(_d.dmg, _kd);
+                    var _hr = player_hit(_d.dmg);
+                    take_damage(_hr[0], _kd, _hr[1]);
                     var _m = max(1, sqrt(mass));   // ตัวหนัก (บอส) กระเด็นน้อยกว่า
                     kb_x = lengthdir_x(_d.kb / _m, _kd);
                     kb_y = lengthdir_y(_d.kb / _m, _kd);

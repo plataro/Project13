@@ -44,5 +44,8 @@ draw_rectangle(_bx + 24, _s2y, _bx + 24 + _s2w * (_ready ? 1 : 1 - skill2_timer 
 
 draw_set_color(c_white);
 
+// ★ พลังโจมตี
+draw_text_transformed(_bx, 124, "ATK " + string(player_atk()), 0.6, 0.6, 0);
+
 // เหรียญ + ยา
 draw_hud_money();

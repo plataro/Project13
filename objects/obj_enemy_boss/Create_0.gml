@@ -12,7 +12,7 @@ sight_range = is_final ? 3000 : 1000;   // บอสไล่เมื่อเ�
 
 phase = 1;
 phase_total = is_final ? 3 : 2;
-state = "chase";      // chase, trans, burst_windup, burst, spiral_windup, spiral, recover
+state = "chase";      // chase, trans, burst_windup, burst, spiral_windup, spiral, leap_windup, leap_air, volley_windup, volley, recover
 state_timer = 0;
 attack_cd = 100;
 last_attack = "";
@@ -21,11 +21,66 @@ burst_wave = 0;
 burst_a0 = 0;
 spiral_a = 0;
 
+// ---- ★ กันผู้เล่นยืนยิงตอดจากไกล ----
+far_range = 300;      // ไกลกว่านี้ = นับว่ายิงตอด
+far_timer = 0;        // เกจยิงตอด เต็มแล้วบอสกระโดดตกใส่
+leap_sx = x;
+leap_sy = y;
+leap_tx = x;
+leap_ty = y;
+leap_t = 0;
+airborne = false;     // ลอยกลางอากาศ = ไม่โดนดาเมจ
+volley_n = 0;
+
 // ---- อมตะช่วงเปลี่ยนเฟส ----
 base_take_damage = take_damage;
-take_damage = function(_dmg, _dir) {
-    if (invuln > 0) return;
-    base_take_damage(_dmg, _dir);
+take_damage = function(_dmg, _dir, _crit = false) {
+    if (invuln > 0 || airborne) return;
+    // โดนยิงจากไกล = เกจยิงตอดขึ้นเร็ว และไม่มีช่วงรอจังหวะแรก (ผู้เล่นเลือกตีจากไกลเอง)
+    if (dist_to_player() > far_range) {
+        far_timer += 25;
+        engage_grace = 0;
+    }
+    base_take_damage(_dmg, _dir, _crit);
+}
+
+// ---- ★ ท่ากระโดดตกใส่ (ไล่ระยะผู้เล่นที่หนีไปยิงจากไกล) ----
+start_leap = function() {
+    if (!instance_exists(obj_player)) return;
+    state = "leap_windup";
+    state_timer = (phase >= 3) ? 24 : 30;
+    telegraph = true;
+    far_timer = 0;
+    last_attack = "leap";
+    leap_tx = obj_player.x;
+    leap_ty = obj_player.y;
+    marker = [leap_tx, leap_ty, 115, false];
+}
+
+leap_land = function() {
+    z = 0;
+    airborne = false;
+    marker = undefined;
+    var _h = instance_create_depth(x, y, depth, obj_enemy_hitbox);
+    _h.owner = id;
+    _h.atk = enemy_attack_data("boss_leap");
+    _h.lift = _h.atk.lift;
+    fx_shake(8);
+    fx_spark(x, y - 20, 0, 24, c_ltgray, 180);
+    // เฟส 2 ขึ้นไป: ลงแล้วมีวงกระสุนกระจาย
+    if (phase >= 2) {
+        var _n = (phase >= 3) ? 12 : 8;
+        var _a0 = irandom(359);
+        for (var _j = 0; _j < _n; _j++) {
+            var _b = instance_create_depth(x, y, depth, obj_enemy_bullet);
+            _b.direction = _a0 + _j * (360 / _n);
+            _b.image_angle = _b.direction;
+            _b.speed = 4.5;
+        }
+    }
+    state = "recover";
+    state_timer = 30;
+    attack_cd = 20;   // ลงแล้วถ้าผู้เล่นอยู่ใกล้ ฟาดต่อได้ไว
 }
 
 // ---- เรียกลูกน้อง (หาจุดที่ไม่ติดกำแพง) ----
@@ -57,6 +112,10 @@ enter_phase = function(_n) {
     flash = 30;
     atk_state = "";
     atk_cur = undefined;
+    z = 0;
+    airborne = false;
+    marker = undefined;
+    far_timer = 0;
     with (obj_enemy_bullet) instance_destroy();
     with (obj_enemy_hitbox) instance_destroy();
 
@@ -113,9 +172,18 @@ ai = function() {
                 vsp = lengthdir_y(move_speed, _dir);
             }
 
+            // ★ เกจยิงตอด: ผู้เล่นอยู่ไกลสะสมขึ้น เข้ามาใกล้ลดลง เต็มแล้วกระโดดใส่ทันที (ไม่สนคูลดาวน์)
+            if (_d > far_range) far_timer++;
+            else far_timer = max(0, far_timer - 2);
+            var _far_limit = (phase == 1) ? 150 : ((phase == 2) ? 110 : 80);
+            if (far_timer >= _far_limit) {
+                start_leap();
+                break;
+            }
+
             if (attack_cd > 0) {
                 attack_cd--;
-            } else if (can_attack()) {
+            } else if (can_attack() || _d > far_range) {
                 // เลือกท่าตามระยะและเฟส ไม่ซ้ำท่าเดิมถ้ามีตัวเลือกอื่น
                 var _opts = [];
                 if (_d < 170) {
@@ -123,7 +191,9 @@ ai = function() {
                     if (phase >= 2) array_push(_opts, "slam");
                 } else {
                     array_push(_opts, "dash");
+                    array_push(_opts, "volley");   // ★ ยิงกระสุนเล็งใส่ผู้เล่น (ทุกเฟส)
                     if (phase >= 2) array_push(_opts, "burst");
+                    if (_d > far_range) array_push(_opts, "leap");
                 }
                 if (phase >= 3) array_push(_opts, "spiral");
 
@@ -142,6 +212,11 @@ ai = function() {
                     case "swing": begin_attack("boss_swing"); break;
                     case "slam":  begin_attack("boss_slam"); break;
                     case "dash":  begin_attack("boss_dash"); break;
+                    case "leap":  start_leap(); break;
+                    case "volley":
+                        state = "volley_windup";
+                        state_timer = 24;
+                        break;
                     case "burst":
                         state = "burst_windup";
                         state_timer = 30;
@@ -152,6 +227,88 @@ ai = function() {
                         break;
                 }
                 attack_cd = (phase == 1) ? 90 : ((phase == 2) ? 50 : 35);
+            }
+            break;
+
+        // ---- ★ กระโดด: ตามจุดผู้เล่นจนเหลือ 10 เฟรมแล้วล็อก ----
+        case "leap_windup":
+            state_timer--;
+            if (state_timer > 10 && instance_exists(obj_player)) {
+                leap_tx = obj_player.x;
+                leap_ty = obj_player.y;
+            } else {
+                marker[3] = true;
+            }
+            marker[0] = leap_tx;
+            marker[1] = leap_ty;
+            if (state_timer <= 0) {
+                telegraph = false;
+                // จุดตกอยู่ในกำแพง = หาที่ว่างใกล้ ๆ
+                if (place_meeting(leap_tx, leap_ty, obj_wall)) {
+                    var _found = false;
+                    for (var _lr = 16; _lr <= 96 && !_found; _lr += 16) {
+                        for (var _aa = 0; _aa < 360 && !_found; _aa += 45) {
+                            if (!place_meeting(leap_tx + lengthdir_x(_lr, _aa), leap_ty + lengthdir_y(_lr, _aa), obj_wall)) {
+                                leap_tx += lengthdir_x(_lr, _aa);
+                                leap_ty += lengthdir_y(_lr, _aa);
+                                _found = true;
+                            }
+                        }
+                    }
+                    marker[0] = leap_tx;
+                    marker[1] = leap_ty;
+                }
+                state = "leap_air";
+                leap_sx = x;
+                leap_sy = y;
+                leap_t = 0;
+                airborne = true;
+            }
+            break;
+
+        case "leap_air":
+            leap_t++;
+            var _air = (phase >= 3) ? 28 : 34;
+            var _lk = min(1, leap_t / _air);
+            x = lerp(leap_sx, leap_tx, _lk);
+            y = lerp(leap_sy, leap_ty, _lk);
+            z = sin(_lk * pi) * 170;
+            hsp = 0;
+            vsp = 0;
+            kb_x = 0;
+            kb_y = 0;
+            if (_lk >= 1) leap_land();
+            break;
+
+        // ---- ★ ยิงเล็ง: 3 ชุด ชุดละ 3 ลูก (เฟส 3 = 5 ลูก) ไม่เล็งดักตอนกลิ้ง ----
+        case "volley_windup":
+            telegraph = true;
+            state_timer--;
+            if (state_timer <= 0) {
+                telegraph = false;
+                volley_n = 0;
+                state = "volley";
+                state_timer = 0;
+            }
+            break;
+
+        case "volley":
+            state_timer--;
+            if (state_timer <= 0 && instance_exists(obj_player)) {
+                var _vn = (phase >= 3) ? 5 : 3;
+                var _va = point_direction(x, y, obj_player.x, obj_player.y);
+                for (var _v = 0; _v < _vn; _v++) {
+                    var _vb = instance_create_depth(x, y, depth, obj_enemy_bullet);
+                    _vb.direction = _va + (_v - (_vn - 1) / 2) * 14;
+                    _vb.image_angle = _vb.direction;
+                    _vb.speed = 6.5;
+                }
+                volley_n++;
+                state_timer = 16;
+                if (volley_n >= 3) {
+                    state = "recover";
+                    state_timer = 40;
+                }
             }
             break;
 

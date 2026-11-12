@@ -1,10 +1,10 @@
 // สร้างเลขดาเมจลอย (พิกัดโลก)
-function spawn_damage_text(_x, _y, _value) {
+function spawn_damage_text(_x, _y, _value, _crit = false) {
     var _t = instance_create_depth(_x, _y, -20000, obj_damage_text);
-    _t.txt = string(_value);
-    var _heavy = (_value >= 2);
-    _t.col = _heavy ? c_yellow : c_white;
-    _t.size = _heavy ? 1.4 : 1;
+    _t.txt = string(_value) + (_crit ? "!" : "");
+    var _heavy = (_value >= player_atk() * 2);   // แรงเกิน 2 เท่าของพลังโจมตี = ตัวใหญ่สีเหลือง
+    _t.col = _crit ? make_color_rgb(255, 120, 30) : (_heavy ? c_yellow : c_white);
+    _t.size = _crit ? 1.6 : (_heavy ? 1.4 : 1);
     return _t;
 }
 
@@ -64,7 +64,7 @@ function fx_enemy_hit(_e, _dmg, _dir) {
     var _cx = (_r[0] + _r[2]) / 2;
     var _cy = (_r[1] + _r[3]) / 2;
     var _big = (_e.object_index == obj_enemy_boss);
-    var _p = clamp(_dmg, 1, 6);
+    var _p = clamp(_dmg / max(1, player_atk()), 1, 6);   // วัดความแรงเทียบพลังโจมตี (ตัวเลขใหญ่แล้ว)
     fx_hitstop(_big ? 2 : 2 + min(_p, 3));
     fx_shake((_big ? 1.5 : 1) + _p * 0.5);
     fx_spark(_cx, _cy, _dir, 4 + _p * 2, (_p >= 3) ? c_yellow : c_white);

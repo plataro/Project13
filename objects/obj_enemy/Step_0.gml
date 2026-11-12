@@ -4,7 +4,7 @@ if (!variable_instance_exists(id, "diff_applied")) {
     var _df = difficulty_data();
     var _tr = tier_data();
     var _hpm = (object_index == obj_enemy_boss) ? 1 : _tr.hp;   // บอสตั้งเลือดเองใน Creation Code
-    hp = max(1, round(hp * _df.enemy_hp * _hpm));
+    hp = max(1, round(hp * _df.enemy_hp * _hpm * DMG_UNIT * enemy_power_mult()));   // ★ เลือดคูณตัวเลขดาเมจใหม่
     max_hp = hp;
     hp_shown = hp;
     move_speed *= _df.enemy_speed * _tr.speed;

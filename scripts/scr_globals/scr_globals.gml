@@ -120,6 +120,48 @@ function tier_data(_t = level_tier()) {
     return { hp: 1, dmg: 1, speed: 1, coin: 2, attackers: 0 };
 }
 
+// =====================================================================
+// ★ พลังโจมตี / ตัวเลขดาเมจ
+// ดาเมจจริง = ดาเมจท่า (1,2,..) x อาวุธ x DMG_UNIT x พลังตามความคืบหน้า (ปราบมินิบอสแต่ละด่าน = โตขึ้น)
+// เลือดศัตรูคูณ DMG_UNIT x พลังตามด่าน เท่ากัน ด่านที่ตั้งใจให้เล่นตอนนั้นจึงสมดุลเหมือนเดิม
+// =====================================================================
+#macro DMG_UNIT 12
+
+// ★ ตัวคูณพลังแต่ละขั้น (0 = เริ่มเกม, 1 = ปราบมินิบอสป่า, 2 = เหมือง, 3 = ปราสาท)
+function power_mult(_stage) {
+    return [1, 1.4, 1.9, 2.5][clamp(_stage, 0, 3)];
+}
+
+// ความคืบหน้าของผู้เล่น = ปราบมินิบอสไปกี่ด่าน
+function power_stage() {
+    var _n = 0;
+    if (flag_get("boss_rm_level_1_the_forest")) _n++;
+    if (flag_get("boss_rm_level_2_the_abandoned_mine")) _n++;
+    if (flag_get("boss_rm_level_3_the_castle")) _n++;
+    return _n;
+}
+
+// พลังโจมตีพื้นฐานของผู้เล่น (แสดงบน HUD)
+function player_atk() {
+    return round(DMG_UNIT * power_mult(power_stage()));
+}
+
+// ความแรงศัตรูในด่านนี้: ตามด่านเป็นหลัก แต่ถ้าผู้เล่นเก่งเกินด่านแล้ว ศัตรูโตตามครึ่งหนึ่ง
+// = กลับมาด่านเก่าง่ายขึ้น แต่ไม่ง่ายจนตีทีเดียวตาย
+function enemy_power_mult(_tier = level_tier()) {
+    var _base = power_mult(_tier - 1);
+    var _pl = power_mult(power_stage());
+    return _base + max(0, _pl - _base) * 0.5;
+}
+
+// ★ สุ่มดาเมจจากผู้เล่น: แกว่ง ±10% และคริติคอล 8% (x1.6) คืนค่า [ดาเมจ, คริไหม]
+function player_hit(_base) {
+    var _d = _base * player_atk() * random_range(0.9, 1.1);
+    var _crit = (random(1) < 0.08);
+    if (_crit) _d *= 1.6;
+    return [max(1, round(_d)), _crit];
+}
+
 // ดาเมจที่ผู้เล่นได้รับจริง: ความยาก x ด่าน แล้วหักเกราะ (ขั้นต่ำ 1)
 function enemy_damage_calc(_base) {
     var _d = ceil(_base * difficulty_data().enemy_dmg * tier_data().dmg);

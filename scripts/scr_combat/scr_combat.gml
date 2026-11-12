@@ -143,6 +143,11 @@ function enemy_attack_base(_name) {
                      lock: 0, lead: 0, turn: 0,
                      lunge_speed: 0, lunge_frames: 0,
                      circles: [ [0, 0, 120] ] };     // ★ เดิม 130 (กลิ้ง 1 ครั้งออกไม่พ้น)
+        case "boss_leap":    // บอส: กระโดดตกใส่ (ใช้ตอนลง ไม่มี windup ในนี้ บอสคุมเอง)
+            return { windup: 1, active: 8, recover: 0, dmg: 2, lift: 40,
+                     lock: 0, lead: 0, turn: 0,
+                     lunge_speed: 0, lunge_frames: 0,
+                     circles: [ [0, 0, 115] ] };
         case "boss_dash":    // บอส: พุ่งชน
             return { windup: 40, active: 22, recover: 50, dmg: 2, lift: 70,
                      lock: 12, lead: 0, turn: 0,     // ★ เดิม lock 8
