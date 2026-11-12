@@ -7,7 +7,7 @@ var _fog_dark = 0.88;     // ★ ความมืดของโซนที�
 if (!is_undefined(global.boss_intro)) _fog_dark *= 1 - global.boss_intro.k;
 with (obj_boss_death) _fog_dark *= 1 - 0.8 * clamp(min(t / 30, (t_end - t) / 40), 0, 1);   // ★ ตอนบอสตาย หมอกจาง เห็นเอฟเฟกต์ชัด
 if (_fog_dark <= 0.01) exit;
-var _rays = 160;          // ★ จำนวนเรย์
+var _rays = 256;          // ★ จำนวนเรย์ (เยอะขึ้น = ขอบเนียนขึ้น)
 var _radius = FOG_RADIUS; // ★ ระยะมองไกลสุด (แก้ที่ scr_combat)
 var _soft = 48;           // ★ ความกว้างขอบนุ่ม (px)
 var _far = 1800;
@@ -22,8 +22,22 @@ if (!variable_global_exists("fog_room") || global.fog_room != room) {
 }
 
 fog_eye = fog_eye_calc(id);   // ชิดกำแพงบนแล้วไม่มองทะลุ
-var _px = fog_eye[0];
-var _py = fog_eye[1];
+// ★ ตาที่ใช้วาดหมอก: ไหลตามนุ่ม ๆ (กันหมอกกระตุกตอนเปลี่ยนทิศ/ชิดกำแพง)
+if (!variable_instance_exists(id, "fog_draw_eye") || fog_draw_room != room) {
+    fog_draw_eye = [fog_eye[0], fog_eye[1]];
+    fog_draw_room = room;
+    fog_hd_prev = undefined;
+}
+var _ex = lerp(fog_draw_eye[0], fog_eye[0], 0.5);
+var _ey = lerp(fog_draw_eye[1], fog_eye[1], 0.35);
+if (point_distance(_ex, _ey, fog_eye[0], fog_eye[1]) > 40
+    || collision_rectangle(_ex - 2, _ey - 2, _ex + 2, _ey + 2, obj_wall, false, true) != noone) {
+    _ex = fog_eye[0];   // ห่างเกิน (วาร์ป) หรือไหลเข้าไปในกำแพง = ใช้ตาจริงเลย
+    _ey = fog_eye[1];
+}
+fog_draw_eye = [_ex, _ey];
+var _px = _ex;
+var _py = _ey;
 
 // เลือกเฉพาะกำแพงที่อยู่ใกล้
 var _near = [];
@@ -73,10 +87,16 @@ for (var _i = 0; _i <= _rays; _i++) {
         if (_ok && _t0 <= _t1 && _t0 > 0.5 && _t0 < _best) _best = _t0;
     }
 
+    // ★ ขยายออกนุ่ม ๆ (หดเข้าทันที กันมองทะลุกำแพง) = ขอบไม่กระพริบแตก
+    if (is_array(fog_hd_prev) && array_length(fog_hd_prev) == _rays + 1 && _best > fog_hd_prev[_i]) {
+        _best = lerp(fog_hd_prev[_i], _best, 0.45);
+    }
     _hd[_i] = _best;
     _hx[_i] = _px + _dx * _best;
     _hy[_i] = _py + _dy * _best;
 }
+
+fog_hd_prev = _hd;
 
 // แถบที่ 1: ขอบที่มองเห็น -> ความมืดเต็มที่ (ขอบนุ่ม)
 draw_primitive_begin(pr_trianglestrip);
@@ -102,12 +122,14 @@ draw_primitive_end();
 var _pl = id;
 with (obj_enemy) {
     if (vis <= 0.02 || !variable_instance_exists(id, "fog_col")) continue;
-    // ยืนซ้อนอยู่หลังผู้เล่น = ข้าม (ตรงนั้นสว่างอยู่แล้ว และจะได้ไม่ทับตัวผู้เล่น)
-    if (abs(x - _pl.x) < 60 && y < _pl.y && y > _pl.y - 140) continue;
-    draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, fog_col, vis);
-    if (flash > 3) {
-        gpu_set_blendmode(bm_add);
-        draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.85);
-        gpu_set_blendmode(bm_normal);
+    // ยืนซ้อนอยู่หลังผู้เล่น = ไม่วาดตัวซ้ำ (ตรงนั้นสว่างอยู่แล้ว และจะได้ไม่ทับตัวผู้เล่น)
+    if (!(abs(x - _pl.x) < 60 && y < _pl.y && y > _pl.y - 140)) {
+        draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, fog_col, vis);
+        if (flash > 3) {
+            gpu_set_blendmode(bm_add);
+            draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.85);
+            gpu_set_blendmode(bm_normal);
+        }
     }
+    enemy_draw_hpbar();   // ★ หลอดเลือดอยู่หน้าตัวศัตรูเสมอ
 }

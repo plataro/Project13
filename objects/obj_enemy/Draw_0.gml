@@ -186,23 +186,4 @@ if (hp_shown < hp) hp_shown = hp;
 else hp_shown = lerp(hp_shown, hp, 0.08);
 if (hp_bar_timer > 0) hp_bar_timer--;
 
-if (show_bar && hp_bar_timer > 0 && hp > 0) {
-    var _hr = enemy_hurt_rect(id);
-    var _bw = 52;
-    var _bh = 6;
-    var _bx = round(x - _bw / 2);
-    var _by = round(_hr[1] - 16);
-    var _fa = min(1, hp_bar_timer / 30);
-
-    draw_set_alpha(_fa);
-    draw_set_color(c_black);
-    draw_rectangle(_bx - 2, _by - 2, _bx + _bw + 1, _by + _bh + 1, false);
-    draw_set_color(c_dkgray);
-    draw_rectangle(_bx, _by, _bx + _bw - 1, _by + _bh - 1, false);
-    draw_set_color(c_white);   // แถบขาวไหลตามหลัง
-    draw_rectangle(_bx, _by, _bx + max(1, _bw * (hp_shown / max_hp)) - 1, _by + _bh - 1, false);
-    draw_set_color(c_red);     // เลือดจริง
-    draw_rectangle(_bx, _by, _bx + max(1, _bw * (hp / max_hp)) - 1, _by + _bh - 1, false);
-    draw_set_alpha(1);
-    draw_set_color(c_white);
-}
+enemy_draw_hpbar();   // ★ ย้ายไปเป็นฟังก์ชัน (หมอกเรียกวาดซ้ำทับอีกรอบ หลอดจะได้อยู่หน้าตัวศัตรูเสมอ)

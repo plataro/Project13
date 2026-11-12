@@ -232,9 +232,11 @@ function fog_room() {
 // จุดตาของผู้เล่น: ปกติสูงจากเท้า 32px แต่ถ้าชิดกำแพงด้านบนจนจุดนั้นจมในกำแพง ให้ลดลงมา
 // (เดิมจุดตาจมในกำแพง = เรย์มองทะลุกำแพงนั้น หมอกหาย)
 function fog_eye_calc(_p) {
-    var _offs = [32, 24, 16, 8, 2];
-    for (var _i = 0; _i < 5; _i++) {
-        if (!position_meeting(_p.x, _p.y - _offs[_i], obj_wall)) return [_p.x, _p.y - _offs[_i]];
+    // ★ ไล่ทีละ 2px และเว้นระยะจากกำแพงอย่างน้อย 3px รอบจุด
+    //   (เดิมกระโดดทีละ 8px และเช็กแค่จุดเดียว ตาไปแตะขอบกำแพงพอดี เรย์ทะลุ = หมอกแวบหาย)
+    for (var _o = 32; _o >= 0; _o -= 2) {
+        var _ey = _p.y - _o;
+        if (collision_rectangle(_p.x - 3, _ey - 3, _p.x + 3, _ey + 3, obj_wall, false, true) == noone) return [_p.x, _ey];
     }
     return [_p.x, _p.y];
 }
@@ -308,3 +310,27 @@ function boss_intro_start(_boss, _name, _title) {
     global.boss_intro = { boss: _boss, name: _name, title: _title, t: 0, k: 0 };
 }
 global.boss_intro = undefined;
+
+// ★ หลอดเลือดบนหัวศัตรู (เรียกในบริบทของศัตรู)
+function enemy_draw_hpbar() {
+    if (show_bar && hp_bar_timer > 0 && hp > 0) {
+        var _hr = enemy_hurt_rect(id);
+        var _bw = 52;
+        var _bh = 6;
+        var _bx = round(x - _bw / 2);
+        var _by = round(_hr[1] - 16);
+        var _fa = min(1, hp_bar_timer / 30);
+
+        draw_set_alpha(_fa);
+        draw_set_color(c_black);
+        draw_rectangle(_bx - 2, _by - 2, _bx + _bw + 1, _by + _bh + 1, false);
+        draw_set_color(c_dkgray);
+        draw_rectangle(_bx, _by, _bx + _bw - 1, _by + _bh - 1, false);
+        draw_set_color(c_white);   // แถบขาวไหลตามหลัง
+        draw_rectangle(_bx, _by, _bx + max(1, _bw * (hp_shown / max_hp)) - 1, _by + _bh - 1, false);
+        draw_set_color(c_red);     // เลือดจริง
+        draw_rectangle(_bx, _by, _bx + max(1, _bw * (hp / max_hp)) - 1, _by + _bh - 1, false);
+        draw_set_alpha(1);
+        draw_set_color(c_white);
+    }
+}
