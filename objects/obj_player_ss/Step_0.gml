@@ -153,7 +153,8 @@ if (atk_t > 0) {
         with (obj_target) {
             if (!hit && tink_id != _sid && point_in_rectangle(x, y - 48, _ax1, _ay1, _ax2, _ay2)) {
                 tink_id = _sid;
-                float_text(x, y - 90, L("ฟันไม่ได้ ต้องยิง! [1]", "Can't cut it, shoot it! [1]"), c_orange, 0.9);
+                if (mode == "sword") on_hit();   // ★ คริสตัล: ฟันได้
+                else float_text(x, y - 90, L("ฟันไม่ได้ ต้องยิง! [", "Can't cut it, shoot it! [") + input_label("shoot1") + "]", c_orange, 0.9);
             }
         }
     }

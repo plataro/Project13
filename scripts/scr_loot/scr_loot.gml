@@ -88,20 +88,34 @@ function pickup_collect(_kind, _value, _x, _y) {
     }
 }
 
+// ★ คูลดาวน์ยาที่เหลือ 0..1 (ใช้ทั้งตอนกดและวาดช่อง Q)
+function potion_boss_fight() {
+    var _f = false;
+    with (obj_enemy_boss) if (alert_timer > 0 || state != "chase" || hp < max_hp) _f = true;
+    return _f;
+}
+function potion_cd_frac() {
+    if (!instance_exists(obj_player)) return 0;
+    var _lp = obj_player.last_potion_t;
+    if (_lp < 0) return 0;
+    var _len = potion_boss_fight() ? 4000 : 600;
+    var _e = current_time - _lp;
+    return (_e >= _len) ? 0 : 1 - _e / _len;
+}
+
 // เรียกจาก obj_player (ปุ่ม Q) ใช้ยา ฟื้น 2 หัวใจ
 function player_use_potion() {
     var _s = global.save;
     if (hp <= 0 || hp >= max_hp || _s.potions <= 0) return false;
-    if (variable_instance_exists(id, "last_potion") && current_time - last_potion < 600) return false;
+    if (potion_cd_frac() > 0 && !potion_boss_fight()) return false;
     // ★ สู้บอสอยู่: ดื่มได้ทุก 4 วิ (กันยืนแลกเลือดแล้วกินยารัว ๆ)
-    var _boss_fight = false;
-    with (obj_enemy_boss) if (alert_timer > 0 || state != "chase" || hp < max_hp) _boss_fight = true;
-    if (_boss_fight && variable_instance_exists(id, "last_potion") && current_time - last_potion < 4000) {
+    if (potion_cd_frac() > 0) {
         float_text(x, y - 110, L("ยังดื่มไม่ได้", "Can't drink yet"), c_gray, 0.8);
         return false;
     }
 
     last_potion = current_time;
+    last_potion_t = current_time;
     // ★ ดื่มยาใช้เวลา: ฟัน/กลิ้งไม่ได้แป๊บหนึ่ง (ต้องหาจังหวะปลอดภัยก่อนดื่ม)
     if (variable_instance_exists(id, "attack_cd")) attack_cd = max(attack_cd, 30);
     if (variable_instance_exists(id, "roll_cd_timer")) roll_cd_timer = max(roll_cd_timer, 30);

@@ -11,7 +11,8 @@ var _bx = x;
 var _by = y;
 with (obj_target) {
     if (!hit && point_distance(_bx, _by, x, y - 48) < 24) {
-        on_hit();
+        if (mode == "sword") fx_spark(x, y - 48, 90, 4, c_white);   // ★ คริสตัล: กระสุนเด้ง
+        else on_hit();
         _hit = true;
     }
 }

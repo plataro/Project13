@@ -220,3 +220,4 @@ if (!instance_exists(obj_pause)) instance_create_depth(0, 0, -14000, obj_pause);
 update_camera(false);   // ★ เข้าห้องมากล้องอยู่ที่ตัวละครทันที (เดิมเริ่มที่มุมซ้ายบน)
 
 dust_t = 0;   // ★ ตัวนับเวลาฝุ่นตอนวิ่ง
+last_potion_t = -1;   // ★ เวลาที่ดื่มยาล่าสุด (คูลดาวน์ช่อง Q)

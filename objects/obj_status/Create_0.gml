@@ -16,8 +16,8 @@ pad_my = device_mouse_y_to_gui(0);
 // รายการเครื่องประดับที่มี (ใช้ทั้ง Draw และ Step)
 acc_x1 = px + 470;
 acc_x2 = px + pw - 20;
-acc_y0 = py + 184;
-acc_rh = 26;
+acc_y0 = py + 176;   // ★ ของพิเศษเพิ่ม 4 ชิ้น = แถวถี่ขึ้น
+acc_rh = 21;
 acc_cw = (acc_x2 - acc_x1 - 6) / 2;   // ★ 2 คอลัมน์
 acc_rect = function(_row) {
     var _c = _row mod 2;

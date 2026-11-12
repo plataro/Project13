@@ -17,7 +17,10 @@ var _me = id;
 var _tg_hit = false;
 with (obj_target) {
     if (!hit && point_distance(_vx, _vy, x, y - 48) < 26) {
-        on_hit();
+        if (mode == "sword") {   // ★ คริสตัล: กระสุนเด้ง ต้องฟัน
+            if (tink_id != _me) { tink_id = _me; float_text(x, y - 90, L("ยิงไม่เข้า ต้องฟัน!", "Shots bounce off, use your blade!"), make_color_rgb(150, 220, 255), 0.9); }
+            fx_spark(x, y - 48, 90, 4, c_white);
+        } else on_hit();
         _tg_hit = true;
     }
 }

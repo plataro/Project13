@@ -4,6 +4,7 @@ gold = 0;
 sp = 0;
 potion = 0;
 shot_up = 0;     // ★ เพิ่มระดับพลังยิงกี่ขั้น (ใช้กับหีบบททดสอบ)
+acc = "";        // ★ หีบเครื่องประดับพิเศษ: id เครื่องประดับที่ได้ (เช่น "eye_hawk")
 trial = false;   // ★ หีบบททดสอบ: กด E แล้วต้องชนะศัตรูที่ถูกเรียกมา 3 รอบถึงได้ของ
 
 opened = false;
@@ -30,7 +31,22 @@ open_chest = function() {
         global.save.sp += sp;
         loot_toast("SP", c_aqua, "star", sp);
     }
-    repeat (potion) pickup_collect("potion", 1, x, y - 20);
+    // ★ หีบยา: ยาเกินช่องที่ถือได้ = เพิ่มช่องให้ 1 แทน (ไม่เสียของ)
+    repeat (potion) {
+        if (!pickup_collect("potion", 1, x, y - 20)) {
+            if (global.save.potion_max < 5) { global.save.potion_max++; global.save.potions++; loot_toast(L("กระเป๋ายา +1", "Potion bag +1"), make_color_rgb(255, 110, 110), "potion"); }
+        }
+    }
+    // ★ เครื่องประดับพิเศษ (สวมให้เลยถ้ายังมีช่องว่าง)
+    if (acc != "" && !acc_owned(acc)) {
+        global.save.acc[$ acc] = true;
+        if (array_length(global.save.acc_eq) < 2) array_push(global.save.acc_eq, acc);
+        apply_difficulty();
+        with (obj_player) { max_hp = global.max_hp; }
+        loot_toast(acc_data(acc).name, make_color_rgb(255, 210, 120), "gem");
+        float_text(x, y - 130, L("ได้เครื่องประดับพิเศษ!", "Special accessory!"), make_color_rgb(255, 210, 120), 1.3);
+        fx_spark(x, y - 30, 90, 26, make_color_rgb(255, 210, 120), 140);
+    }
 
     if (shot_up > 0) {
         var _lv0 = global.save.shot_lv;

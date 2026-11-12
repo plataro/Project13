@@ -44,7 +44,7 @@ build_ctx = function() {
           goal: function() {
               if (!instance_exists(obj_target)) return true;
               var _all = true;
-              with (obj_target) if (!hit) _all = false;
+              with (obj_target) if (channel == 0 && !hit) _all = false;   // ★ เฉพาะเป้าบทสอน (ช่อง 0) ไม่นับปริศนาห้องรางวัล
               return _all;
           },
           when: function() { return instance_exists(obj_player) && variable_struct_exists(global.story_seen, "ctx_atk"); } },

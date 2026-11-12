@@ -60,7 +60,7 @@ setup = function(_type, _title) {
             tab = 1;
             break;
         case "jeweler":   // ★ เครื่องประดับ
-            buy_ids = acc_list();
+            buy_ids = acc_shop_list();
             can_sell = false;
             break;
         case "alchemist": // ★ บัฟ

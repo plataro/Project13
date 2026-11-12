@@ -156,7 +156,7 @@ if (!_ui_busy) {
         [input_label("shoot1"), "fire", _s1_cd, false, string(shot1_ammo), false],
         [input_label("shoot2"), "fire3", skill2_unlocked ? skill2_timer / skill2_cooldown : 0, !skill2_unlocked, "", false],
         [input_label("roll"), "roll", (roll_cd_timer > 0) ? roll_cd_timer / max(1, roll_cooldown) : 0, false, "", state == PState.ROLL],
-        [input_label("potion"), "potion", 0, global.save.potions <= 0, string(global.save.potions), false]
+        [input_label("potion"), "potion", potion_cd_frac(), global.save.potions <= 0, string(global.save.potions), false]
     ];
     for (var _i = 0; _i < _n; _i++) {
         var _sl = _slots[_i];

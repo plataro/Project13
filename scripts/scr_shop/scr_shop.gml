@@ -191,7 +191,15 @@ function weapon_cycle(_dir) {
 // burn / poison / stun = โอกาสติดสถานะให้ศัตรูตอนตีโดน
 // =====================================================================
 function acc_list() {
+    return ["ring_power", "neck_hunter", "ear_slayer", "brace_wind", "charm_stone", "heart_stone", "amulet_fire", "fang_snake", "seal_thunder",
+            "eye_hawk", "scale_guard", "ember_crown", "feather_moon"];
+}
+// ★ ของที่ขายในร้านอัญมณี (ของพิเศษจากหีบปริศนาไม่ขาย)
+function acc_shop_list() {
     return ["ring_power", "neck_hunter", "ear_slayer", "brace_wind", "charm_stone", "heart_stone", "amulet_fire", "fang_snake", "seal_thunder"];
+}
+function acc_is_special(_id) {
+    return (_id == "eye_hawk" || _id == "scale_guard" || _id == "ember_crown" || _id == "feather_moon");
 }
 
 function acc_data(_id) {
@@ -205,6 +213,11 @@ function acc_data(_id) {
         case "amulet_fire":  return { name: L("จี้เพลิง", "Flame Pendant"),          desc: L("ตีโดน 20% ติดไฟไหม้", "20% on hit: Burn"),           price: 240, burn: 0.20 };
         case "fang_snake":   return { name: L("เขี้ยวอสรพิษ", "Serpent Fang"),     desc: L("ตีโดน 25% ติดพิษ (ช้าลง)", "25% on hit: Poison (slow)"),       price: 220, poison: 0.25 };
         case "seal_thunder": return { name: L("ตราสายฟ้า", "Thunder Seal"),       desc: L("ตีโดน 10% ทำให้ศัตรูสตัน", "10% on hit: Stun"),      price: 320, stun: 0.10 };
+        // ★ ของพิเศษจากหีบปริศนา (หลายค่ารวมกัน หาซื้อไม่ได้)
+        case "eye_hawk":     return { name: L("ดวงตาเหยี่ยว", "Hawk's Eye"),      desc: L("โอกาสคริ +15% | ดาเมจคริ +30%", "Crit chance +15% | Crit damage +30%"), price: 0, crit: 0.15, critdmg: 0.3 };
+        case "scale_guard":  return { name: L("เกล็ดพิทักษ์", "Guardian Scale"),   desc: L("หัวใจ +1 | ลดดาเมจ -1", "Max hearts +1 | Damage taken -1"),       price: 0, hp: 1, def: 1 };
+        case "ember_crown":  return { name: L("มงกุฎถ่านเพลิง", "Ember Crown"),   desc: L("ATK +20% | ตีโดน 15% ติดไฟไหม้", "ATK +20% | 15% on hit: Burn"),     price: 0, atk: 0.20, burn: 0.15 };
+        case "feather_moon": return { name: L("ขนนกจันทรา", "Moon Feather"),     desc: L("ความเร็ว +15% | ตีโดน 10% สตัน", "Speed +15% | 10% on hit: Stun"),    price: 0, spd: 0.15, stun: 0.10 };
     }
     return undefined;
 }

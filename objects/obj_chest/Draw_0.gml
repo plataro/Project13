@@ -15,6 +15,28 @@ if (trial && !opened && trial_state == 1) {
     draw_set_alpha(1);
 }
 
+// ★ หีบเครื่องประดับพิเศษ: ออร่าทอง + ประกายหมุน / หีบยา: ออร่าแดง
+if (!opened && acc != "") {
+    gpu_set_blendmode(bm_add);
+    draw_set_color(make_color_rgb(255, 200, 90));
+    draw_set_alpha(0.25 + 0.15 * sin(current_time / 180));
+    draw_circle(_x, _y - 22, 48, false);
+    for (var _sp = 0; _sp < 4; _sp++) {
+        var _sa = current_time / 8 + _sp * 90;
+        draw_set_alpha(0.8);
+        draw_circle(_x + lengthdir_x(36, _sa), _y - 22 + lengthdir_y(20, _sa), 2, false);
+    }
+    draw_set_alpha(1);
+    gpu_set_blendmode(bm_normal);
+}
+if (!opened && acc == "" && potion > 0 && gold <= 0 && shot_up <= 0 && !trial) {
+    gpu_set_blendmode(bm_add);
+    draw_set_color(make_color_rgb(255, 80, 90));
+    draw_set_alpha(0.2 + 0.1 * sin(current_time / 220));
+    draw_circle(_x, _y - 22, 40, false);
+    draw_set_alpha(1);
+    gpu_set_blendmode(bm_normal);
+}
 // ★ หีบพลัง/บททดสอบ: ออร่าม่วงกะพริบ
 if (!opened && (shot_up > 0 || trial)) {
     gpu_set_blendmode(bm_add);
@@ -26,12 +48,28 @@ if (!opened && (shot_up > 0 || trial)) {
 }
 
 if (!opened) {
-    draw_set_color(make_color_rgb(150, 95, 40));
+    // ★ สีหีบตามชนิด: ธรรมดา = ไม้ / เครื่องประดับพิเศษ = ม่วงขอบทอง / ยา = แดงมีกากบาท
+    var _special = (acc != "");
+    var _potchest = (!_special && potion > 0 && gold <= 0 && shot_up <= 0 && !trial);
+    var _c1 = _special ? make_color_rgb(70, 40, 100) : (_potchest ? make_color_rgb(150, 45, 50) : make_color_rgb(150, 95, 40));
+    var _c2 = _special ? make_color_rgb(50, 26, 76) : (_potchest ? make_color_rgb(110, 30, 36) : make_color_rgb(110, 65, 25));
+    draw_set_color(_c1);
     draw_rectangle(_x - 24, _y - 34, _x + 24, _y - 2, false);
-    draw_set_color(make_color_rgb(110, 65, 25));
+    draw_set_color(_c2);
     draw_rectangle(_x - 24, _y - 42, _x + 24, _y - 30, false);
-    draw_set_color(c_yellow);
-    draw_rectangle(_x - 4, _y - 30, _x + 4, _y - 20, false);
+    if (_special) {
+        draw_set_color(make_color_rgb(255, 210, 120));
+        draw_rectangle(_x - 24, _y - 42, _x + 24, _y - 2, true);
+        draw_rectangle(_x - 25, _y - 43, _x + 25, _y - 1, true);
+    }
+    if (_potchest) {
+        draw_set_color(c_white);
+        draw_rectangle(_x - 2, _y - 28, _x + 2, _y - 8, false);
+        draw_rectangle(_x - 10, _y - 20, _x + 10, _y - 16, false);
+    } else {
+        draw_set_color(_special ? make_color_rgb(255, 210, 120) : c_yellow);
+        draw_rectangle(_x - 4, _y - 30, _x + 4, _y - 20, false);
+    }
 } else {
     draw_set_color(make_color_rgb(95, 60, 30));
     draw_rectangle(_x - 24, _y - 30, _x + 24, _y - 2, false);

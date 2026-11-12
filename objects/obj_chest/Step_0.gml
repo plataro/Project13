@@ -8,6 +8,8 @@ if (instance_exists(obj_player)) _p = obj_player.id;
 else if (instance_exists(obj_player_ss)) _p = obj_player_ss.id;
 
 near = (_p != noone) && !opened && trial_state == 0 && point_distance(x, y, _p.x, _p.y) < 90;
+// ★ มีกำแพง/ประตูกั้นระหว่างผู้เล่นกับหีบ = เปิดไม่ได้ (หีบในห้องรางวัลต้องเปิดประตูก่อน)
+if (near && collision_line(x, y - 12, _p.x, _p.y - 8, obj_wall, false, true) != noone) near = false;
 
 var _press = near && input_pressed("interact")
     && !instance_exists(obj_dialogue) && !instance_exists(obj_fade)
