@@ -33,8 +33,9 @@ if (!_frozen) {
     _kx = (keyboard_check(ord("D")) || keyboard_check(vk_right))
         - (keyboard_check(ord("A")) || keyboard_check(vk_left));
     _run = keyboard_check(vk_shift);
-    _jp = keyboard_check_pressed(vk_space) || keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up);
-    _jh = keyboard_check(vk_space) || keyboard_check(ord("W")) || keyboard_check(vk_up);
+    // ★ กระโดดด้วย Space เท่านั้น (W / ลูกศรขึ้น ใช้ขึ้นบันได)
+    _jp = keyboard_check_pressed(vk_space);
+    _jh = keyboard_check(vk_space);
 }
 
 if (atk_cd > 0) atk_cd--;
@@ -60,6 +61,23 @@ if (!_frozen && on_stairs == noone && (keyboard_check_pressed(ord("W")) || keybo
     }
 }
 
+// ★ ชั้นบน: เดินเข้าหาปลายบนของบันได = ก้าวลงบันไดอัตโนมัติ (ไม่ต้องกด W)
+if (!_frozen && on_stairs == noone && grounded && _kx != 0) {
+    var _me2 = id;
+    with (obj_stairs_ss) {
+        if (_me2.on_stairs != noone) continue;
+        var _tx2 = x + dir * run;
+        var _ty2 = y - rise;
+        // เดินไปทางขาลง (ทิศตรงข้ามกับ dir) และถึงปลายบนพอดี
+        if (_kx == -dir && abs(_me2.x - _tx2) < 10 && abs(_me2.y - _ty2) < 12) {
+            _me2.on_stairs = id;
+            _me2.stair_s = 1;
+            _me2.hsp = 0;
+            _me2.vsp = 0;
+        }
+    }
+}
+
 if (on_stairs != noone) {
     if (!instance_exists(on_stairs)) {
         on_stairs = noone;
@@ -79,8 +97,7 @@ if (on_stairs != noone) {
         vsp = 0;
         hrem = 0;
         vrem = 0;
-        if (!_frozen && (keyboard_check_pressed(ord("S")) || keyboard_check_pressed(vk_down))) _leave = true;   // ลงกลางบันได = ตกลงไป
-        if (!_frozen && keyboard_check_pressed(vk_space)) { _leave = true; vsp = -jump_speed * 0.8; }
+        // ★ ออกจากบันไดได้ทางเดียว: เดินด้วย A/D จนสุดปลายบันได (ไม่มีกด S หรือกระโดดออก)
         if (_leave) on_stairs = noone;
 
         // แอนิเมชันเดิน + กล้อง แล้วจบ (บนบันไดไม่ใช้ฟิสิกส์ปกติ)
@@ -134,7 +151,8 @@ if (!_frozen && room != rm_the_sanctuary_ss && keyboard_check_pressed(ord("1")) 
     var _b = instance_create_depth(x + lengthdir_x(20, _sa), y - 40 + lengthdir_y(20, _sa), depth - 1, obj_bullet_ss);
     _b.direction = _sa;
     _b.image_angle = _sa;
-    _b.speed = 11;
+    _b.vx = lengthdir_x(11, _sa);   // ★ ขยับเองใน Step ของกระสุน (เดิมใช้ speed แล้วค้างอยู่กับที่)
+    _b.vy = lengthdir_y(11, _sa);
     shot_cd = 26;
     face = (mouse_x >= x) ? 1 : -1;
 }

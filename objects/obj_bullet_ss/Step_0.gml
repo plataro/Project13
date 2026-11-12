@@ -1,3 +1,5 @@
+x += vx;
+y += vy;
 life--;
 if (life <= 0 || place_meeting(x, y, global.ss_solids) || !point_in_rectangle(x, y, 0, 0, room_width, room_height)) {
     fx_spark(x, y, direction + 180, 4, c_white);

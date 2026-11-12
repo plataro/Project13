@@ -2,3 +2,5 @@
 sprite_index = spr_bullet;
 depth = -110;
 life = 90;
+vx = 0;
+vy = 0;

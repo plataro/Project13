@@ -47,6 +47,123 @@ switch (kind) {
         break;
     }
 
+    // =================================================================
+    // ★ ของตกแต่งฉาก side-scroll (วาดหลังฉาก ตั้ง depth = 100 ใน Creation Code)
+    // (x, y) = จุดฐานบนพื้น ยกเว้นหน้าต่าง/ธง/โซ่ = จุดบน
+    // =================================================================
+    case "column": {   // เสาหินสูง h
+        var _cw = 46;
+        draw_set_color(make_color_rgb(72, 68, 76));
+        draw_rectangle(x - _cw / 2, y - h, x + _cw / 2, y, false);
+        draw_set_color(make_color_rgb(92, 88, 98));
+        draw_rectangle(x - _cw / 2 + 6, y - h, x - _cw / 2 + 14, y, false);
+        draw_set_color(make_color_rgb(60, 56, 64));
+        draw_rectangle(x - _cw / 2 - 10, y - h, x + _cw / 2 + 10, y - h + 22, false);   // หัวเสา
+        draw_rectangle(x - _cw / 2 - 8, y - 18, x + _cw / 2 + 8, y, false);            // ฐาน
+        break;
+    }
+    case "window": {   // หน้าต่างโค้ง + ลำแสงส่องลงพื้น
+        var _ww = 70;
+        var _wh = 150;
+        draw_set_color(make_color_rgb(50, 46, 56));
+        draw_rectangle(x - _ww / 2 - 8, y, x + _ww / 2 + 8, y + _wh + 8, false);
+        draw_circle(x, y, _ww / 2 + 8, false);
+        draw_set_color(make_color_rgb(120, 150, 190));
+        draw_rectangle(x - _ww / 2, y, x + _ww / 2, y + _wh, false);
+        draw_circle(x, y, _ww / 2, false);
+        draw_set_color(make_color_rgb(50, 46, 56));
+        draw_rectangle(x - 3, y - _ww / 2, x + 3, y + _wh, false);
+        draw_rectangle(x - _ww / 2, y + _wh * 0.45, x + _ww / 2, y + _wh * 0.45 + 5, false);
+        // ลำแสง
+        gpu_set_blendmode(bm_add);
+        var _la = 0.07 + 0.02 * sin(current_time / 900 + seed);
+        draw_primitive_begin(pr_trianglestrip);
+        draw_vertex_color(x - _ww / 2, y + _wh, make_color_rgb(255, 230, 170), _la);
+        draw_vertex_color(x + _ww / 2, y + _wh, make_color_rgb(255, 230, 170), _la);
+        draw_vertex_color(x - _ww / 2 + 120, y + _wh + h, make_color_rgb(255, 230, 170), 0);
+        draw_vertex_color(x + _ww / 2 + 220, y + _wh + h, make_color_rgb(255, 230, 170), 0);
+        draw_primitive_end();
+        gpu_set_blendmode(bm_normal);
+        break;
+    }
+    case "torch": {    // คบเพลิงติดผนัง ไฟกะพริบ
+        draw_set_color(make_color_rgb(70, 50, 35));
+        draw_rectangle(x - 4, y - 30, x + 4, y, false);
+        draw_rectangle(x - 10, y - 34, x + 10, y - 28, false);
+        var _fl = 1 + 0.15 * sin(current_time / 70 + seed) + 0.1 * sin(current_time / 33 + seed);
+        gpu_set_blendmode(bm_add);
+        draw_set_alpha(0.18);
+        draw_set_color(make_color_rgb(255, 150, 60));
+        draw_circle(x, y - 44, 70 * _fl, false);
+        draw_set_alpha(0.9);
+        draw_set_color(make_color_rgb(255, 140, 40));
+        draw_ellipse(x - 9 * _fl, y - 62 * _fl, x + 9 * _fl, y - 32, false);
+        draw_set_color(make_color_rgb(255, 230, 140));
+        draw_ellipse(x - 4, y - 50 * _fl, x + 4, y - 34, false);
+        draw_set_alpha(1);
+        gpu_set_blendmode(bm_normal);
+        break;
+    }
+    case "banner": {   // ธงแขวน แกว่งเบา ๆ
+        var _bw = 54;
+        var _bh = 170;
+        var _sway = sin(current_time / 800 + seed) * 6;
+        var _bc = (tint == c_white) ? make_color_rgb(130, 30, 35) : tint;
+        draw_set_color(make_color_rgb(90, 70, 40));
+        draw_rectangle(x - _bw / 2 - 8, y - 4, x + _bw / 2 + 8, y + 4, false);
+        draw_set_color(_bc);
+        draw_triangle(x - _bw / 2, y, x + _bw / 2, y, x - _bw / 2 + _sway, y + _bh, false);
+        draw_triangle(x + _bw / 2, y, x + _bw / 2 + _sway, y + _bh, x - _bw / 2 + _sway, y + _bh, false);
+        draw_set_color(make_color_rgb(200, 160, 70));
+        draw_circle(x + _sway * 0.5, y + _bh * 0.4, 10, false);
+        break;
+    }
+    case "statue": {   // รูปปั้นนักรบบนแท่น
+        draw_set_color(make_color_rgb(70, 66, 74));
+        draw_rectangle(x - 34, y - 40, x + 34, y, false);
+        draw_set_color(make_color_rgb(110, 106, 112));
+        draw_rectangle(x - 16, y - 150, x + 16, y - 40, false);   // ลำตัว
+        draw_circle(x, y - 165, 15, false);                       // หัว
+        draw_rectangle(x + 16, y - 140, x + 24, y - 80, false);   // แขน
+        draw_set_color(make_color_rgb(140, 136, 140));
+        draw_rectangle(x + 22, y - 200, x + 27, y - 70, false);   // ดาบชี้ขึ้น
+        break;
+    }
+    case "altar": {    // แท่นวางดาบ
+        draw_set_color(make_color_rgb(95, 90, 100));
+        draw_rectangle(x - 44, y - 24, x + 44, y, false);
+        draw_set_color(make_color_rgb(130, 125, 135));
+        draw_rectangle(x - 52, y - 32, x + 52, y - 24, false);
+        gpu_set_blendmode(bm_add);
+        draw_set_alpha(0.15 + 0.08 * sin(current_time / 400));
+        draw_set_color(make_color_rgb(150, 200, 255));
+        draw_circle(x, y - 60, 60, false);
+        draw_set_alpha(1);
+        gpu_set_blendmode(bm_normal);
+        break;
+    }
+    case "chain": {    // โซ่ห้อยจากเพดาน ยาว h
+        draw_set_color(make_color_rgb(80, 80, 88));
+        for (var _cy = 0; _cy < h; _cy += 14) {
+            draw_ellipse(x - 4 + sin(current_time / 1000 + seed + _cy) * 1.5, y + _cy, x + 4, y + _cy + 12, true);
+        }
+        break;
+    }
+    case "rubble": {   // กองหินพัง
+        draw_set_color(make_color_rgb(75, 70, 72));
+        draw_ellipse(x - 40, y - 22, x + 10, y, false);
+        draw_ellipse(x - 10, y - 30, x + 40, y, false);
+        draw_set_color(make_color_rgb(95, 90, 92));
+        draw_ellipse(x - 20, y - 40, x + 12, y - 14, false);
+        break;
+    }
+    case "railing": {  // ราวกั้นขอบชั้นบน (กำแพงจริงเป็น obj_ground_ss ที่ซ่อนไว้)
+        draw_set_color(make_color_rgb(100, 90, 80));
+        draw_rectangle(x, y - 70, x + 32, y - 62, false);
+        for (var _rx = x + 4; _rx < x + 32; _rx += 10) draw_rectangle(_rx, y - 62, _rx + 3, y, false);
+        break;
+    }
+
     // ===== ป้ายไม้ =====
     case "sign": {
         draw_set_color(make_color_rgb(110, 75, 40));

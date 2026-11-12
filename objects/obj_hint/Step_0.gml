@@ -24,7 +24,12 @@ if (_near && !done && a > 0.6) {
         for (var _j = 0; _j < array_length(_it.c); _j++) {
             var _code = _it.c[_j];
             var _hit = false;
-            if (_code == -1) _hit = mouse_check_button_pressed(mb_left);
+            // ★ -4 = ขึ้นบันไดแล้ว, -5 / -6 = กด A / D ระหว่างอยู่บนบันได (ต้องขึ้นบันไดก่อนถึงนับ)
+            var _onst = instance_exists(obj_player_ss) && obj_player_ss.on_stairs != noone;
+            if (_code == -4) _hit = _onst;
+            else if (_code == -5) _hit = _onst && keyboard_check(ord("A"));
+            else if (_code == -6) _hit = _onst && keyboard_check(ord("D"));
+            else if (_code == -1) _hit = mouse_check_button_pressed(mb_left);
             else if (_code == -2) _hit = mouse_wheel_up() || mouse_wheel_down();
             else _hit = keyboard_check_pressed(_code);
             if (_hit) _it.g[_j] = true;
