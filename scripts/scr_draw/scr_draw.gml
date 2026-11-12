@@ -313,3 +313,19 @@ function draw_loot_feed(_ytop) {
     draw_set_alpha(1);
     draw_set_color(c_white);
 }
+
+
+// ★ ตำแหน่งช่องสกิลล่างจอ (ต้องตรงกับ obj_player Draw_64: ช่อง 48 ห่าง 12 จำนวน 6)
+//   0 คลิก, 1 ค้าง, 2 ยิง, 3 สกิล 2, 4 กลิ้ง, 5 ยา, 6 แผงบัฟด้านขวา
+function hud_slot_rect(_i) {
+    var _sz = 48;
+    var _gap = 12;
+    var _x0 = 480 - (6 * _sz + 5 * _gap) / 2;
+    var _y0 = 540 - _sz - 26;
+    if (_i == 6) {
+        var _fx = _x0 + 6 * (_sz + _gap) + 8;
+        return [_fx, _y0 + 4, _fx + 150, _y0 + _sz - 4];
+    }
+    var _x = _x0 + _i * (_sz + _gap);
+    return [_x, _y0, _x + _sz, _y0 + _sz];
+}

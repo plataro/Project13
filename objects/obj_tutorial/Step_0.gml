@@ -138,7 +138,8 @@ if (is_undefined(ctx)) {
         var _ok = false;
         for (var _k = 0; _k < array_length(ctx.codes); _k++) {
             var _code = ctx.codes[_k];
-            if (_code == -2) { if (mouse_wheel_up() || mouse_wheel_down()) _ok = true; }
+            if (_code == -1) { if (mouse_check_button_pressed(mb_left)) _ok = true; }
+            else if (_code == -2) { if (mouse_wheel_up() || mouse_wheel_down()) _ok = true; }
             else if (_code == -3) { if (obj_player.state == PState.CHARGE && obj_player.charge_t >= obj_player.charge_time) _ok = true; }   // ชาร์จเต็มสักครั้ง
             else if (keyboard_check_pressed(_code)) _ok = true;
         }

@@ -1,3 +1,1 @@
-items = [{ k: ["คลิกซ้าย"], c: [-1], t: "โจมตี" }, { k: ["Space"], c: [vk_space], t: "กลิ้งหลบ" }];
-hkey = "hint_attack";
-radius = 280;
+instance_destroy();   // ★ ย้ายไปสอนที่แถบสกิลล่างจอแทน (obj_tutorial ctx_atk / ctx_roll / ctx_shot / ctx_potion)
