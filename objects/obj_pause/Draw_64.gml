@@ -2,6 +2,24 @@ draw_set_font(fnt_dialog);
 var _mx = device_mouse_x_to_gui(0);
 var _my = device_mouse_y_to_gui(0);
 
+// ★ ข้อความ "บันทึกแล้ว" มุมขวาล่าง หลังเซฟอัตโนมัติ
+if (global.save_flash > 0) {
+    global.save_flash--;
+    if (!open) {
+        draw_set_halign(fa_right);
+        draw_set_valign(fa_bottom);
+        draw_set_alpha(min(1, global.save_flash / 30));
+        draw_set_color(c_black);
+        draw_text_transformed(945, 529, "บันทึกแล้ว", 0.6, 0.6, 0);
+        draw_set_color(make_color_rgb(150, 230, 150));
+        draw_text_transformed(944, 528, "บันทึกแล้ว", 0.6, 0.6, 0);
+        draw_set_alpha(1);
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        draw_set_color(c_white);
+    }
+}
+
 // =========================
 // ปุ่มหยุด (ตอนเล่นอยู่)
 // =========================
@@ -55,7 +73,7 @@ draw_text_transformed(480, 130, _title, 1.3, 1.3, 0);
 
 if (screen == 2) {
     draw_set_color(c_ltgray);
-    draw_text_transformed(480, 178, "ความคืบหน้าที่เล่นมาจะหายทั้งหมด", 0.7, 0.7, 0);
+    draw_text_transformed(480, 178, "เล่นต่อได้จากจุดที่เข้าห้องนี้ (เซฟอัตโนมัติ)", 0.7, 0.7, 0);
 }
 
 var _items = get_items();

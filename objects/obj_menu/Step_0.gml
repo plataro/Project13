@@ -15,9 +15,11 @@ if (screen == 1 || screen == 2) {
 }
 
 // หน้าเลือกฉาก (Debug) / เลือกระดับความยาก: Esc กลับ
+if (msg_timer > 0) msg_timer--;
+
 if (screen == 3 && _back) {
     screen = 0;
-    sel = 5;
+    sel = 0;
     exit;
 }
 if (screen == 4 && _back) {
@@ -28,8 +30,15 @@ if (screen == 4 && _back) {
 
 // สร้างรายการเมนู
 if (screen == 0) {
-    items = ["เริ่มเกม", "วิธีเล่น", "เครดิต", "ตั้งค่า", global.debug ? "Debug Mode: เปิด" : "Debug Mode: ปิด"];
-    if (global.debug) array_push(items, "เลือกฉาก");
+    items = [];
+    acts = [];
+    if (has_save) { array_push(items, "เล่นต่อ"); array_push(acts, "continue"); }
+    array_push(items, has_save ? "เริ่มเกมใหม่" : "เริ่มเกม"); array_push(acts, "new");
+    array_push(items, "วิธีเล่น");  array_push(acts, "howto");
+    array_push(items, "เครดิต");    array_push(acts, "credits");
+    array_push(items, "ตั้งค่า");    array_push(acts, "settings");
+    array_push(items, global.debug ? "Debug Mode: เปิด" : "Debug Mode: ปิด"); array_push(acts, "debug");
+    if (global.debug) { array_push(items, "เลือกฉาก"); array_push(acts, "scenes"); }
 } else if (screen == 4) {
     items = ["ง่าย", "ปานกลาง", "ยาก", "กลับ"];
 } else {
@@ -53,7 +62,7 @@ last_my = _my;
 
 var _clicked = false;
 for (var _j = 0; _j < _n; _j++) {
-    var _y = 250 + _j * 50;
+    var _y = item_y(_j);
     var _over = (_mx > 330 && _mx < 630 && _my > _y - 5 && _my < _y + 40);
     if (_over && _moved) sel = _j;
     if (_over && _click) {
@@ -66,22 +75,34 @@ sel = clamp(sel, 0, _n - 1);
 
 if (_enter || _clicked) {
     if (screen == 0) {
-        switch (sel) {
-            case 0:
+        switch (acts[sel]) {
+            case "continue":
+                var _r = save_load();
+                if (_r == -1) {
+                    msg = "โหลดเซฟไม่ได้ (ไฟล์เสีย)";
+                    msg_timer = 180;
+                    has_save = false;
+                    sel = 0;
+                } else {
+                    var _fc = instance_create_depth(0, 0, -10000, obj_fade);
+                    _fc.target_room = _r;
+                }
+                break;
+            case "new":
                 // ไปหน้าเลือกระดับความยาก (เริ่มที่ระดับที่เลือกไว้ครั้งก่อน)
                 screen = 4;
                 sel = global.difficulty;
                 break;
-            case 1:
+            case "howto":
                 screen = 1;
                 break;
-            case 2:
+            case "credits":
                 screen = 2;
                 break;
-            case 3:
+            case "settings":
                 if (instance_exists(obj_pause)) obj_pause.open_settings_menu();
                 break;
-            case 4:
+            case "debug":
                 global.debug = !global.debug;
                 if (global.debug) {
                     if (!instance_exists(obj_debug)) instance_create_depth(0, 0, -9500, obj_debug);
@@ -90,7 +111,7 @@ if (_enter || _clicked) {
                     instance_destroy(obj_debug);
                 }
                 break;
-            case 5:
+            case "scenes":
                 screen = 3;
                 sel = 0;
                 break;
@@ -109,7 +130,7 @@ if (_enter || _clicked) {
         // หน้าเลือกฉาก (Debug)
         if (sel >= array_length(global.levels)) {
             screen = 0;
-            sel = 5;
+            sel = 0;
         } else {
             game_reset();
             var _f2 = instance_create_depth(0, 0, -10000, obj_fade);

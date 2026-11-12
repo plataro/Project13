@@ -32,12 +32,24 @@ else if (screen == 2) {
 }
 else {
     draw_set_color(c_white);
-    if (screen == 0) draw_text_transformed(480, 120, "THE UNKNOWN", 2.5, 2.5, 0);
+    if (screen == 0) {
+        draw_text_transformed(480, 110, "THE UNKNOWN", 2.5, 2.5, 0);
+        if (has_save) {
+            draw_set_color(c_gray);
+            draw_text_transformed(480, 185, "เซฟล่าสุด: " + save_text, 0.6, 0.6, 0);
+            draw_set_color(c_white);
+        }
+        if (msg_timer > 0) {
+            draw_set_color(c_red);
+            draw_text_transformed(480, 505, msg, 0.7, 0.7, 0);
+            draw_set_color(c_white);
+        }
+    }
     else if (screen == 3) draw_text_transformed(480, 120, "เลือกฉาก (Debug)", 1.5, 1.5, 0);
     else draw_text_transformed(480, 120, "เลือกระดับความยาก", 1.5, 1.5, 0);
 
     for (var _i = 0; _i < array_length(items); _i++) {
-        var _y = 250 + _i * 50;
+        var _y = item_y(_i);
         if (_i == sel) {
             draw_set_color(c_yellow);
             draw_text(480, _y, "> " + items[_i] + " <");
@@ -50,7 +62,11 @@ else {
     // คำอธิบายของระดับที่เลือกอยู่
     if (screen == 4 && sel < 3) {
         draw_set_color(c_gray);
-        draw_text(480, 470, difficulty_data(sel).desc);
+        draw_text(480, 440, difficulty_data(sel).desc);
+        if (has_save) {
+            draw_set_color(make_color_rgb(255, 170, 80));
+            draw_text_transformed(480, 480, "เริ่มเกมใหม่จะเขียนทับเซฟเดิม", 0.7, 0.7, 0);
+        }
     }
 }
 

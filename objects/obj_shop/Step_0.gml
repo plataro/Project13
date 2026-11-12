@@ -5,6 +5,7 @@ if (msg_timer > 0) {
 }
 
 if (open_delay <= 0 && (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(ord("E")))) {
+    save_commit();   // ★ ซื้อ/ขายแล้วเซฟเลย
     instance_destroy();
     exit;
 }
@@ -31,6 +32,7 @@ if (_click) {
         tab = 1;
     }
     else if (point_in_rectangle(_mx, _my, px + pw - 164, py + ph - 64, px + pw - 24, py + ph - 20)) {
+        save_commit();
         instance_destroy();
         exit;
     }

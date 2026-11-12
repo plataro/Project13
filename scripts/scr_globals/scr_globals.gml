@@ -80,12 +80,121 @@ function game_reset() {
     global.story_seen = {};
 }
 
-// เก็บภาพเซฟตอนเข้าห้องใหม่ (ตายแล้วเริ่มห้องซ้ำ ไม่เก็บซ้ำ)
+// เก็บภาพเซฟตอนเข้าห้องใหม่ (ตายแล้วเริ่มห้องซ้ำ ไม่เก็บซ้ำ) + ★ เซฟลงเบราว์เซอร์อัตโนมัติ
 function save_snapshot_new_room() {
     if (global.snap_room != room) {
         global.snap = json_stringify(global.save);
         global.snap_room = room;
+        global.snap_seen = json_stringify(global.story_seen);
+        save_write_file(global.player_hp);
     }
+}
+
+// =====================================================================
+// ★ เซฟลงเครื่อง/เบราว์เซอร์ (save.ini → localStorage บนเว็บ)
+// เซฟอัตโนมัติทุกครั้งที่เข้าห้องใหม่ และตอนปิดร้านค้า
+// โหลดแล้วจะเกิดที่ประตูที่เข้าห้องนั้นมา ด้วยของ/เงิน/สกิล ณ ตอนนั้น
+// =====================================================================
+#macro SAVE_FILE "save.ini"
+#macro SAVE_VERSION 1
+global.snap_seen = "{}";
+global.save_flash = 0;   // นับถอยหลังแสดงข้อความ "บันทึกแล้ว"
+
+// ห้องนี้เซฟได้ไหม (เฉพาะห้องในลำดับด่าน ไม่รวมฉากจบ และไม่เซฟตอนเปิด Debug กันทับเซฟจริง)
+function save_room_ok() {
+    if (global.debug || room == rm_menu || room == rm_end) return false;
+    return level_index() >= 0;
+}
+
+function save_write_file(_hp) {
+    if (!save_room_ok()) return;
+    var _d = {
+        v: SAVE_VERSION,
+        room: room_get_name(room),
+        arrive: global.arrive,
+        difficulty: global.difficulty,
+        hp: _hp,
+        save: global.snap,
+        seen: global.snap_seen,
+        ending: global.ending
+    };
+    ini_open(SAVE_FILE);
+    ini_write_string("save", "data", base64_encode(json_stringify(_d)));
+    ini_close();
+    global.save_flash = 120;
+}
+
+// เซฟสถานะปัจจุบันกลางห้อง (เช่น ปิดร้านค้า) ตายแล้วก็จะไม่เสียของที่ซื้อ
+function save_commit() {
+    global.snap = json_stringify(global.save);
+    global.snap_seen = json_stringify(global.story_seen);
+    var _hp = instance_exists(obj_player) ? obj_player.hp : global.player_hp;
+    save_write_file(_hp);
+}
+
+function save_exists() {
+    ini_open(SAVE_FILE);
+    var _e = ini_key_exists("save", "data");
+    ini_close();
+    return _e;
+}
+
+function save_delete() {
+    ini_open(SAVE_FILE);
+    ini_section_delete("save");
+    ini_close();
+}
+
+// ข้อความสรุปเซฟสำหรับเมนู ("" = อ่านไม่ได้)
+function save_summary() {
+    var _d = save_read_raw();
+    if (is_undefined(_d)) return "";
+    return difficulty_data(_d.difficulty).name + "  ·  " + _d.room;
+}
+
+function save_read_raw() {
+    ini_open(SAVE_FILE);
+    var _s = ini_read_string("save", "data", "");
+    ini_close();
+    if (_s == "") return undefined;
+    try {
+        var _d = json_parse(base64_decode(_s));
+        if (!is_struct(_d) || !variable_struct_exists(_d, "room")) return undefined;
+        return _d;
+    } catch (_e) {
+        return undefined;
+    }
+}
+
+// โหลดเซฟเข้าตัวแปรเกม คืนค่าห้องที่ต้องไป (-1 = โหลดไม่ได้)
+function save_load() {
+    var _d = save_read_raw();
+    if (is_undefined(_d)) return -1;
+    var _r = asset_get_index(_d.room);
+    if (_r == -1 || !room_exists(_r)) return -1;
+
+    global.difficulty = _d.difficulty;
+    try {
+        global.save = json_parse(_d.save);
+        global.story_seen = json_parse(_d.seen);
+    } catch (_e) {
+        return -1;
+    }
+    // เซฟเก่าที่ขาดช่องใหม่ ๆ = เติมค่าเริ่มต้น
+    var _def = save_default();
+    var _keys = variable_struct_get_names(_def);
+    for (var _i = 0; _i < array_length(_keys); _i++) {
+        if (!variable_struct_exists(global.save, _keys[_i])) global.save[$ _keys[_i]] = _def[$ _keys[_i]];
+    }
+
+    global.ending = _d.ending;
+    global.arrive = _d.arrive;
+    global.snap = "";
+    global.snap_room = noone;
+    global.hitstop = 0;
+    apply_difficulty();
+    global.player_hp = clamp(_d.hp, 1, global.max_hp);
+    return _r;
 }
 
 // ตายแล้วคืนเงิน/ของ/ยา กลับไปเท่าตอนเข้าห้อง กันฟาร์ม
