@@ -96,3 +96,18 @@ for (var _i = 0; _i <= _rays; _i++) {
     draw_vertex_color(_px + lengthdir_x(_far, _a3), _py + lengthdir_y(_far, _a3), c_black, _fog_dark);
 }
 draw_primitive_end();
+
+// ★ ศัตรูที่ "มองเห็นแล้ว" วาดตัวซ้ำทับหมอก
+//   (เดิมยืนชิดกำแพงด้านบน ส่วนหัวเลยเส้นกำแพงเข้าไปในโซนมืด ตัวเลยมืดตามไปด้วย)
+var _pl = id;
+with (obj_enemy) {
+    if (vis <= 0.02 || !variable_instance_exists(id, "fog_col")) continue;
+    // ยืนซ้อนอยู่หลังผู้เล่น = ข้าม (ตรงนั้นสว่างอยู่แล้ว และจะได้ไม่ทับตัวผู้เล่น)
+    if (abs(x - _pl.x) < 60 && y < _pl.y && y > _pl.y - 140) continue;
+    draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, fog_col, vis);
+    if (flash > 3) {
+        gpu_set_blendmode(bm_add);
+        draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.85);
+        gpu_set_blendmode(bm_normal);
+    }
+}

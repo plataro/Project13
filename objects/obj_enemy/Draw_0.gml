@@ -132,6 +132,8 @@ if (atk_state == "windup" && !is_undefined(atk_cur)) {
 }
 
 draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, _col, vis);
+fog_col = _col;   // ★ จำไว้ให้หมอกวาดตัวซ้ำทับ (ตัวไม่มืดตามขอบกำแพง)
+fog_ox = _ox;
 
 // ★ เกราะกันกระสุน: วงฟ้าเรือง ๆ รอบตัว (กะพริบตอนใกล้หมด)
 if (shield > 0 && (shield > 60 || (shield div 5) mod 2 == 0)) {
