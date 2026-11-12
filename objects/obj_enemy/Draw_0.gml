@@ -1,6 +1,7 @@
 // ★ เห็นเมื่อรอยเท้าอยู่ในโซนสว่างของหมอก (เช็กทุกเฟรม ใช้จุดตาเดียวกับหมอก)
 // ค่อย ๆ จางเข้า/ออก ไม่โผล่/หายแบบกระตุก
 var _show = (flash > 0) || enemy_visible(id);
+if (!is_undefined(global.boss_intro) && global.boss_intro.boss == id) _show = true;   // ★ บอสที่กำลังเปิดตัว = เห็นเสมอ
 if (!_show && instance_exists(obj_player) && point_distance(x, y, obj_player.x, obj_player.y) < 70) _show = true;
 vis = clamp(vis + (_show ? 0.2 : -0.1), 0, 1);
 if (vis <= 0.01) exit;

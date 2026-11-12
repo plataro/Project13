@@ -3,6 +3,9 @@ if (!fog_room()) exit;
 if (instance_exists(obj_gameover)) exit;
 
 var _fog_dark = 0.88;     // ★ ความมืดของโซนที่มองไม่เห็น (0-1)
+// ★ ตอนเปิดตัวบอส: หมอกจางลงตามจังหวะกล้อง จะได้เห็นบอสแม้อยู่นอกสายตา
+if (!is_undefined(global.boss_intro)) _fog_dark *= 1 - global.boss_intro.k;
+if (_fog_dark <= 0.01) exit;
 var _rays = 160;          // ★ จำนวนเรย์
 var _radius = FOG_RADIUS; // ★ ระยะมองไกลสุด (แก้ที่ scr_combat)
 var _soft = 48;           // ★ ความกว้างขอบนุ่ม (px)

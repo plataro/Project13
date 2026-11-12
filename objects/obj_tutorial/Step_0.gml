@@ -26,6 +26,7 @@ if (!is_undefined(global.boss_intro)) {
         else _k = 1 - (_bi.t - 150) / 30;
         _k = clamp(_k, 0, 1);
         _k = _k * _k * (3 - 2 * _k);   // ease
+        _bi.k = _k;                    // หมอกจางตามนี้ (obj_player Draw_73)
         camera_set_view_pos(_cam, round(lerp(_px, _bx, _k)), round(lerp(_py, _by, _k)));
 
         if (_bi.t == 30) fx_shake(4);

@@ -304,6 +304,6 @@ function boss_intro_start(_boss, _name, _title) {
     var _key = "intro_" + room_get_name(room);
     if (variable_struct_exists(global.story_seen, _key)) return;   // ดูแล้วไม่ขึ้นซ้ำ (ตายแล้วเริ่มใหม่ก็ไม่ขึ้น)
     global.story_seen[$ _key] = true;
-    global.boss_intro = { boss: _boss, name: _name, title: _title, t: 0 };
+    global.boss_intro = { boss: _boss, name: _name, title: _title, t: 0, k: 0 };
 }
 global.boss_intro = undefined;
