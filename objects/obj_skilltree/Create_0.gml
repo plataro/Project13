@@ -20,7 +20,7 @@ branch_icon = ["sword", "fire", "star"];
 branch_col = [make_color_rgb(240, 120, 100), make_color_rgb(255, 160, 70), make_color_rgb(120, 200, 255)];
 open_t = 0;
 
-branch_names = ["ดาบ", "ยิง", "ร่างกาย"];
+branch_names = function() { return [L("ดาบ", "Sword"), L("ยิง", "Shooting"), L("ร่างกาย", "Body")]; };
 nodes = skill_nodes();
 hover_key = "";
 msg = "";

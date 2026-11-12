@@ -125,16 +125,16 @@ function draw_hud_money() {
     ui_text_bold(_x1 + 36, _cy, string(_s.gold), 0.55, make_color_rgb(255, 225, 120));
     // ยา
     draw_set_halign(fa_right);
-    ui_text(_x2 - 12, _cy, "ยา " + string(_s.potions) + "/" + string(potion_cap()), 0.45, make_color_rgb(255, 130, 130));
+    ui_text(_x2 - 12, _cy, L("ยา ", "Potion ") + string(_s.potions) + "/" + string(potion_cap()), 0.45, make_color_rgb(255, 130, 130));
     draw_set_halign(fa_left);
 
     // อาวุธ / เกราะ
     var _multi = array_length(variable_struct_get_names(_s.weapons)) > 0;   // มีอาวุธมากกว่า 1 ชิ้นถึงโชว์ [R]
-    ui_text(_x1 + 14, _cy + 22, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? ("  |  เกราะ " + string(_s.armor)) : ""), 0.45, UI_TEXT);
+    ui_text(_x1 + 14, _cy + 22, (_multi ? "[R] " : "") + weapon_data(_s.weapon).name + ((_s.armor > 0) ? (L("  |  เกราะ ", "  |  Armor ") + string(_s.armor)) : ""), 0.45, UI_TEXT);
 
     // แต้มสกิล
     if (_s.sp > 0) {
-        ui_text(_x1 + 14, _cy + 44, (flag_get("tree_unlocked") ? "[T] แต้มสกิล " : "แต้มสกิล ") + string(_s.sp), 0.45, make_color_rgb(255, 220, 90));
+        ui_text(_x1 + 14, _cy + 44, (flag_get("tree_unlocked") ? L("[T] แต้มสกิล ", "[T] Skill Points ") : L("แต้มสกิล ", "Skill Points ")) + string(_s.sp), 0.45, make_color_rgb(255, 220, 90));
     }
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);

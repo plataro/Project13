@@ -119,7 +119,7 @@ if (chars >= total && variable_struct_exists(lines[index], "choices")) {
     if (_ready) {
         draw_set_color(c_gray);
         draw_set_halign(fa_center);
-        draw_text_transformed(480, choice_y0 + array_length(_chs) * choice_gap + 2, "คลิกเพื่อเลือก", 0.55, 0.55, 0);
+        draw_text_transformed(480, choice_y0 + array_length(_chs) * choice_gap + 2, L("คลิกเพื่อเลือก", "Click to choose"), 0.55, 0.55, 0);
         draw_set_halign(fa_left);
     }
     draw_set_color(c_white);

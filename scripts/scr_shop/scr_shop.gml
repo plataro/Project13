@@ -369,3 +369,14 @@ function status_toggle() {
         || instance_exists(obj_skilltree) || instance_exists(obj_gameover)) return;
     instance_create_depth(0, 0, -12500, obj_status);
 }
+
+// ★ ชื่อร้านตามชนิด (2 ภาษา)
+function shop_type_name(_type) {
+    switch (_type) {
+        case "smith":     return L("ช่างตีเหล็ก", "Blacksmith");
+        case "alchemist": return L("นักปรุงยา", "Alchemist");
+        case "jeweler":   return L("ร้านอัญมณี", "Jeweler");
+        case "buyer":     return L("ของเก่า (รับซื้อ)", "Antiques (Buyer)");
+    }
+    return L("พ่อค้า", "Merchant");
+}

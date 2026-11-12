@@ -251,6 +251,8 @@ function draw_key_hint(_x, _y, _items, _alpha, _t, _tick = false) {
 // ตัดบรรทัดอัตโนมัติ (ภาษาไทยไม่มีเว้นวรรค ต้องตัดเอง)
 function text_wrap_thai(_str, _maxw) {
     draw_set_font(fnt_dialog);
+    // ★ ภาษาอังกฤษ: ตัดบรรทัดตามช่องว่าง (คำไม่ขาดกลางคำ)
+    if (global.lang == "en") return text_wrap_words(_str, _maxw);
     var _out = "";
     var _line = "";
     var _n = string_length(_str);
@@ -280,4 +282,25 @@ function dialogue_start(_lines, _on_done = undefined) {
     _d.lines = _lines;
     _d.on_done = _on_done;
     _d.load_line();
+}
+
+// ★ ตัดบรรทัดแบบภาษาอังกฤษ (ตามช่องว่าง)
+function text_wrap_words(_str, _maxw) {
+    draw_set_font(fnt_dialog);
+    var _out = "";
+    var _paras = string_split(_str, "\n");
+    for (var _p = 0; _p < array_length(_paras); _p++) {
+        var _words = string_split(_paras[_p], " ");
+        var _line = "";
+        for (var _w = 0; _w < array_length(_words); _w++) {
+            var _try = (_line == "") ? _words[_w] : (_line + " " + _words[_w]);
+            if (_line != "" && string_width(_try) > _maxw) {
+                _out += _line + "\n";
+                _line = _words[_w];
+            } else _line = _try;
+        }
+        _out += _line;
+        if (_p < array_length(_paras) - 1) _out += "\n";
+    }
+    return _out;
 }

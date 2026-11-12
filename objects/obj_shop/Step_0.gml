@@ -44,16 +44,16 @@ if (_click) {
         var _total = 0;
         var _kinds = item_kinds();
         for (var _j = 0; _j < array_length(_kinds); _j++) _total += shop_sell(_kinds[_j], true, sell_mul);
-        msg = (_total > 0) ? ("ขายทั้งหมดได้ " + string(_total) + " เหรียญ") : "ไม่มีของให้ขาย";
+        msg = (_total > 0) ? (L("ขายทั้งหมดได้ ", "Sold all for ") + string(_total) + L(" เหรียญ", " gold")) : L("ไม่มีของให้ขาย", "Nothing to sell");
         msg_timer = 120;
     }
     else if (hover_row >= 0) {
         if (tab == 0) {
             var _r = shop_buy(buy_ids[hover_row]);
-            msg = (_r == "") ? "ซื้อแล้ว!" : _r;
+            msg = (_r == "") ? L("ซื้อแล้ว!", "Purchased!") : _r;
         } else {
             var _got = shop_sell(sell_list[hover_row], keyboard_check(vk_shift), sell_mul);
-            msg = "ได้รับ " + string(_got) + " เหรียญ";
+            msg = L("ได้รับ ", "Got ") + string(_got) + L(" เหรียญ", " gold");
         }
         msg_timer = 120;
     }

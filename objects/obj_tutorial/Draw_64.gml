@@ -81,8 +81,8 @@ if (freeze) {
     draw_set_color(c_black);
     draw_rectangle(0, 0, 960, 540, false);
     draw_set_alpha(1);
-    ui_text_bold(480, 150, "ศัตรูกำลังจะโจมตี!", 0.85, make_color_rgb(255, 120, 100));
-    tut_slot_callout(5, ["Space"], "กลิ้งหลบ", "ระหว่างกลิ้งจะไม่โดนโจมตี (กดทิศค้าง = เลือกทาง)", UI_MUTED, false, _fa, 0);
+    ui_text_bold(480, 150, L("ศัตรูกำลังจะโจมตี!", "Enemy is about to attack!"), 0.85, make_color_rgb(255, 120, 100));
+    tut_slot_callout(5, ["Space"], L("กลิ้งหลบ", "Dodge roll"), L("ระหว่างกลิ้งจะไม่โดนโจมตี (กดทิศค้าง = เลือกทาง)", "Invincible while rolling (hold a direction to aim)"), UI_MUTED, false, _fa, 0);
 }
 
 // ===== ข้อความสั้น =====

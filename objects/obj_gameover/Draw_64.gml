@@ -18,7 +18,7 @@ if (alpha >= 0.8) {
     draw_set_color(UI_GOLD_DARK);
     draw_line_width(400, 244 + _oy, 560, 244 + _oy, 2);
 
-    var _opts = ["ลองใหม่จากจุดเข้าห้อง", "กลับเมนูหลัก"];
+    var _opts = [L("ลองใหม่จากจุดเข้าห้อง", "Retry from area entrance"), L("กลับเมนูหลัก", "Back to Main Menu")];
     for (var _i = 0; _i < 2; _i++) {
         var _by = btn_y(_i) + _oy;
         var _on = (sel == _i);
@@ -31,7 +31,7 @@ if (alpha >= 0.8) {
         if (_on) ui_text_bold(480, _by, _opts[_i], 0.6, make_color_rgb(255, 235, 180));
         else ui_text(480, _by, _opts[_i], 0.58, UI_MUTED);
     }
-    ui_text(480, 392 + _oy, "W/S เลือก | Enter / คลิก ยืนยัน", 0.42, UI_MUTED);
+    ui_text(480, 392 + _oy, L("W/S เลือก | Enter / คลิก ยืนยัน", "W/S select | Enter / Click confirm"), 0.42, UI_MUTED);
     draw_set_alpha(1);
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);

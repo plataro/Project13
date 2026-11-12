@@ -26,7 +26,7 @@ if (idx < array_length(slides)) {
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         draw_set_color(c_ltgray);
-        draw_text_transformed(480, 180, "[ ภาพประกอบ ]", 0.7, 0.7, 0);
+        draw_text_transformed(480, 180, L("[ ภาพประกอบ ]", "[ Illustration ]"), 0.7, 0.7, 0);
         draw_set_color(c_gray);
         draw_text_transformed(480, 210, _sl.img, 0.5, 0.5, 0);
         draw_set_halign(fa_left);
@@ -100,7 +100,7 @@ if (idx < array_length(slides)) {
     }
 
     draw_set_halign(fa_right);
-    ui_text(944, 8, "Tab / Esc ข้าม", 0.45, UI_MUTED);
+    ui_text(944, 8, L("Tab / Esc ข้าม", "Tab / Esc skip"), 0.45, UI_MUTED);
     draw_set_halign(fa_left);
 }
 

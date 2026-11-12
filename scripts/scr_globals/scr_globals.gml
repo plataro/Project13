@@ -1,3 +1,18 @@
+// =====================================================================
+// ★ ภาษา: L("ข้อความไทย", "English text") คืนตามภาษาที่เลือก
+//   เขียนคู่ไว้ตรงที่ใช้เลย แก้คำได้ทันทีไม่ต้องตามหา key
+// =====================================================================
+global.lang = "th";          // "th" / "en"
+global.lang_chosen = false;  // เคยเลือกภาษาแล้วหรือยัง (ครั้งแรกเมนูจะถาม)
+function L(_th, _en) {
+    return (global.lang == "en") ? _en : _th;
+}
+function lang_set(_l) {
+    global.lang = _l;
+    global.lang_chosen = true;
+    settings_save();
+}
+
 global.max_hp = 5;
 global.player_hp = global.max_hp;
 global.debug = false;
@@ -35,17 +50,17 @@ function level_index() {
 function difficulty_data(_i = global.difficulty) {
     switch (_i) {
         case 0:   // ง่าย
-            return { name: "ง่าย", player_hp: 8,
+            return { name: L("ง่าย", "Easy"), player_hp: 8,
                      enemy_hp: 0.7, enemy_dmg: 0.5, windup: 1.3, enemy_speed: 0.9, attackers: 1,
-                     desc: "เลือด 8 | ศัตรูอ่อนและช้ากว่า ดาเมจน้อย เตรียมโจมตีนาน หลบง่าย" };
+                     desc: L("เลือด 8 | ศัตรูอ่อนและช้ากว่า ดาเมจน้อย เตรียมโจมตีนาน หลบง่าย", "8 HP | Weaker, slower enemies with long wind-ups. Easy to dodge") };
         case 2:   // ยาก
-            return { name: "ยาก", player_hp: 4,
+            return { name: L("ยาก", "Hard"), player_hp: 4,
                      enemy_hp: 1.5, enemy_dmg: 1, windup: 0.8, enemy_speed: 1.15, attackers: 3,
-                     desc: "เลือด 4 | ศัตรูทนและเร็วกว่า บุกพร้อมกัน 3 ตัว สัญญาณเตือนสั้นลง" };
+                     desc: L("เลือด 4 | ศัตรูทนและเร็วกว่า บุกพร้อมกัน 3 ตัว สัญญาณเตือนสั้นลง", "4 HP | Tougher, faster enemies. 3 attack at once, shorter warnings") };
         default:  // ปานกลาง
-            return { name: "ปานกลาง", player_hp: 5,
+            return { name: L("ปานกลาง", "Normal"), player_hp: 5,
                      enemy_hp: 1, enemy_dmg: 1, windup: 1, enemy_speed: 1, attackers: 2,
-                     desc: "เลือด 5 | สมดุล เล่นตามที่ออกแบบไว้" };
+                     desc: L("เลือด 5 | สมดุล เล่นตามที่ออกแบบไว้", "5 HP | Balanced, the intended experience") };
     }
 }
 
@@ -317,6 +332,9 @@ function settings_load() {
     global.fx_shake_scale = ini_read_real("settings", "shake", 2.5);
     global.fx_hitstop_on = ini_read_real("settings", "hitstop", 1) > 0;
     global.show_dmg = ini_read_real("settings", "dmg_numbers", 1) > 0;
+    global.lang_chosen = ini_key_exists("settings", "lang");
+    global.lang = ini_read_string("settings", "lang", "th");
+    if (global.lang != "en") global.lang = "th";
     ini_close();
     settings_apply();
 }
@@ -327,6 +345,7 @@ function settings_save() {
     ini_write_real("settings", "shake", global.fx_shake_scale);
     ini_write_real("settings", "hitstop", global.fx_hitstop_on ? 1 : 0);
     ini_write_real("settings", "dmg_numbers", global.show_dmg ? 1 : 0);
+    if (global.lang_chosen) ini_write_string("settings", "lang", global.lang);
     ini_close();
 }
 
@@ -335,13 +354,13 @@ function settings_save() {
 function room_title(_r) {
     if (_r == noone || _r == -1) return "";
     switch (_r) {
-        case rm_the_sanctuary_ss:            return "วิหาร";
-        case rm_level_1_the_forest:          return "ป่า";
-        case rm_the_village:                 return "หมู่บ้าน";
-        case rm_level_2_the_abandoned_mine:  return "เหมืองร้าง";
-        case rm_level_3_the_castle:          return "ปราสาท";
-        case rm_the_final_ss:                return "ทางสู่บัลลังก์";
-        case rm_boss:                        return "บัลลังก์มังกร";
+        case rm_the_sanctuary_ss:            return L("วิหาร", "Sanctuary");
+        case rm_level_1_the_forest:          return L("ป่า", "Forest");
+        case rm_the_village:                 return L("หมู่บ้าน", "Village");
+        case rm_level_2_the_abandoned_mine:  return L("เหมืองร้าง", "Abandoned Mine");
+        case rm_level_3_the_castle:          return L("ปราสาท", "Castle");
+        case rm_the_final_ss:                return L("ทางสู่บัลลังก์", "Path to the Throne");
+        case rm_boss:                        return L("บัลลังก์มังกร", "Dragon's Throne");
         case rm_end:                         return "";
     }
     return "";
@@ -351,9 +370,9 @@ function room_title(_r) {
 // ★ รายชื่อเครดิต (เมนูหลัก + หน้าจบเกม) [หัวข้อ, ชื่อ]
 function credits_lines() {
     return [
-        ["โค้ดและระบบเกม", "[ใส่ชื่อ]"],
-        ["ภาพและเนื้อเรื่อง", "[ใส่ชื่อ]"],
-        ["เสียงและเพลง", "[ใส่ชื่อและแหล่งที่มา]"],
-        ["ฟอนต์", "Mitr (Cadson Demak, SIL OFL)"]
+        [L("โค้ดและระบบเกม", "Code & Systems"), "[ใส่ชื่อ]"],
+        [L("ภาพและเนื้อเรื่อง", "Art & Story"), "[ใส่ชื่อ]"],
+        [L("เสียงและเพลง", "Sound & Music"), "[ใส่ชื่อและแหล่งที่มา]"],
+        [L("ฟอนต์", "Font"), "Mitr (Cadson Demak, SIL OFL)"]
     ];
 }

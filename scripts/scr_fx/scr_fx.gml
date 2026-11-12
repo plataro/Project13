@@ -159,7 +159,7 @@ function draw_combo_hud() {
     }
     ui_text_bold(_x + _sh, _y, _num, _s, _col);
     var _nw = string_width(_num) * _s;
-    ui_text_bold(_x + _nw + 8 + _sh, _y - 6, (_c.brk > 0) ? "คอมโบขาด" : "คอมโบ", 0.5, (_c.brk > 0) ? make_color_rgb(255, 110, 110) : UI_GOLD);
+    ui_text_bold(_x + _nw + 8 + _sh, _y - 6, (_c.brk > 0) ? L("คอมโบขาด", "Combo broken") : L("คอมโบ", "Combo"), 0.5, (_c.brk > 0) ? make_color_rgb(255, 110, 110) : UI_GOLD);
     // เวลาที่เหลือ
     var _bw = 120;
     var _k = _c.t / COMBO_TIME;
@@ -169,7 +169,7 @@ function draw_combo_hud() {
     if (_k > 0) draw_rectangle(_x, _y + 4, _x + _bw * _k, _y + 6, false);
     // ดาเมจรวม
     draw_set_valign(fa_top);
-    ui_text(_x, _y + 11, "ดาเมจรวม", 0.42, UI_MUTED);
+    ui_text(_x, _y + 11, L("ดาเมจรวม", "Total dmg"), 0.42, UI_MUTED);
     ui_text_bold(_x + 62, _y + 9, num_commas(_c.dmg), 0.5, make_color_rgb(255, 225, 160));
     draw_set_alpha(_oa);
     draw_set_halign(fa_left);

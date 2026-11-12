@@ -101,7 +101,7 @@ var _ry = _by + _bh + 8;
 ui_text(_bx, _ry, "ATK " + string(round(player_atk() * player_stats().atk)), 0.48, UI_GOLD);
 var _sx2 = _bx + 74;
 // ★ สถานะผิดปกติเป็นไอคอน (กรอบแดงกะพริบ) + คำสั้น ๆ
-var _sts = [["burn", st_burn, "กลิ้งดับไฟ!", c_orange], ["poison", st_poison, "พิษ", make_color_rgb(140, 220, 90)], ["stun", st_stun, "มึน", c_yellow]];
+var _sts = [["burn", st_burn, L("กลิ้งดับไฟ!", "Roll to put out!"), c_orange], ["poison", st_poison, L("พิษ", "Poison"), make_color_rgb(140, 220, 90)], ["stun", st_stun, L("มึน", "Stun"), c_yellow]];
 for (var _q = 0; _q < 3; _q++) {
     if (_sts[_q][1] <= 0) continue;
     var _fl = 0.5 + 0.5 * sin(current_time / 120);
@@ -147,8 +147,8 @@ if (!_ui_busy) {
     var _running = (state == PState.MOVE) && keyboard_check(vk_shift) && (abs(hsp) + abs(vsp) > 0.5);
     var _slots = [
         ["Shift", "run", 0, false, "", _running],
-        ["คลิก",  _ham ? "hammer" : "sword", _atk_cd, false, (state == PState.ATTACK && combo > 0 && combo < 9) ? string(combo) : "", state == PState.ATTACK],
-        ["ค้าง",  "charge", 0, !_ham, "", state == PState.CHARGE],
+        [L("คลิก", "Click"),  _ham ? "hammer" : "sword", _atk_cd, false, (state == PState.ATTACK && combo > 0 && combo < 9) ? string(combo) : "", state == PState.ATTACK],
+        [L("ค้าง", "Hold"),  "charge", 0, !_ham, "", state == PState.CHARGE],
         ["1",     "fire", _s1_cd, false, string(shot1_ammo), false],
         ["2",     "fire3", skill2_unlocked ? skill2_timer / skill2_cooldown : 0, !skill2_unlocked, "", false],
         ["Space", "roll", (roll_cd_timer > 0) ? roll_cd_timer / max(1, roll_cooldown) : 0, false, "", state == PState.ROLL],
@@ -183,7 +183,7 @@ if (!_ui_busy) {
         ui_panel(_fxs, _y0 + 4, _fxs + 150, _y0 + _sz - 4, 0.9);
         draw_set_valign(fa_middle);
         ui_text_bold(_fxs + 10, _y0 + _sz / 2 - 7, "[F] " + buff_data(_bid).name, 0.42, buff_data(_bid).col);
-        ui_text(_fxs + 10, _y0 + _sz / 2 + 9, "x" + string(_bn) + "   [V] เปลี่ยน", 0.38, UI_MUTED);
+        ui_text(_fxs + 10, _y0 + _sz / 2 + 9, "x" + string(_bn) + L("   [V] เปลี่ยน", "   [V] switch"), 0.38, UI_MUTED);
         draw_set_valign(fa_top);
     }
 }

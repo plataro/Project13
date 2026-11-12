@@ -10,6 +10,7 @@ acts = [];     // การทำงานของแต่ละแถวใ�
 has_save = save_exists();
 save_text = has_save ? save_summary() : "";
 if (has_save && save_text == "") has_save = false;   // เซฟเสีย = ทำเหมือนไม่มี
+save_lang = global.lang;
 msg = "";
 msg_timer = 0;
 

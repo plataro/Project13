@@ -1,6 +1,14 @@
 if (instance_exists(obj_fade)) exit;
 if (instance_exists(obj_pause) && obj_pause.open) exit;   // หน้าตั้งค่าเปิดทับอยู่
 
+// ★ เปิดเกมครั้งแรก: ถามภาษาก่อน
+if (!global.lang_chosen && screen == 0) { screen = 5; sel = (global.lang == "en") ? 1 : 0; }
+// ★ เปลี่ยนภาษาแล้ว ข้อความเซฟต้องสร้างใหม่
+if (save_lang != global.lang) {
+    save_lang = global.lang;
+    if (has_save) save_text = save_summary();
+}
+
 var _enter = keyboard_check_pressed(vk_enter);
 var _click = mouse_check_button_pressed(mb_left);
 var _back = keyboard_check_pressed(vk_escape);
@@ -32,22 +40,24 @@ if (screen == 4 && _back) {
 if (screen == 0) {
     items = [];
     acts = [];
-    if (has_save) { array_push(items, "เล่นต่อ"); array_push(acts, "continue"); }
-    array_push(items, has_save ? "เริ่มเกมใหม่" : "เริ่มเกม"); array_push(acts, "new");
-    array_push(items, "วิธีเล่น");  array_push(acts, "howto");
-    array_push(items, "เครดิต");    array_push(acts, "credits");
-    array_push(items, "ตั้งค่า");    array_push(acts, "settings");
-    if (SHOW_DEBUG_MENU) { array_push(items, global.debug ? "Debug Mode: เปิด" : "Debug Mode: ปิด"); array_push(acts, "debug"); }
-    if (global.debug) { array_push(items, "เลือกฉาก"); array_push(acts, "scenes"); }
+    if (has_save) { array_push(items, L("เล่นต่อ", "Continue")); array_push(acts, "continue"); }
+    array_push(items, has_save ? L("เริ่มเกมใหม่", "New Game") : L("เริ่มเกม", "Start Game")); array_push(acts, "new");
+    array_push(items, L("วิธีเล่น", "How to Play"));  array_push(acts, "howto");
+    array_push(items, L("เครดิต", "Credits"));    array_push(acts, "credits");
+    array_push(items, L("ตั้งค่า", "Settings"));    array_push(acts, "settings");
+    if (SHOW_DEBUG_MENU) { array_push(items, global.debug ? "Debug Mode: ON" : "Debug Mode: OFF"); array_push(acts, "debug"); }
+    if (global.debug) { array_push(items, L("เลือกฉาก", "Scene Select")); array_push(acts, "scenes"); }
 } else if (screen == 4) {
-    items = ["ง่าย", "ปานกลาง", "ยาก", "กลับ"];
+    items = [difficulty_data(0).name, difficulty_data(1).name, difficulty_data(2).name, L("กลับ", "Back")];
+} else if (screen == 5) {
+    items = ["ภาษาไทย", "English"];
 } else {
     items = [];
     for (var _i = 0; _i < array_length(global.levels); _i++) {
         var _rt = room_title(global.levels[_i]);
         array_push(items, (_rt != "") ? _rt : room_get_name(global.levels[_i]));
     }
-    array_push(items, "กลับ");
+    array_push(items, L("กลับ", "Back"));
 }
 
 var _n = array_length(items);
@@ -80,7 +90,7 @@ if (_enter || _clicked) {
             case "continue":
                 var _r = save_load();
                 if (_r == -1) {
-                    msg = "โหลดเซฟไม่ได้ (ไฟล์เสีย)";
+                    msg = L("โหลดเซฟไม่ได้ (ไฟล์เสีย)", "Couldn't load save (file is corrupted)");
                     msg_timer = 180;
                     has_save = false;
                     sel = 0;
@@ -117,6 +127,10 @@ if (_enter || _clicked) {
                 sel = 0;
                 break;
         }
+    } else if (screen == 5) {
+        lang_set((sel == 1) ? "en" : "th");
+        screen = 0;
+        sel = 0;
     } else if (screen == 4) {
         if (sel >= 3) {
             screen = 0;

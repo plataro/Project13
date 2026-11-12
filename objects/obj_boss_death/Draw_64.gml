@@ -33,7 +33,7 @@ if (_ta > 0) {
     draw_triangle(474, _y + 26, 486, _y + 26, 480, _y + 20, false);
     draw_triangle(474, _y + 26, 486, _y + 26, 480, _y + 32, false);
     var _s = 1.25 + 0.3 * (1 - _sp);
-    ui_text_bold(480, _y - 8, is_final ? "ชัยชนะ" : "ปราบแล้ว", _s, make_color_rgb(255, 225, 150));
+    ui_text_bold(480, _y - 8, is_final ? L("ชัยชนะ", "Victory") : L("ปราบแล้ว", "Defeated"), _s, make_color_rgb(255, 225, 150));
     ui_text(480, _y + 46, boss_name, 0.6, make_color_rgb(230, 200, 190));
     draw_set_alpha(1);
     draw_set_halign(fa_left);

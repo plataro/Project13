@@ -16,10 +16,10 @@ draw_set_valign(fa_middle);
 
 // หัวข้อ + แต้ม
 draw_set_halign(fa_left);
-ui_text_bold(px + 22, py + 24, "ต้นไม้สกิล", 0.66, UI_GOLD);
+ui_text_bold(px + 22, py + 24, L("ต้นไม้สกิล", "Skill Tree"), 0.66, UI_GOLD);
 draw_set_halign(fa_right);
 var _spp = 1 + 0.04 * sin(current_time / 200) * (global.save.sp > 0);
-ui_text_bold(px + pw - 46, py + 24, "แต้มสกิล  " + string(global.save.sp), 0.55 * _spp, make_color_rgb(255, 220, 90));
+ui_text_bold(px + pw - 46, py + 24, L("แต้มสกิล  ", "Skill Points  ") + string(global.save.sp), 0.55 * _spp, make_color_rgb(255, 220, 90));
 ui_icon("star", px + pw - 30, py + 24, 9, make_color_rgb(255, 220, 90));
 draw_set_color(UI_GOLD_DARK);
 draw_line(px + 20, py + 42, px + pw - 20, py + 42);
@@ -32,8 +32,8 @@ for (var _b = 0; _b < 3; _b++) {
     draw_set_color(branch_col[_b]);
     draw_rectangle(_bx - node_w / 2 - 8, py + 54, _bx + node_w / 2 + 8, row_y0 + 4 * row_gap + node_h + 8, false);
     draw_set_alpha(_ok);
-    ui_icon(branch_icon[_b], _bx - string_width(branch_names[_b]) * 0.28 - 16, py + 68, 8, branch_col[_b]);
-    ui_text_bold(_bx + 6, py + 68, branch_names[_b], 0.55, branch_col[_b]);
+    ui_icon(branch_icon[_b], _bx - string_width(branch_names()[_b]) * 0.28 - 16, py + 68, 8, branch_col[_b]);
+    ui_text_bold(_bx + 6, py + 68, branch_names()[_b], 0.55, branch_col[_b]);
 }
 
 // เส้นเชื่อม (ปลดแล้ว = ทองมีแสงวิ่ง)
@@ -85,9 +85,9 @@ for (var _j = 0; _j < array_length(nodes); _j++) {
     draw_set_color(_has ? _bc : merge_color(_bc, c_black, 0.6));
     draw_rectangle(_rc[0] + 1, _rc[1] + 1, _rc[0] + 4, _rc[3] - 1, false);
 
-    ui_text_bold(_cx2, _rc[1] + 14, _nn.name, 0.48, (_has || _avail) ? UI_TEXT : make_color_rgb(110, 105, 120), false);
+    ui_text_bold(_cx2, _rc[1] + 14, _nn.name, ui_fit(_nn.name, 0.48, node_w - 14), (_has || _avail) ? UI_TEXT : make_color_rgb(110, 105, 120), false);
     var _cc = _has ? UI_GOLD : (_afford ? make_color_rgb(255, 220, 90) : make_color_rgb(110, 105, 120));
-    ui_text(_cx2, _rc[1] + 31, _has ? "ปลดแล้ว" : (string(_nn.cost) + " SP"), 0.4, _cc);
+    ui_text(_cx2, _rc[1] + 31, _has ? L("ปลดแล้ว", "Unlocked") : (string(_nn.cost) + " SP"), 0.4, _cc);
     if (!_has && !_avail) {   // ล็อก
         draw_set_color(make_color_rgb(90, 85, 100));
         draw_rectangle(_rc[2] - 16, _rc[1] + 8, _rc[2] - 8, _rc[1] + 15, false);
@@ -102,9 +102,9 @@ draw_line(px + 20, _dy - 16, px + pw - 20, _dy - 16);
 draw_set_halign(fa_center);
 if (hover_key != "") {
     var _hn = skill_find(hover_key);
-    ui_text(px + pw / 2, _dy, _hn.desc, 0.52, UI_TEXT);
+    ui_text(px + pw / 2, _dy, _hn.desc, ui_fit(_hn.desc, 0.52, pw - 40), UI_TEXT);
 } else {
-    ui_text(px + pw / 2, _dy, "ชี้ที่สกิลเพื่อดูรายละเอียด | คลิกเพื่อปลด | T / Esc ปิด", 0.46, UI_MUTED);
+    ui_text(px + pw / 2, _dy, L("ชี้ที่สกิลเพื่อดูรายละเอียด | คลิกเพื่อปลด | T / Esc ปิด", "Hover a skill for details | Click to unlock | T / Esc close"), 0.46, UI_MUTED);
 }
 if (msg != "") ui_text_bold(px + pw / 2 - 40, py + ph - 26, msg, 0.5, make_color_rgb(255, 225, 120));
 
@@ -116,7 +116,7 @@ draw_set_color(_ch ? make_color_rgb(110, 54, 58) : make_color_rgb(80, 40, 44));
 draw_rectangle(close_x1, close_y1, close_x2, close_y2, false);
 draw_set_color(_ch ? UI_GOLD : UI_GOLD_DARK);
 draw_rectangle(close_x1, close_y1, close_x2, close_y2, true);
-ui_text((close_x1 + close_x2) / 2, (close_y1 + close_y2) / 2, "ปิด (T)", 0.5, UI_TEXT);
+ui_text((close_x1 + close_x2) / 2, (close_y1 + close_y2) / 2, L("ปิด (T)", "Close (T)"), 0.5, UI_TEXT);
 
 draw_set_alpha(1);
 draw_set_halign(fa_left);

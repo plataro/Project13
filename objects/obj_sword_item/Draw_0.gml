@@ -23,4 +23,4 @@ if (_spr != -1 && sprite_exists(_spr)) {
     draw_set_color(c_white);
 }
 
-ui_prompt(x, y - 92, "E", "หยิบดาบ", prompt_a);
+ui_prompt(x, y - 92, "E", L("หยิบดาบ", "Take sword"), prompt_a);

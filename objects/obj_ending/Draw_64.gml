@@ -33,7 +33,7 @@ var _top = 150 - _scroll;   // ตำแหน่งหัวข้อ (เล�
 var _a1 = clamp(_t / 50, 0, 1);
 draw_set_alpha(_a1);
 var _s1 = 2.4 + 0.4 * (1 - _a1);
-ui_text_bold(480, _top, "จบ", _s1, _accent);
+ui_text_bold(480, _top, L("จบ", "The End"), _s1 * L(1, 0.6), _accent);
 // เส้นประดับ
 var _a2 = clamp((_t - 40) / 40, 0, 1);
 draw_set_alpha(_a2);
@@ -45,17 +45,17 @@ draw_triangle(472, _top + 58, 488, _top + 58, 480, _top + 66, false);
 // ชื่อตอนจบ
 var _a3 = clamp((_t - 70) / 40, 0, 1);
 draw_set_alpha(_a3);
-ui_text_bold(480, _top + 100, _kill ? "ตอนจบที่ 1 : ผู้พิชิตมังกร" : "ตอนจบที่ 2 : เคียงข้างราชา", 0.8, make_color_rgb(255, 230, 170));
+ui_text_bold(480, _top + 100, _kill ? L("ตอนจบที่ 1 : ผู้พิชิตมังกร", "Ending 1 : The Dragonslayer") : L("ตอนจบที่ 2 : เคียงข้างราชา", "Ending 2 : Beside the King"), 0.8, make_color_rgb(255, 230, 170));
 var _a4 = clamp((_t - 120) / 40, 0, 1);
 draw_set_alpha(_a4);
-ui_text(480, _top + 150, "ขอบคุณที่เล่น", 0.65, UI_TEXT);
-ui_text(480, _top + 186, _kill ? "ลองเลือกอยู่เคียงข้างราชามังกรดูไหม?" : "ลองเลือกหยุดราชามังกรดูไหม?", 0.5, UI_MUTED);
+ui_text(480, _top + 150, L("ขอบคุณที่เล่น", "Thank you for playing"), 0.65, UI_TEXT);
+ui_text(480, _top + 186, _kill ? L("ลองเลือกอยู่เคียงข้างราชามังกรดูไหม?", "What if you had stood beside the Dragon King?") : L("ลองเลือกหยุดราชามังกรดูไหม?", "What if you had stopped the Dragon King?"), 0.5, UI_MUTED);
 
 // เครดิต
 var _cl = credits_lines();
 var _cy0 = _top + 320;
 draw_set_alpha(clamp((_t - 200) / 40, 0, 1));
-ui_text_bold(480, _cy0, "เครดิต", 0.75, UI_GOLD);
+ui_text_bold(480, _cy0, L("เครดิต", "Credits"), 0.75, UI_GOLD);
 for (var _i = 0; _i < array_length(_cl); _i++) {
     var _ly = _cy0 + 60 + _i * 70;
     ui_text(480, _ly, _cl[_i][0], 0.48, UI_MUTED);
@@ -69,7 +69,7 @@ draw_set_alpha(1);
 // ปุ่มกลับเมนู (กะพริบช้า)
 if (_t > 60) {
     draw_set_alpha(0.4 + 0.4 * (0.5 + 0.5 * sin(current_time / 400)));
-    ui_text(480, 516, "Enter / คลิก = กลับเมนู", 0.45, UI_MUTED);
+    ui_text(480, 516, L("Enter / คลิก = กลับเมนู", "Enter / Click = Main Menu"), 0.45, UI_MUTED);
     draw_set_alpha(1);
 }
 draw_set_halign(fa_left);

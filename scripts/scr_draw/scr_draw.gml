@@ -405,3 +405,10 @@ function tut_slot_callout(_slot, _keys, _text, _sub, _subc, _done, _a, _shake = 
     draw_set_halign(fa_center);
     draw_set_alpha(1);
 }
+
+// ★ ย่อสเกลข้อความอัตโนมัติถ้ากว้างเกิน _maxw (ข้อความอังกฤษมักยาวกว่าไทย)
+function ui_fit(_txt, _s, _maxw) {
+    draw_set_font(fnt_dialog);
+    var _w = string_width(_txt) * _s;
+    return (_w > _maxw) ? _s * _maxw / _w : _s;
+}

@@ -154,7 +154,7 @@ if (shield > 0) {
 
     draw_set_halign(fa_left);
     draw_set_valign(fa_middle);
-    ui_text(_x + _tw + 10, _py + 8, "เกราะ - ใช้ดาบฟันให้แตก", 0.48, _scol);
+    ui_text(_x + _tw + 10, _py + 8, L("เกราะ - ใช้ดาบฟันให้แตก", "Shield - break it with melee"), 0.48, _scol);
     draw_set_valign(fa_top);
     draw_set_color(c_white);
 }
@@ -193,9 +193,9 @@ if (state == "ult") {
     draw_set_valign(fa_middle);
     var _pulse = 1 + 0.06 * sin(current_time / 90);
     draw_set_color(c_black);
-    draw_text_transformed(481, 91, "ไม้ตาย! เข้าไปฟันขัดจังหวะ (กระสุนไม่เข้า)", 0.85 * _pulse, 0.85 * _pulse, 0);
+    draw_text_transformed(481, 91, L("ไม้ตาย! เข้าไปฟันขัดจังหวะ (กระสุนไม่เข้า)", "Ultimate! Get close and strike to interrupt (immune to shots)"), 0.85 * _pulse, 0.85 * _pulse, 0);
     draw_set_color(c_red);
-    draw_text_transformed(480, 90, "ไม้ตาย! เข้าไปฟันขัดจังหวะ (กระสุนไม่เข้า)", 0.85 * _pulse, 0.85 * _pulse, 0);
+    draw_text_transformed(480, 90, L("ไม้ตาย! เข้าไปฟันขัดจังหวะ (กระสุนไม่เข้า)", "Ultimate! Get close and strike to interrupt (immune to shots)"), 0.85 * _pulse, 0.85 * _pulse, 0);
 
     // เกจขัดจังหวะ
     var _gx = 330;
@@ -224,7 +224,7 @@ if (state == "stunned") {
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     draw_set_color(c_yellow);
-    draw_text_transformed(480, 96, "มึนงง! รุมเลย", 0.8, 0.8, 0);
+    draw_text_transformed(480, 96, L("มึนงง! รุมเลย", "Stunned! Attack now!"), 0.8, 0.8, 0);
     draw_set_color(c_black);
     draw_rectangle(378, 110, 582, 117, false);
     draw_set_color(c_yellow);

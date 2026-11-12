@@ -23,6 +23,6 @@ for (var _i = 0; _i < array_length(nodes); _i++) {
 
 if (open_delay <= 0 && mouse_check_button_pressed(mb_left) && hover_key != "") {
     var _res = skill_unlock(hover_key);
-    msg = (_res == "") ? "ปลดสกิลแล้ว!" : _res;
+    msg = (_res == "") ? L("ปลดสกิลแล้ว!", "Skill unlocked!") : _res;
     msg_timer = 120;
 }

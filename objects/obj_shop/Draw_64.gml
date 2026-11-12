@@ -20,7 +20,7 @@ draw_set_font(fnt_dialog);
 // ชื่อร้าน + เส้นใต้
 draw_set_halign(fa_left);
 draw_set_valign(fa_middle);
-ui_text_bold(_px + 22, _py + 24, shop_title, 0.62, UI_GOLD);
+ui_text_bold(_px + 22, _py + 24, shop_type_name(shop_type), 0.62, UI_GOLD);
 draw_set_color(UI_GOLD_DARK);
 draw_line(_px + 20, _py + 42, _px + pw - 20, _py + 42);
 
@@ -30,7 +30,7 @@ ui_text(_px + pw - 40, _py + 24, string(global.save.gold), 0.55, make_color_rgb(
 ui_icon("coin", _px + pw - 28, _py + 24, 7, make_color_rgb(255, 210, 80));
 
 // แท็บ
-var _tabs = ["ซื้อ", "ขาย"];
+var _tabs = [L("ซื้อ", "Buy"), L("ขาย", "Sell")];
 draw_set_halign(fa_center);
 for (var _t = 0; _t < 2; _t++) {
     if ((_t == 0 && !can_buy) || (_t == 1 && !can_sell)) continue;
@@ -82,12 +82,12 @@ if (tab == 0) {
         var _bd = buff_data(buy_ids[_i]);
         ui_icon(_icon_of(buy_ids[_i]), row_x + 26, _ry + (row_h - 6) / 2, 11, is_undefined(_bd) ? (_info.ok ? UI_GOLD : c_gray) : _bd.col);
 
-        ui_text_bold(row_x + 56, _ry + 16, _info.name, 0.5, _info.ok ? UI_TEXT : c_gray, false);
-        ui_text(row_x + 56, _ry + 36, _info.desc, 0.4, UI_MUTED);
+        ui_text_bold(row_x + 56, _ry + 16, _info.name, ui_fit(_info.name, 0.5, row_w - 170), _info.ok ? UI_TEXT : c_gray, false);
+        ui_text(row_x + 56, _ry + 36, _info.desc, ui_fit(_info.desc, 0.4, row_w - 140), UI_MUTED);
 
         draw_set_halign(fa_right);
         var _pc = !_info.ok ? c_gray : ((global.save.gold >= _info.price) ? make_color_rgb(255, 215, 90) : make_color_rgb(255, 100, 100));
-        var _pt = _info.ok ? ((_info.price > 0) ? string(_info.price) : "สวมใส่") : _info.why;
+        var _pt = _info.ok ? ((_info.price > 0) ? string(_info.price) : L("สวมใส่", "Equip")) : _info.why;
         ui_text_bold(row_x + row_w - ((_info.ok && _info.price > 0) ? 30 : 14), _ry + (row_h - 6) / 2, _pt, 0.5, _pc);
         if (_info.ok && _info.price > 0) ui_icon("coin", row_x + row_w - 18, _ry + (row_h - 6) / 2, 6, make_color_rgb(255, 210, 80));
         draw_set_halign(fa_left);
@@ -95,7 +95,7 @@ if (tab == 0) {
 } else {
     if (array_length(sell_list) == 0) {
         draw_set_halign(fa_center);
-        ui_text(_px + pw / 2, row_y0 + 60 + _oy, "ไม่มีของสะสมให้ขาย", 0.55, UI_MUTED);
+        ui_text(_px + pw / 2, row_y0 + 60 + _oy, L("ไม่มีของสะสมให้ขาย", "Nothing to sell"), 0.55, UI_MUTED);
         draw_set_halign(fa_left);
     }
     for (var _i2 = scroll; _i2 < min(array_length(sell_list), scroll + vis_rows); _i2++) {
@@ -112,7 +112,7 @@ if (tab == 0) {
         ui_icon("gem", row_x + 26, _ry2 + (row_h - 6) / 2, 11, _item.col);
 
         ui_text_bold(row_x + 56, _ry2 + 16, _item.name + "  x" + string(_cnt), 0.5, UI_TEXT, false);
-        ui_text(row_x + 56, _ry2 + 36, "คลิก = ขาย 1 ชิ้น | Shift+คลิก = ขายทั้งหมด", 0.4, UI_MUTED);
+        ui_text(row_x + 56, _ry2 + 36, L("คลิก = ขาย 1 ชิ้น | Shift+คลิก = ขายทั้งหมด", "Click = sell 1 | Shift+Click = sell all"), 0.4, UI_MUTED);
 
         draw_set_halign(fa_right);
         ui_text_bold(row_x + row_w - 30, _ry2 + (row_h - 6) / 2, "+" + string(round(_item.price * sell_mul)), 0.5, make_color_rgb(255, 215, 90));
@@ -125,7 +125,7 @@ if (tab == 0) {
 var _cnt_all = (tab == 0) ? array_length(buy_ids) : array_length(sell_list);
 if (_cnt_all > vis_rows) {
     draw_set_halign(fa_center);
-    ui_text(_px + pw / 2, row_y0 + vis_rows * row_h + 6 + _oy, "ล้อเมาส์เพื่อเลื่อน (" + string(scroll + 1) + "-" + string(min(_cnt_all, scroll + vis_rows)) + " จาก " + string(_cnt_all) + ")", 0.42, UI_MUTED);
+    ui_text(_px + pw / 2, row_y0 + vis_rows * row_h + 6 + _oy, L("ล้อเมาส์เพื่อเลื่อน (", "Scroll wheel (") + string(scroll + 1) + "-" + string(min(_cnt_all, scroll + vis_rows)) + L(" จาก ", " of ") + string(_cnt_all) + ")", 0.42, UI_MUTED);
     draw_set_halign(fa_left);
 }
 
@@ -142,8 +142,8 @@ var _button = function(_x1, _y1, _x2, _y2, _txt, _col, _mx, _my) {
     ui_text(( _x1 + _x2) / 2, (_y1 + _y2) / 2, _txt, 0.5, UI_TEXT);
     draw_set_halign(fa_left);
 };
-if (tab == 1) _button(sell_x1, btn_y1 + _oy, sell_x2, btn_y2 + _oy, "ขายทั้งหมด", make_color_rgb(40, 70, 50), _mx, _my);
-_button(close_x1, btn_y1 + _oy, close_x2, btn_y2 + _oy, "ปิด (E)", make_color_rgb(80, 40, 44), _mx, _my);
+if (tab == 1) _button(sell_x1, btn_y1 + _oy, sell_x2, btn_y2 + _oy, L("ขายทั้งหมด", "Sell All"), make_color_rgb(40, 70, 50), _mx, _my);
+_button(close_x1, btn_y1 + _oy, close_x2, btn_y2 + _oy, L("ปิด (E)", "Close (E)"), make_color_rgb(80, 40, 44), _mx, _my);
 
 // ข้อความแจ้งผล
 if (msg != "") {

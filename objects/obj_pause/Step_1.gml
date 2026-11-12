@@ -52,7 +52,7 @@ if (keyboard_check_pressed(vk_escape) || keyboard_check_pressed(ord("P"))) {
 // เลื่อนด้วยคีย์บอร์ด
 if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) sel = (sel + 1) mod _n;
 if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) sel = (sel - 1 + _n) mod _n;
-if (screen == 1 && sel < 4) {
+if (screen == 1 && sel < 5) {
     if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) change_setting(sel, 1);
     if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) change_setting(sel, -1);
 }

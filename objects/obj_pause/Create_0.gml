@@ -89,21 +89,24 @@ close_settings = function() {
 get_items = function() {
     switch (screen) {
         case 1:
+            var _on = L("เปิด", "On");
+            var _off = L("ปิด", "Off");
             return [
-                "เสียง:  " + string(global.set_volume) + "%",
-                "กล้องสั่น:  " + shake_name(),
-                "หยุดจังหวะตอนตีโดน:  " + (global.fx_hitstop_on ? "เปิด" : "ปิด"),
-                "ตัวเลขดาเมจ:  " + (global.show_dmg ? "เปิด" : "ปิด"),
-                "กลับ"
+                L("ภาษา:  ไทย", "Language:  English"),
+                L("เสียง:  ", "Volume:  ") + string(global.set_volume) + "%",
+                L("กล้องสั่น:  ", "Screen shake:  ") + shake_name(),
+                L("หยุดจังหวะตอนตีโดน:  ", "Hit-stop:  ") + (global.fx_hitstop_on ? _on : _off),
+                L("ตัวเลขดาเมจ:  ", "Damage numbers:  ") + (global.show_dmg ? _on : _off),
+                L("กลับ", "Back")
             ];
         case 2:
-            return ["ยืนยัน กลับหน้าหลัก", "ยกเลิก"];
+            return [L("ยืนยัน กลับหน้าหลัก", "Yes, return to title"), L("ยกเลิก", "Cancel")];
     }
-    return ["เล่นต่อ", "ตั้งค่า", "กลับหน้าหลัก"];
+    return [L("เล่นต่อ", "Resume"), L("ตั้งค่า", "Settings"), L("กลับหน้าหลัก", "Return to Title")];
 }
 
 shake_vals = [0, 1, 2.5, 4];
-shake_names = ["ปิด", "เบา", "ปกติ", "แรง"];
+shake_names = function() { return [L("ปิด", "Off"), L("เบา", "Light"), L("ปกติ", "Normal"), L("แรง", "Strong")]; };
 shake_index = function() {
     var _best = 0;
     for (var _i = 0; _i < 4; _i++) {
@@ -112,22 +115,25 @@ shake_index = function() {
     return _best;
 }
 shake_name = function() {
-    return shake_names[shake_index()];
+    return shake_names()[shake_index()];
 }
 
 // ปรับค่าตั้งค่าแถว _row ไป _d (+1 / -1)
 change_setting = function(_row, _d) {
     switch (_row) {
-        case 0:
-            global.set_volume = clamp(global.set_volume + _d * 10, 0, 100);
+        case 0:   // ★ ภาษา
+            lang_set((global.lang == "en") ? "th" : "en");
             break;
         case 1:
-            global.fx_shake_scale = shake_vals[(shake_index() + _d + 4) mod 4];
+            global.set_volume = clamp(global.set_volume + _d * 10, 0, 100);
             break;
         case 2:
-            global.fx_hitstop_on = !global.fx_hitstop_on;
+            global.fx_shake_scale = shake_vals[(shake_index() + _d + 4) mod 4];
             break;
         case 3:
+            global.fx_hitstop_on = !global.fx_hitstop_on;
+            break;
+        case 4:
             global.show_dmg = !global.show_dmg;
             break;
     }
@@ -143,8 +149,8 @@ confirm = function(_row) {
             else { screen = 2; sel = 1; }
             break;
         case 1:
-            if (_row == 4) close_settings();
-            else if (_row == 0) {
+            if (_row == 5) close_settings();
+            else if (_row == 1) {
                 // เสียง: กดวนขึ้นทีละ 20% ถึง 100 แล้ววนกลับ 0
                 global.set_volume = (global.set_volume >= 100) ? 0 : min(100, global.set_volume + 20);
                 settings_apply();
