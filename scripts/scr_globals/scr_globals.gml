@@ -311,3 +311,20 @@ function settings_save() {
     ini_write_real("settings", "dmg_numbers", global.show_dmg ? 1 : 0);
     ini_close();
 }
+
+
+// ★ ชื่อพื้นที่ (ป้ายบอกทางออก)
+function room_title(_r) {
+    if (_r == noone || _r == -1) return "";
+    switch (_r) {
+        case rm_the_sanctuary_ss:            return "วิหาร";
+        case rm_level_1_the_forest:          return "ป่า";
+        case rm_the_village:                 return "หมู่บ้าน";
+        case rm_level_2_the_abandoned_mine:  return "เหมืองร้าง";
+        case rm_level_3_the_castle:          return "ปราสาท";
+        case rm_the_final_ss:                return "ทางสู่บัลลังก์";
+        case rm_boss:                        return "บัลลังก์มังกร";
+        case rm_end:                         return "";
+    }
+    return "";
+}

@@ -12,6 +12,20 @@ if (!point_in_rectangle(x, y, 0, 0, room_width, room_height)) {
 var _vx = x;
 var _vy = y - lift;
 var _me = id;
+
+// ★ เป้ายิง (พัซเซิล): โดนแล้วกระสุนหายไป
+var _tg_hit = false;
+with (obj_target) {
+    if (!hit && point_distance(_vx, _vy, x, y - 48) < 26) {
+        on_hit();
+        _tg_hit = true;
+    }
+}
+if (_tg_hit) {
+    instance_destroy();
+    exit;
+}
+
 var _target = noone;
 with (obj_enemy) {
     if (enemy_hit_by_circle(id, _vx, _vy, 8) && !array_contains(_me.hit_ids, id)) {

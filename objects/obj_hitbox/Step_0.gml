@@ -26,6 +26,23 @@ if (age >= step_data.active_from && age <= step_data.active_to) {
     var _px = x;
     var _py = y;
 
+    // ★ ฟันเป้ายิง = ไม่ได้ผล บอกใบ้ให้ใช้ปุ่มยิง
+    with (obj_target) {
+        if (!hit && tink_id != _me) {
+            for (var _ti = 0; _ti < array_length(_d.circles); _ti++) {
+                var _tc = _d.circles[_ti];
+                var _tx = _px + lengthdir_x(_tc[0], _ang) + lengthdir_x(_tc[1], _ang + 90);
+                var _ty = _py + lengthdir_y(_tc[0], _ang) + lengthdir_y(_tc[1], _ang + 90) - _lift;
+                if (point_distance(_tx, _ty, x, y - 48) < _tc[2] + 18) {
+                    tink_id = _me;
+                    float_text(x, y - 90, "ฟันไม่ได้ ต้องยิง! [1]", c_orange, 0.9);
+                    fx_spark(x, y - 48, _ang + 180, 4, c_white);
+                    break;
+                }
+            }
+        }
+    }
+
     with (obj_enemy) {
         // ★ ศัตรูที่อยู่หลังกำแพงไม่โดน
         if (last_hit_id != _me && !wall_between(_px, _py, x, y)) {
