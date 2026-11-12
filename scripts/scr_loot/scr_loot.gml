@@ -69,12 +69,13 @@ function pickup_collect(_kind, _value, _x, _y) {
     switch (_kind) {
         case "gold":
             _s.gold += _value;
+            loot_toast("G", make_color_rgb(255, 210, 80), "coin", _value);
             return true;
 
         case "potion":
             if (_s.potions >= potion_cap()) return false;
             _s.potions++;
-            float_text(_x, _y - 30, "+ยา", c_red, 0.8);
+            loot_toast("ยาฟื้นเลือด", make_color_rgb(255, 110, 110), "potion");
             return true;
 
         default:
@@ -82,7 +83,7 @@ function pickup_collect(_kind, _value, _x, _y) {
             if (is_undefined(_d)) return true;
             _n = variable_struct_exists(_s.items, _kind) ? _s.items[$ _kind] : 0;
             _s.items[$ _kind] = _n + 1;
-            float_text(_x, _y - 30, "+" + _d.name, _d.col, 0.7);
+            loot_toast(_d.name, _d.col, "gem");
             return true;
     }
 }
@@ -138,4 +139,7 @@ function draw_hud_money() {
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_color(c_white);
+
+    // ★ ของที่ได้รับ (ใต้แผง)
+    draw_loot_feed(_y2 + 10);
 }

@@ -99,9 +99,19 @@ draw_set_alpha(1);
 var _ry = _by + _bh + 8;
 ui_text(_bx, _ry, "ATK " + string(round(player_atk() * player_stats().atk)), 0.48, UI_GOLD);
 var _sx2 = _bx + 74;
-if (st_burn > 0)   { ui_text(_sx2, _ry, "ไฟไหม้! กลิ้งดับ", 0.48, c_orange); _sx2 += 110; }
-if (st_poison > 0) { ui_text(_sx2, _ry, "พิษ", 0.48, make_color_rgb(140, 220, 90)); _sx2 += 40; }
-if (st_stun > 0)   { ui_text(_sx2, _ry, "มึน", 0.48, c_yellow); }
+// ★ สถานะผิดปกติเป็นไอคอน (กรอบแดงกะพริบ) + คำสั้น ๆ
+var _sts = [["burn", st_burn, "กลิ้งดับไฟ!", c_orange], ["poison", st_poison, "พิษ", make_color_rgb(140, 220, 90)], ["stun", st_stun, "มึน", c_yellow]];
+for (var _q = 0; _q < 3; _q++) {
+    if (_sts[_q][1] <= 0) continue;
+    var _fl = 0.5 + 0.5 * sin(current_time / 120);
+    draw_set_color(make_color_rgb(40, 16, 20));
+    draw_rectangle(_sx2, _ry - 1, _sx2 + 20, _ry + 19, false);
+    draw_set_color(merge_color(make_color_rgb(140, 40, 40), make_color_rgb(255, 90, 90), _fl));
+    draw_rectangle(_sx2, _ry - 1, _sx2 + 20, _ry + 19, true);
+    ui_icon(_sts[_q][0], _sx2 + 10, _ry + 9, 7, c_white);
+    ui_text(_sx2 + 25, _ry, _sts[_q][2], 0.42, _sts[_q][3]);
+    _sx2 += 32 + string_width(_sts[_q][2]) * 0.42;
+}
 
 // บัฟที่ทำงาน (ไอคอนเล็ก + เวลา)
 var _bxx = _bx;

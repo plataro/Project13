@@ -1,108 +1,217 @@
-var _gold = make_color_rgb(200, 170, 110);
-draw_set_alpha(0.7);
+// ★ หน้าสถานะ (สไตล์ UI ใหม่ + ภาพตัวละคร) — placeholder
+open_t = min(1, open_t + 1 / 12);
+var _ok = 1 - power(1 - open_t, 3);
+draw_set_alpha(0.7 * _ok);
 draw_set_color(c_black);
 draw_rectangle(0, 0, 960, 540, false);
 draw_set_alpha(1);
-draw_set_color(make_color_rgb(36, 32, 48));
-draw_rectangle(px, py, px + pw, py + ph, false);
-draw_set_color(_gold);
-draw_rectangle(px, py, px + pw, py + ph, true);
-draw_rectangle(px + 3, py + 3, px + pw - 3, py + ph - 3, true);
+ui_panel(px, py, px + pw, py + ph, _ok);
+draw_set_alpha(_ok);
 
 draw_set_font(fnt_dialog);
 draw_set_valign(fa_middle);
 draw_set_halign(fa_left);
-draw_set_color(c_white);
-draw_text(px + 24, py + 28, "สถานะตัวละคร");
+ui_text_bold(px + 22, py + 24, "สถานะตัวละคร", 0.66, UI_GOLD);
+draw_set_halign(fa_right);
+ui_text(px + pw - 22, py + 24, "I / Esc ปิด", 0.42, UI_MUTED);
+draw_set_halign(fa_left);
+draw_set_color(UI_GOLD_DARK);
+draw_line(px + 20, py + 42, px + pw - 20, py + 42);
 
 var _st = player_stats();
 var _s = global.save;
 var _sd = shot_data(_s.shot_lv);
 var _hp = instance_exists(obj_player) ? obj_player.hp : global.player_hp;
 
-// ===== ซ้าย: ค่าสถานะ =====
+// ===== ซ้าย: ภาพตัวละคร =====
+var _fx1 = px + 20;
+var _fy1 = py + 56;
+var _fx2 = px + 184;
+var _fy2 = py + 250;
+draw_rectangle_color(_fx1, _fy1, _fx2, _fy2, make_color_rgb(50, 44, 70), make_color_rgb(50, 44, 70), make_color_rgb(16, 14, 24), make_color_rgb(16, 14, 24), false);
+// แสงด้านหลัง
+draw_set_alpha(0.18 * _ok);
+draw_set_color(UI_GOLD);
+draw_circle((_fx1 + _fx2) / 2, _fy1 + 90, 60 + 4 * sin(current_time / 400), false);
+draw_set_alpha(_ok);
+var _pd = portrait_data().a;
+var _ps = _pd.sprite;
+var _emo = _pd.emotions.normal;
+if (instance_exists(obj_player) && obj_player.hp <= 1 && variable_struct_exists(_pd.emotions, "sad")) _emo = _pd.emotions.sad;
+var _sw = sprite_get_width(_ps);
+var _sh = sprite_get_height(_ps);
+var _sc = min((_fx2 - _fx1 - 8) / _sw, (_fy2 - _fy1 - 8) / _sh);
+var _dw = _sw * _sc;
+var _dh = _sh * _sc;
+var _breath = sin(current_time / 600) * 1.5;
+draw_sprite_part_ext(_ps, _emo, 0, 0, _sw, _sh, (_fx1 + _fx2) / 2 - _dw / 2, _fy2 - 4 - _dh + _breath, _sc, _sc, c_white, _ok);
+draw_set_color(UI_GOLD);
+draw_rectangle(_fx1, _fy1, _fx2, _fy2, true);
+draw_set_color(UI_GOLD_DARK);
+draw_rectangle(_fx1 + 3, _fy1 + 3, _fx2 - 3, _fy2 - 3, true);
+
+// หัวใจใต้ภาพ
+var _hx = _fx1 + 4;
+for (var _h = 0; _h < global.max_hp; _h++) {
+    var _hcx = _hx + 8 + _h * 18;
+    draw_set_color((_h < _hp) ? make_color_rgb(230, 60, 70) : make_color_rgb(60, 40, 50));
+    draw_circle(_hcx - 3, _fy2 + 14, 4, false);
+    draw_circle(_hcx + 3, _fy2 + 14, 4, false);
+    draw_triangle(_hcx - 7, _fy2 + 15, _hcx + 7, _fy2 + 15, _hcx, _fy2 + 23, false);
+}
+// อาวุธ / เกราะ
+ui_icon((_s.weapon == "hammer") ? "hammer" : "sword", _fx1 + 10, _fy2 + 40, 7, UI_GOLD);
+ui_text(_fx1 + 24, _fy2 + 40, weapon_data(_s.weapon).name, 0.45, UI_TEXT);
+ui_icon("gem", _fx1 + 10, _fy2 + 62, 7, make_color_rgb(150, 170, 200));
+ui_text(_fx1 + 24, _fy2 + 62, (_s.armor == 0) ? "ไม่มีเกราะ" : ((_s.armor == 1) ? "เกราะหนัง" : "เกราะเหล็ก"), 0.45, UI_TEXT);
+
+// ===== กลาง: ค่าสถานะ =====
 var _rows = [
-    ["หัวใจ",        string(_hp) + " / " + string(global.max_hp)],
-    ["พลังโจมตี",     string(round(player_atk() * _st.atk)) + ((_st.atk != 1) ? ("  (+" + string(round((_st.atk - 1) * 100)) + "%)") : "")],
-    ["โอกาสคริ",      string(round(_st.crit * 100)) + "%"],
-    ["ดาเมจคริ",      "x" + string_format(_st.critdmg, 1, 1)],
-    ["ความเร็ว",      string(round(_st.spd * 100)) + "%"],
-    ["ลดดาเมจรับ",     "-" + string(_st.def)],
-    ["พลังยิง",       string(_sd.ammo) + " นัด · แรง x" + string(_sd.dmg)],
-    ["อาวุธ",         weapon_data(_s.weapon).name],
-    ["เกราะ",         (_s.armor == 0) ? "-" : ((_s.armor == 1) ? "เกราะหนัง" : "เกราะเหล็ก")],
-    ["ติดสถานะศัตรู",  ((_st.burn > 0) ? ("ไฟ " + string(round(_st.burn * 100)) + "% ") : "") + ((_st.poison > 0) ? ("พิษ " + string(round(_st.poison * 100)) + "% ") : "") + ((_st.stun > 0) ? ("สตัน " + string(round(_st.stun * 100)) + "%") : "") + ((_st.burn + _st.poison + _st.stun) <= 0 ? "-" : "")]
+    ["หัวใจ",        string(_hp) + " / " + string(global.max_hp), make_color_rgb(230, 80, 90)],
+    ["พลังโจมตี",     string(round(player_atk() * _st.atk)) + ((_st.atk != 1) ? ("  (+" + string(round((_st.atk - 1) * 100)) + "%)") : ""), make_color_rgb(240, 130, 100)],
+    ["โอกาสคริ",      string(round(_st.crit * 100)) + "%", make_color_rgb(255, 200, 90)],
+    ["ดาเมจคริ",      "x" + string_format(_st.critdmg, 1, 1), make_color_rgb(255, 170, 70)],
+    ["ความเร็ว",      string(round(_st.spd * 100)) + "%", make_color_rgb(140, 230, 160)],
+    ["ลดดาเมจรับ",     "-" + string(_st.def), make_color_rgb(150, 170, 200)],
+    ["พลังยิง",       string(_sd.ammo) + " นัด · x" + string(_sd.dmg), make_color_rgb(255, 150, 60)],
+    ["ติดสถานะศัตรู",  ((_st.burn > 0) ? ("ไฟ " + string(round(_st.burn * 100)) + "% ") : "") + ((_st.poison > 0) ? ("พิษ " + string(round(_st.poison * 100)) + "% ") : "") + ((_st.stun > 0) ? ("สตัน " + string(round(_st.stun * 100)) + "%") : "") + ((_st.burn + _st.poison + _st.stun) <= 0 ? "-" : ""), make_color_rgb(200, 140, 255)]
 ];
+var _sx1 = px + 204;
+var _sx2 = px + 450;
+ui_text_bold(_sx1, py + 62, "ค่าสถานะ", 0.5, UI_GOLD, false);
 for (var _i = 0; _i < array_length(_rows); _i++) {
-    var _y = py + 74 + _i * 32;
-    draw_set_color(c_ltgray);
-    draw_text_transformed(px + 30, _y, _rows[_i][0], 0.7, 0.7, 0);
-    draw_set_color(c_white);
-    draw_text_transformed(px + 190, _y, _rows[_i][1], 0.7, 0.7, 0);
+    var _y = py + 92 + _i * 29;
+    if (_i mod 2 == 0) {
+        draw_set_alpha(0.35 * _ok);
+        draw_set_color(UI_BG2);
+        draw_rectangle(_sx1, _y - 13, _sx2, _y + 13, false);
+        draw_set_alpha(_ok);
+    }
+    draw_set_color(_rows[_i][2]);
+    draw_triangle(_sx1 + 6, _y, _sx1 + 11, _y - 5, _sx1 + 16, _y, false);
+    draw_triangle(_sx1 + 6, _y, _sx1 + 11, _y + 5, _sx1 + 16, _y, false);
+    ui_text(_sx1 + 24, _y, _rows[_i][0], 0.45, UI_MUTED);
+    draw_set_halign(fa_right);
+    ui_text_bold(_sx2 - 8, _y, _rows[_i][1], 0.45, UI_TEXT, false);
+    draw_set_halign(fa_left);
 }
 
 // ===== ขวา: เครื่องประดับ =====
-draw_set_color(_gold);
-draw_text_transformed(px + 440, py + 74, "เครื่องประดับที่สวม (2 ช่อง)", 0.7, 0.7, 0);
+ui_text_bold(acc_x1, py + 62, "เครื่องประดับที่สวม (2 ช่อง)", 0.5, UI_GOLD, false);
 for (var _k = 0; _k < 2; _k++) {
-    var _sy = py + 104 + _k * 34;
-    draw_set_color(make_color_rgb(56, 48, 70));
-    draw_rectangle(px + 440, _sy - 14, px + pw - 24, _sy + 14, false);
-    draw_set_color(c_white);
+    var _sy = py + 92 + _k * 32;
     var _id = (_k < array_length(_s.acc_eq)) ? _s.acc_eq[_k] : "";
-    draw_text_transformed(px + 452, _sy, (_id == "") ? "- ว่าง -" : (acc_data(_id).name + "  ·  " + acc_data(_id).desc), 0.62, 0.62, 0);
+    draw_set_color((_id == "") ? UI_BG : make_color_rgb(60, 50, 28));
+    draw_rectangle(acc_x1, _sy - 13, acc_x2, _sy + 13, false);
+    draw_set_color((_id == "") ? make_color_rgb(70, 62, 86) : UI_GOLD);
+    draw_rectangle(acc_x1, _sy - 13, acc_x2, _sy + 13, true);
+    ui_icon("gem", acc_x1 + 14, _sy, 7, (_id == "") ? make_color_rgb(70, 62, 86) : make_color_rgb(120, 220, 255));
+    ui_text(acc_x1 + 28, _sy, (_id == "") ? "- ว่าง -" : acc_data(_id).name, 0.45, (_id == "") ? UI_MUTED : UI_TEXT);
 }
-draw_set_color(_gold);
-draw_text_transformed(px + 440, py + 186, "ที่มี (คลิก = สวม/ถอด)", 0.7, 0.7, 0);
+ui_text_bold(acc_x1, acc_y0 - 18, "ที่มี (คลิก = สวม/ถอด)", 0.5, UI_GOLD, false);
 var _list = acc_list();
 var _row = 0;
 for (var _a = 0; _a < array_length(_list); _a++) {
     if (!acc_owned(_list[_a])) continue;
-    var _ry = py + 214 + _row * 30;
+    var _rr = acc_rect(_row);
     var _eqd = acc_equipped(_list[_a]);
-    draw_set_color((hover_acc == _list[_a]) ? make_color_rgb(90, 80, 112) : make_color_rgb(48, 42, 62));
-    draw_rectangle(px + 440, _ry - 2, px + pw - 24, _ry + 26, false);
-    draw_set_color(_eqd ? c_yellow : c_white);
-    draw_text_transformed(px + 452, _ry + 12, (_eqd ? "[สวม] " : "") + acc_data(_list[_a]).name + "  ·  " + acc_data(_list[_a]).desc, 0.6, 0.6, 0);
+    var _hv = (hover_acc == _list[_a]);
+    draw_set_color(_eqd ? make_color_rgb(60, 50, 28) : (_hv ? make_color_rgb(60, 52, 78) : make_color_rgb(30, 27, 42)));
+    draw_rectangle(_rr[0], _rr[1], _rr[2], _rr[3], false);
+    draw_set_color(_eqd ? UI_GOLD : (_hv ? UI_GOLD_DARK : make_color_rgb(60, 54, 74)));
+    draw_rectangle(_rr[0], _rr[1], _rr[2], _rr[3], true);
+    ui_text(_rr[0] + 8, (_rr[1] + _rr[3]) / 2, acc_data(_list[_a]).name, 0.4, _eqd ? make_color_rgb(255, 225, 120) : UI_TEXT);
     _row++;
 }
-if (_row == 0) {
-    draw_set_color(c_gray);
-    draw_text_transformed(px + 452, py + 226, "ยังไม่มี (ซื้อได้ที่ร้านอัญมณีในหมู่บ้าน)", 0.6, 0.6, 0);
-}
+if (_row == 0) ui_text(acc_x1, acc_y0 + 10, "ยังไม่มี (ซื้อได้ที่ร้านอัญมณี)", 0.42, UI_MUTED);
 
-// ===== ล่าง: บัฟ / สถานะผิดปกติ =====
-var _by = py + ph - 96;
-draw_set_color(_gold);
-draw_text_transformed(px + 30, _by, "บัฟที่ทำงานอยู่", 0.7, 0.7, 0);
-var _bt = "";
+// ===== ล่าง: บัฟ / สถานะผิดปกติ (เป็นไอคอน) =====
+var _by = py + ph - 108;
+draw_set_color(UI_GOLD_DARK);
+draw_line(px + 20, _by - 14, px + pw - 20, _by - 14);
+ui_text_bold(px + 22, _by, "บัฟ / สถานะ", 0.48, UI_GOLD, false);
+var _cx = px + 140;
+var _any = false;
 for (var _b = 0; _b < array_length(global.buffs); _b++) {
     var _bd = buff_data(global.buffs[_b].id);
-    _bt += _bd.name + " " + string(ceil(global.buffs[_b].t / 60)) + "วิ   ";
+    var _kk = global.buffs[_b].t / global.buffs[_b].t0;
+    draw_set_color(UI_BG);
+    draw_rectangle(_cx, _by - 14, _cx + 28, _by + 14, false);
+    draw_set_color(_bd.col);
+    draw_rectangle(_cx + 2, _by - 12 + 24 * (1 - _kk), _cx + 26, _by + 12, false);
+    draw_set_color(UI_GOLD_DARK);
+    draw_rectangle(_cx, _by - 14, _cx + 28, _by + 14, true);
+    ui_text(_cx + 34, _by, _bd.name + " " + string(ceil(global.buffs[_b].t / 60)) + "วิ", 0.42, UI_TEXT);
+    _cx += 44 + string_width(_bd.name) * 0.42 + 36;
+    _any = true;
 }
 if (instance_exists(obj_player)) {
-    if (obj_player.st_burn > 0) _bt += "[ไฟไหม้]  ";
-    if (obj_player.st_poison > 0) _bt += "[พิษ]  ";
+    var _sts = [["burn", obj_player.st_burn, "ไฟไหม้"], ["poison", obj_player.st_poison, "พิษ"], ["stun", obj_player.st_stun, "มึน"]];
+    for (var _q = 0; _q < 3; _q++) {
+        if (_sts[_q][1] <= 0) continue;
+        draw_set_color(make_color_rgb(50, 20, 24));
+        draw_rectangle(_cx, _by - 14, _cx + 28, _by + 14, false);
+        draw_set_color(make_color_rgb(200, 80, 80));
+        draw_rectangle(_cx, _by - 14, _cx + 28, _by + 14, true);
+        ui_icon(_sts[_q][0], _cx + 14, _by, 9, c_white);
+        ui_text(_cx + 34, _by, _sts[_q][2], 0.42, make_color_rgb(255, 150, 140));
+        _cx += 34 + string_width(_sts[_q][2]) * 0.42 + 20;
+        _any = true;
+    }
 }
-draw_set_color(c_white);
-draw_text_transformed(px + 190, _by, (_bt == "") ? "-" : _bt, 0.6, 0.6, 0);
-var _it = "";
+if (!_any) ui_text(px + 140, _by, "-", 0.45, UI_MUTED);
+
+// ไอเท็มบัฟที่ถือ
+ui_text_bold(px + 22, _by + 40, "ไอเท็มบัฟ", 0.48, UI_GOLD, false);
+var _ix = px + 140;
 var _bl = buff_list();
+var _anyi = false;
 for (var _j = 0; _j < array_length(_bl); _j++) {
     var _n = variable_struct_exists(_s.buff_items, _bl[_j]) ? _s.buff_items[$ _bl[_j]] : 0;
-    if (_n > 0) _it += buff_data(_bl[_j]).name + " x" + string(_n) + "   ";
+    if (_n <= 0) continue;
+    var _bd2 = buff_data(_bl[_j]);
+    var _sel = (global.buff_sel == _j);
+    var _tw = string_width(_bd2.name + " x" + string(_n)) * 0.42 + 36;
+    draw_set_color(_sel ? make_color_rgb(60, 50, 28) : UI_BG);
+    draw_rectangle(_ix, _by + 28, _ix + _tw, _by + 52, false);
+    draw_set_color(_sel ? UI_GOLD : make_color_rgb(70, 62, 86));
+    draw_rectangle(_ix, _by + 28, _ix + _tw, _by + 52, true);
+    ui_icon("potion", _ix + 13, _by + 40, 7, _bd2.col);
+    ui_text(_ix + 26, _by + 40, _bd2.name + " x" + string(_n), 0.42, UI_TEXT);
+    _ix += _tw + 8;
+    _anyi = true;
 }
-draw_set_color(_gold);
-draw_text_transformed(px + 30, _by + 30, "ไอเท็มบัฟ (F ใช้ · V เลือก)", 0.7, 0.7, 0);
-draw_set_color(c_white);
-draw_text_transformed(px + 260, _by + 30, (_it == "") ? "-" : _it, 0.6, 0.6, 0);
+if (!_anyi) ui_text(px + 140, _by + 40, "-", 0.45, UI_MUTED);
+ui_text(px + 22, py + ph - 26, "F ใช้บัฟ · V เปลี่ยน", 0.4, UI_MUTED);
 
 // ปุ่มปิด
-draw_set_color(make_color_rgb(110, 60, 60));
-draw_rectangle(px + pw - 150, py + ph - 50, px + pw - 20, py + ph - 14, false);
-draw_set_color(c_white);
+var _mx = device_mouse_x_to_gui(0);
+var _my = device_mouse_y_to_gui(0);
+
+// ★ กล่องคำอธิบายเครื่องประดับที่ชี้ (ข้างเมาส์)
+if (hover_acc != "") {
+    var _dsc = acc_data(hover_acc).desc + (acc_equipped(hover_acc) ? "  · คลิกเพื่อถอด" : "  · คลิกเพื่อสวม");
+    var _tw2 = string_width(_dsc) * 0.42 + 20;
+    var _tx1 = clamp(_mx - _tw2 - 10, 4, 956 - _tw2);
+    var _ty1 = _my + 14;
+    draw_set_alpha(0.95 * _ok);
+    draw_set_color(UI_BG);
+    draw_rectangle(_tx1, _ty1, _tx1 + _tw2, _ty1 + 26, false);
+    draw_set_alpha(_ok);
+    draw_set_color(UI_GOLD);
+    draw_rectangle(_tx1, _ty1, _tx1 + _tw2, _ty1 + 26, true);
+    draw_set_halign(fa_left);
+    ui_text(_tx1 + 10, _ty1 + 13, _dsc, 0.42, make_color_rgb(200, 230, 255));
+}
+var _ch = point_in_rectangle(_mx, _my, close_x1, close_y1, close_x2, close_y2);
+draw_set_color(_ch ? make_color_rgb(110, 54, 58) : make_color_rgb(80, 40, 44));
+draw_rectangle(close_x1, close_y1, close_x2, close_y2, false);
+draw_set_color(_ch ? UI_GOLD : UI_GOLD_DARK);
+draw_rectangle(close_x1, close_y1, close_x2, close_y2, true);
 draw_set_halign(fa_center);
-draw_text_transformed(px + pw - 85, py + ph - 32, "ปิด (I)", 0.75, 0.75, 0);
+ui_text((close_x1 + close_x2) / 2, (close_y1 + close_y2) / 2, "ปิด (I)", 0.5, UI_TEXT);
+
+draw_set_alpha(1);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);

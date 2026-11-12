@@ -184,6 +184,7 @@ if (_kx != 0 && atk_t <= 0) face = _kx;
 vsp = min(vsp + grav, max_fall);
 
 if (jump_buffer > 0 && coyote > 0) {
+    fx_dust(x, y - 2, 3, make_color_rgb(190, 180, 165));   // ★ ฝุ่นตอนกระโดด
     vsp = -jump_speed;
     vrem = 0;
     jump_buffer = 0;
@@ -222,6 +223,17 @@ repeat (abs(_my)) {
 }
 
 grounded = place_meeting(x, y + 1, _solids);
+
+// ★ ฝุ่น: ตอนวิ่งบนพื้น / ตอนลงพื้น
+if (grounded && !ss_was_grounded) fx_dust(x, y - 2, 4, make_color_rgb(190, 180, 165));
+ss_was_grounded = grounded;
+if (grounded && abs(hsp) > 1.5) {
+    ss_dust_t--;
+    if (ss_dust_t <= 0) {
+        ss_dust_t = _run ? 4 : 9;
+        fx_dust(x - sign(hsp) * 8, y - 2, _run ? 2 : 1, make_color_rgb(190, 180, 165), -hsp * 0.15);
+    }
+} else ss_dust_t = 0;
 
 // ---- ตกหลุม / โดนหนาม ----
 if (respawn_timer <= 0 && (place_meeting(x, y, obj_hazard_ss) || y > room_height + 64)) {

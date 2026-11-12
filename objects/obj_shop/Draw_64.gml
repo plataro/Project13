@@ -1,125 +1,157 @@
+// ★ ร้านค้า (สไตล์ UI ใหม่ ขนาดเล็กลง) — placeholder
 var _gw = display_get_gui_width();
 var _gh = display_get_gui_height();
-var _gold_col = make_color_rgb(200, 170, 110);
+open_t = min(1, open_t + 1 / 10);
+var _ok = 1 - power(1 - open_t, 3);
+var _oy = (1 - _ok) * 24;
 
 // พื้นมืด
-draw_set_alpha(0.65);
+draw_set_alpha(0.6 * _ok);
 draw_set_color(c_black);
 draw_rectangle(0, 0, _gw, _gh, false);
 draw_set_alpha(1);
 
-// กรอบร้าน
-draw_set_color(make_color_rgb(40, 34, 52));
-draw_rectangle(px, py, px + pw, py + ph, false);
-draw_set_color(_gold_col);
-draw_rectangle(px, py, px + pw, py + ph, true);
-draw_rectangle(px + 3, py + 3, px + pw - 3, py + ph - 3, true);
-
+var _px = px;
+var _py = py + _oy;
+ui_panel(_px, _py, _px + pw, _py + ph, _ok);
+draw_set_alpha(_ok);
 draw_set_font(fnt_dialog);
-draw_set_valign(fa_middle);
 
-// แท็บ
-var _tabs = ["ซื้อ", "ขาย"];
-for (var _t = 0; _t < 2; _t++) {
-    if ((_t == 0 && !can_buy) || (_t == 1 && !can_sell)) continue;
-    var _tx = px + 24 + _t * 170;
-    draw_set_color((tab == _t) ? _gold_col : make_color_rgb(70, 62, 86));
-    draw_rectangle(_tx, py + 20, _tx + 160, py + 64, false);
-    draw_set_color((tab == _t) ? c_black : c_white);
-    draw_set_halign(fa_center);
-    draw_text(_tx + 80, py + 42, _tabs[_t]);
-}
-
-// ชื่อร้าน
+// ชื่อร้าน + เส้นใต้
 draw_set_halign(fa_left);
-draw_set_color(_gold_col);
-draw_text_transformed(px + 24, py + 6, shop_title, 0.6, 0.6, 0);
+draw_set_valign(fa_middle);
+ui_text_bold(_px + 22, _py + 24, shop_title, 0.62, UI_GOLD);
+draw_set_color(UI_GOLD_DARK);
+draw_line(_px + 20, _py + 42, _px + pw - 20, _py + 42);
 
 // เหรียญที่มี
 draw_set_halign(fa_right);
-draw_set_color(c_yellow);
-draw_text(px + pw - 24, py + 42, string(global.save.gold) + " เหรียญ");
+ui_text(_px + pw - 40, _py + 24, string(global.save.gold), 0.55, make_color_rgb(255, 215, 90));
+ui_icon("coin", _px + pw - 28, _py + 24, 7, make_color_rgb(255, 210, 80));
+
+// แท็บ
+var _tabs = ["ซื้อ", "ขาย"];
+draw_set_halign(fa_center);
+for (var _t = 0; _t < 2; _t++) {
+    if ((_t == 0 && !can_buy) || (_t == 1 && !can_sell)) continue;
+    var _tx = tab_x(_t);
+    var _ty = tab_y + _oy;
+    var _on = (tab == _t);
+    draw_set_color(_on ? make_color_rgb(70, 58, 34) : UI_BG);
+    draw_rectangle(_tx, _ty, _tx + tab_w, _ty + tab_h, false);
+    draw_set_color(_on ? UI_GOLD : UI_GOLD_DARK);
+    draw_rectangle(_tx, _ty, _tx + tab_w, _ty + tab_h, true);
+    if (_on) draw_rectangle(_tx + 2, _ty + tab_h - 3, _tx + tab_w - 2, _ty + tab_h - 1, false);
+    if (_on) ui_text_bold(_tx + tab_w / 2, _ty + tab_h / 2, _tabs[_t], 0.55, UI_GOLD);
+    else ui_text(_tx + tab_w / 2, _ty + tab_h / 2, _tabs[_t], 0.55, UI_MUTED);
+}
+
+// ไอคอนตามชนิดของ
+var _icon_of = function(_id) {
+    switch (_id) {
+        case "potion": case "bag": return "potion";
+        case "greatsword": return "sword";
+        case "hammer": return "hammer";
+        case "heart": return "star";
+    }
+    if (!is_undefined(buff_data(_id))) return "potion";
+    return "gem";
+};
 
 // รายการ
 draw_set_halign(fa_left);
+var _hl = function(_x1, _y1, _x2, _y2, _hover) {
+    draw_set_color(_hover ? make_color_rgb(52, 44, 66) : make_color_rgb(30, 27, 42));
+    draw_rectangle(_x1, _y1, _x2, _y2, false);
+    draw_set_color(_hover ? UI_GOLD : make_color_rgb(70, 62, 86));
+    draw_rectangle(_x1, _y1, _x2, _y2, true);
+    if (_hover) ui_highlight(_x1 + 1, _y1 + 1, _x2 - 1, _y2 - 1, 0.6);
+};
 if (tab == 0) {
     for (var _i = scroll; _i < min(array_length(buy_ids), scroll + vis_rows); _i++) {
         var _info = shop_item_info(buy_ids[_i]);
-        var _ry = row_y0 + (_i - scroll) * row_h;
+        var _ry = row_y0 + (_i - scroll) * row_h + _oy;
+        var _hov = (hover_row == _i);
+        _hl(row_x, _ry, row_x + row_w, _ry + row_h - 6, _hov);
 
-        draw_set_color((hover_row == _i) ? make_color_rgb(78, 68, 96) : make_color_rgb(56, 48, 70));
-        draw_rectangle(row_x, _ry, row_x + row_w, _ry + row_h - 6, false);
+        // ช่องไอคอน
+        draw_set_color(UI_BG);
+        draw_rectangle(row_x + 8, _ry + 7, row_x + 44, _ry + row_h - 13, false);
+        draw_set_color(UI_GOLD_DARK);
+        draw_rectangle(row_x + 8, _ry + 7, row_x + 44, _ry + row_h - 13, true);
+        var _bd = buff_data(buy_ids[_i]);
+        ui_icon(_icon_of(buy_ids[_i]), row_x + 26, _ry + (row_h - 6) / 2, 11, is_undefined(_bd) ? (_info.ok ? UI_GOLD : c_gray) : _bd.col);
 
-        draw_set_color(_info.ok ? c_white : c_gray);
-        draw_text(row_x + 14, _ry + 18, _info.name);
-        draw_set_color(c_ltgray);
-        draw_text_transformed(row_x + 14, _ry + 42, _info.desc, 0.65, 0.65, 0);
+        ui_text_bold(row_x + 56, _ry + 16, _info.name, 0.5, _info.ok ? UI_TEXT : c_gray, false);
+        ui_text(row_x + 56, _ry + 36, _info.desc, 0.4, UI_MUTED);
 
         draw_set_halign(fa_right);
-        if (!_info.ok) draw_set_color(c_gray);
-        else draw_set_color((global.save.gold >= _info.price) ? c_yellow : c_red);
-        draw_text(row_x + row_w - 14, _ry + 28, _info.ok ? ((_info.price > 0) ? (string(_info.price) + " เหรียญ") : "สวมใส่") : _info.why);
+        var _pc = !_info.ok ? c_gray : ((global.save.gold >= _info.price) ? make_color_rgb(255, 215, 90) : make_color_rgb(255, 100, 100));
+        var _pt = _info.ok ? ((_info.price > 0) ? string(_info.price) : "สวมใส่") : _info.why;
+        ui_text_bold(row_x + row_w - ((_info.ok && _info.price > 0) ? 30 : 14), _ry + (row_h - 6) / 2, _pt, 0.5, _pc);
+        if (_info.ok && _info.price > 0) ui_icon("coin", row_x + row_w - 18, _ry + (row_h - 6) / 2, 6, make_color_rgb(255, 210, 80));
         draw_set_halign(fa_left);
     }
 } else {
     if (array_length(sell_list) == 0) {
         draw_set_halign(fa_center);
-        draw_set_color(c_gray);
-        draw_text(px + pw / 2, row_y0 + 60, "ไม่มีของสะสมให้ขาย");
+        ui_text(_px + pw / 2, row_y0 + 60 + _oy, "ไม่มีของสะสมให้ขาย", 0.55, UI_MUTED);
         draw_set_halign(fa_left);
     }
     for (var _i2 = scroll; _i2 < min(array_length(sell_list), scroll + vis_rows); _i2++) {
         var _kind = sell_list[_i2];
         var _item = item_data(_kind);
         var _cnt = global.save.items[$ _kind];
-        var _ry2 = row_y0 + (_i2 - scroll) * row_h;
+        var _ry2 = row_y0 + (_i2 - scroll) * row_h + _oy;
+        _hl(row_x, _ry2, row_x + row_w, _ry2 + row_h - 6, hover_row == _i2);
 
-        draw_set_color((hover_row == _i2) ? make_color_rgb(78, 68, 96) : make_color_rgb(56, 48, 70));
-        draw_rectangle(row_x, _ry2, row_x + row_w, _ry2 + row_h - 6, false);
+        draw_set_color(UI_BG);
+        draw_rectangle(row_x + 8, _ry2 + 7, row_x + 44, _ry2 + row_h - 13, false);
+        draw_set_color(UI_GOLD_DARK);
+        draw_rectangle(row_x + 8, _ry2 + 7, row_x + 44, _ry2 + row_h - 13, true);
+        ui_icon("gem", row_x + 26, _ry2 + (row_h - 6) / 2, 11, _item.col);
 
-        draw_set_color(_item.col);
-        draw_circle(row_x + 26, _ry2 + 27, 10, false);
-        draw_set_color(c_white);
-        draw_text(row_x + 52, _ry2 + 18, _item.name + "  x" + string(_cnt));
-        draw_set_color(c_ltgray);
-        draw_text_transformed(row_x + 52, _ry2 + 42, "คลิก = ขาย 1 ชิ้น · Shift+คลิก = ขายทั้งหมด", 0.6, 0.6, 0);
+        ui_text_bold(row_x + 56, _ry2 + 16, _item.name + "  x" + string(_cnt), 0.5, UI_TEXT, false);
+        ui_text(row_x + 56, _ry2 + 36, "คลิก = ขาย 1 ชิ้น · Shift+คลิก = ขายทั้งหมด", 0.4, UI_MUTED);
 
         draw_set_halign(fa_right);
-        draw_set_color(c_yellow);
-        draw_text(row_x + row_w - 14, _ry2 + 28, "+" + string(round(_item.price * sell_mul)) + " เหรียญ");
+        ui_text_bold(row_x + row_w - 30, _ry2 + (row_h - 6) / 2, "+" + string(round(_item.price * sell_mul)), 0.5, make_color_rgb(255, 215, 90));
+        ui_icon("coin", row_x + row_w - 18, _ry2 + (row_h - 6) / 2, 6, make_color_rgb(255, 210, 80));
         draw_set_halign(fa_left);
     }
-
-    // ปุ่มขายทั้งหมด
-    draw_set_color(make_color_rgb(70, 62, 86));
-    draw_rectangle(px + 24, py + ph - 64, px + 224, py + ph - 20, false);
-    draw_set_color(c_white);
-    draw_set_halign(fa_center);
-    draw_text(px + 124, py + ph - 42, "ขายทั้งหมด");
 }
 
 // ★ บอกว่ายังมีรายการให้เลื่อน
 var _cnt_all = (tab == 0) ? array_length(buy_ids) : array_length(sell_list);
 if (_cnt_all > vis_rows) {
     draw_set_halign(fa_center);
-    draw_set_color(c_ltgray);
-    draw_text_transformed(px + pw / 2, row_y0 + vis_rows * row_h + 4, "ล้อเมาส์เพื่อเลื่อน (" + string(scroll + 1) + "-" + string(min(_cnt_all, scroll + vis_rows)) + " จาก " + string(_cnt_all) + ")", 0.55, 0.55, 0);
+    ui_text(_px + pw / 2, row_y0 + vis_rows * row_h + 6 + _oy, "ล้อเมาส์เพื่อเลื่อน (" + string(scroll + 1) + "-" + string(min(_cnt_all, scroll + vis_rows)) + " จาก " + string(_cnt_all) + ")", 0.42, UI_MUTED);
     draw_set_halign(fa_left);
 }
 
-// ปุ่มปิด
-draw_set_color(make_color_rgb(110, 60, 60));
-draw_rectangle(px + pw - 164, py + ph - 64, px + pw - 24, py + ph - 20, false);
-draw_set_color(c_white);
-draw_set_halign(fa_center);
-draw_text(px + pw - 94, py + ph - 42, "ปิด (Esc)");
+// ปุ่ม
+var _mx = device_mouse_x_to_gui(0);
+var _my = device_mouse_y_to_gui(0);
+var _button = function(_x1, _y1, _x2, _y2, _txt, _col, _mx, _my) {
+    var _h = point_in_rectangle(_mx, _my, _x1, _y1, _x2, _y2);
+    draw_set_color(_h ? merge_color(_col, c_white, 0.15) : _col);
+    draw_rectangle(_x1, _y1, _x2, _y2, false);
+    draw_set_color(_h ? UI_GOLD : UI_GOLD_DARK);
+    draw_rectangle(_x1, _y1, _x2, _y2, true);
+    draw_set_halign(fa_center);
+    ui_text(( _x1 + _x2) / 2, (_y1 + _y2) / 2, _txt, 0.5, UI_TEXT);
+    draw_set_halign(fa_left);
+};
+if (tab == 1) _button(sell_x1, btn_y1 + _oy, sell_x2, btn_y2 + _oy, "ขายทั้งหมด", make_color_rgb(40, 70, 50), _mx, _my);
+_button(close_x1, btn_y1 + _oy, close_x2, btn_y2 + _oy, "ปิด (E)", make_color_rgb(80, 40, 44), _mx, _my);
 
 // ข้อความแจ้งผล
 if (msg != "") {
-    draw_set_color(c_yellow);
-    draw_text(px + pw / 2, py + ph - 42, msg);
+    draw_set_halign(fa_center);
+    ui_text_bold(_px + pw / 2, (btn_y1 + btn_y2) / 2 + _oy, msg, 0.5, make_color_rgb(255, 225, 120));
 }
 
+draw_set_alpha(1);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);

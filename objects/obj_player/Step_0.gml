@@ -169,6 +169,16 @@ switch (state) {
         hsp = mvx;
         vsp = mvy;
 
+        // ★ ฝุ่นตอนวิ่ง (วิ่งเร็ว = ถี่ขึ้น)
+        var _spd = point_distance(0, 0, mvx, mvy);
+        if (_spd > 1.2) {
+            dust_t--;
+            if (dust_t <= 0) {
+                dust_t = _running ? 4 : 9;
+                fx_dust(x - sign(mvx) * 6, y - 2, _running ? 2 : 1, make_color_rgb(200, 190, 170), -mvx * 0.15);
+            }
+        } else dust_t = 0;
+
         // กลิ้ง (ใช้ปุ่มที่จำไว้ กดล่วงหน้าได้)
         if (roll_buffer > 0 && roll_cd_timer <= 0) {
             start_roll(_kx, _ky, _len);

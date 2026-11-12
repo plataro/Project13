@@ -24,11 +24,11 @@ open_chest = function() {
 
     if (gold > 0) {
         global.save.gold += gold;
-        float_text(x, y - 70, "+" + string(gold) + " G", c_yellow, 1);
+        loot_toast("G", make_color_rgb(255, 210, 80), "coin", gold);
     }
     if (sp > 0) {
         global.save.sp += sp;
-        float_text(x, y - 100, "+" + string(sp) + " SP", c_aqua, 1.3);
+        loot_toast("SP", c_aqua, "star", sp);
     }
     repeat (potion) pickup_collect("potion", 1, x, y - 20);
 
@@ -41,8 +41,9 @@ open_chest = function() {
             shot1_ammo = shot1_max;
             shot1_reload_timer = 0;
         }
-        float_text(x, y - 130, "พลังยิงเพิ่มขึ้น!  " + string(_sd.ammo) + " นัด", make_color_rgb(200, 120, 255), 1.4);
-        if (_lv0 < 2 && global.save.shot_lv >= 2) float_text(x, y - 165, "ปลดสกิล 2: ยิงสามทิศ", c_yellow, 1.2);
+        float_text(x, y - 130, "พลังยิงเพิ่มขึ้น!", make_color_rgb(200, 120, 255), 1.4);
+        loot_toast("ลูกไฟ " + string(_sd.ammo) + " นัด", make_color_rgb(255, 150, 60), "fire");
+        if (_lv0 < 2 && global.save.shot_lv >= 2) loot_toast("ปลดสกิล 2: ยิงสามทิศ", c_yellow, "fire3");
         fx_spark(x, y - 30, 90, 22, make_color_rgb(200, 120, 255), 120);
     }
 }

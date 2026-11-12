@@ -12,4 +12,5 @@ function award_sp_once(_key, _n, _x, _y) {
     flag_set("sp_" + _key);
     global.save.sp += _n;
     float_text(_x, _y - 80, "+" + string(_n) + " SP", c_yellow, 1.5);
+    loot_toast("SP", c_aqua, "star", _n);
 }

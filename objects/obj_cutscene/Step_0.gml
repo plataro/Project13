@@ -2,7 +2,7 @@ t++;
 
 if (shown_idx != idx && idx < array_length(slides)) {
     shown_idx = idx;
-    wrapped = text_wrap_thai(slides[idx].text, 840);
+    wrapped = text_wrap_thai(slides[idx].text, 1150);
     chars = 0;
     total = string_length(wrapped);
     img_a = 0;

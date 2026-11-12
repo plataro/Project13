@@ -18,5 +18,6 @@ var _touch = (_p != noone) && !instance_exists(obj_fade) && !instance_exists(obj
 if ((_near && keyboard_check_pressed(ord("E"))) || _touch) {
     flag_set("sword");
     picked = true;
+    loot_toast("ดาบ", c_white, "sword");
     start_t = 3;
 }

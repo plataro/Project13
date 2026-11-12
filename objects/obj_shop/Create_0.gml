@@ -1,14 +1,28 @@
 depth = -12000;
 
-px = 110;
-py = 40;
-pw = 740;
-ph = 460;
+// ★ ขนาดเล็กลง (เดิม 740x460)
+px = 190;
+py = 62;
+pw = 580;
+ph = 416;
 
-row_x = px + 24;
-row_w = pw - 48;
-row_y0 = py + 90;
-row_h = 62;
+row_x = px + 20;
+row_w = pw - 40;
+row_y0 = py + 96;
+row_h = 56;
+
+// แท็บ / ปุ่ม (ใช้ทั้ง Draw และ Step)
+tab_y = py + 50;
+tab_w = 110;
+tab_h = 30;
+tab_x = function(_t) { return px + 20 + _t * (tab_w + 8); };
+btn_y1 = py + ph - 46;
+btn_y2 = py + ph - 16;
+close_x1 = px + pw - 130;
+close_x2 = px + pw - 20;
+sell_x1 = px + 20;
+sell_x2 = px + 160;
+open_t = 0;          // แอนิเมชันเปิด
 
 tab = 0;             // 0 = ซื้อ, 1 = ขาย
 msg = "";

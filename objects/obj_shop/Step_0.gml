@@ -29,18 +29,18 @@ for (var _i = scroll; _i < min(_count, scroll + vis_rows); _i++) {
 }
 
 if (_click) {
-    if (can_buy && point_in_rectangle(_mx, _my, px + 24, py + 20, px + 184, py + 64)) {
+    if (can_buy && point_in_rectangle(_mx, _my, tab_x(0), tab_y, tab_x(0) + tab_w, tab_y + tab_h)) {
         tab = 0;
     }
-    else if (can_sell && point_in_rectangle(_mx, _my, px + 194, py + 20, px + 354, py + 64)) {
+    else if (can_sell && point_in_rectangle(_mx, _my, tab_x(1), tab_y, tab_x(1) + tab_w, tab_y + tab_h)) {
         tab = 1;
     }
-    else if (point_in_rectangle(_mx, _my, px + pw - 164, py + ph - 64, px + pw - 24, py + ph - 20)) {
+    else if (point_in_rectangle(_mx, _my, close_x1, btn_y1, close_x2, btn_y2)) {
         save_commit();
         instance_destroy();
         exit;
     }
-    else if (tab == 1 && point_in_rectangle(_mx, _my, px + 24, py + ph - 64, px + 224, py + ph - 20)) {
+    else if (tab == 1 && point_in_rectangle(_mx, _my, sell_x1, btn_y1, sell_x2, btn_y2)) {
         var _total = 0;
         var _kinds = item_kinds();
         for (var _j = 0; _j < array_length(_kinds); _j++) _total += shop_sell(_kinds[_j], true, sell_mul);

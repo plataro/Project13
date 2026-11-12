@@ -212,12 +212,14 @@ function draw_key_hint(_x, _y, _items, _alpha, _t, _tick = false) {
     var _x0 = _x - _pw / 2;
     var _y0 = _y - _ph / 2 + sin(_t / 25) * 3;
 
-    draw_set_alpha(_alpha * 0.65);
-    draw_set_color(c_black);
-    draw_roundrect_ext(_x0, _y0, _x0 + _pw, _y0 + _ph, 14, 14, false);
-    draw_set_alpha(_alpha * 0.8);
-    draw_set_color(_tick ? c_lime : c_white);
-    draw_roundrect_ext(_x0, _y0, _x0 + _pw, _y0 + _ph, 14, 14, true);
+    // ★ สไตล์เดียวกับ UI ใหม่ (ไล่สี + ขอบทอง / เขียวเมื่อทำแล้ว)
+    draw_set_alpha(_alpha * 0.85);
+    draw_rectangle_color(_x0, _y0, _x0 + _pw, _y0 + _ph, UI_BG2, UI_BG2, UI_BG, UI_BG, false);
+    draw_set_alpha(_alpha);
+    draw_set_color(_tick ? make_color_rgb(120, 230, 120) : UI_GOLD);
+    draw_rectangle(_x0, _y0, _x0 + _pw, _y0 + _ph, true);
+    draw_set_color(_tick ? make_color_rgb(60, 140, 60) : UI_GOLD_DARK);
+    draw_rectangle(_x0 + 3, _y0 + 3, _x0 + _pw - 3, _y0 + _ph - 3, true);
 
     draw_set_valign(fa_middle);
     for (var _c = 0; _c < _n; _c++) {
@@ -228,19 +230,18 @@ function draw_key_hint(_x, _y, _items, _alpha, _t, _tick = false) {
             var _kw = max(28, string_width(_ks2[_d]) * _s + 16);
             draw_set_alpha(_alpha * 0.95);
             var _gt = variable_struct_exists(_items[_c], "g") && _items[_c].g[_d];
-            draw_set_color(_gt ? make_color_rgb(30, 110, 60) : make_color_rgb(38, 42, 60));
-            draw_roundrect_ext(_cx, _cy - 13, _cx + _kw, _cy + 13, 6, 6, false);
-            draw_set_color(_gt ? c_lime : make_color_rgb(255, 214, 102));
-            draw_roundrect_ext(_cx, _cy - 13, _cx + _kw, _cy + 13, 6, 6, true);
+            draw_set_color(_gt ? make_color_rgb(40, 110, 50) : make_color_rgb(150, 120, 70));
+            draw_rectangle(_cx, _cy - 11, _cx + _kw, _cy + 14, false);
+            draw_set_color(_gt ? make_color_rgb(150, 240, 150) : make_color_rgb(250, 235, 200));
+            draw_rectangle(_cx, _cy - 13, _cx + _kw, _cy + 11, false);
             draw_set_halign(fa_center);
-            draw_set_color(c_white);
+            draw_set_color(make_color_rgb(40, 30, 20));
             draw_text_transformed(_cx + _kw / 2, _cy, _ks2[_d], _s, _s, 0);
             draw_set_halign(fa_left);
             _cx += _kw + 5;
         }
         draw_set_alpha(_alpha);
-        draw_set_color(c_white);
-        draw_text_transformed(_cx + 4, _cy, _items[_c].t, _s, _s, 0);
+        ui_text(_cx + 4, _cy, _items[_c].t, _s, UI_TEXT);
     }
     draw_set_valign(fa_top);
     draw_set_alpha(1);

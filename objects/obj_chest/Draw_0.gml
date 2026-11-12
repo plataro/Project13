@@ -41,10 +41,11 @@ if (!opened) {
 
 draw_set_font(fnt_dialog);
 draw_set_halign(fa_center);
-if (near) {
-    draw_set_color(c_yellow);
-    draw_text_transformed(_x, _y - 74, trial ? "[E] บททดสอบ: ชนะศัตรู 3 รอบ" : "[E] เปิดหีบ", 0.6, 0.6, 0);
-}
+if (!variable_instance_exists(id, "pr_a")) pr_a = 0;
+pr_a = lerp(pr_a, (near && !opened) ? 1 : 0, 0.2);
+ui_prompt(_x, _y - 62, "E", trial ? "บททดสอบ: ชนะศัตรู 3 รอบ" : "เปิดหีบ", pr_a, trial ? make_color_rgb(200, 120, 255) : UI_GOLD);
+draw_set_font(fnt_dialog);
+draw_set_halign(fa_center);
 if (trial && !opened && trial_state == 1) {
     draw_set_color(make_color_rgb(210, 150, 255));
     draw_text_transformed(_x, _y - 74, "รอบ " + string(max(1, trial_wave)) + " / " + string(trial_waves) + "  ·  อย่าออกนอกวง", 0.6, 0.6, 0);

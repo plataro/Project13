@@ -1,3 +1,3 @@
-items = [{ k: ["Space"], c: [vk_space], t: "กระโดด" }];
+items = [{ k: ["Space"], c: [vk_space], t: "กระโดดข้ามหลุม / ขึ้นที่สูง" }];
 hkey = "hint_ss_jump";
-radius = 300;
+radius = 220;

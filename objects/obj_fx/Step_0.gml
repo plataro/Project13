@@ -16,6 +16,11 @@ for (var _i = _n - 1; _i >= 0; _i--) {
             _p.y += _p.vy;
             _p.vx *= 0.86;
             _p.vy *= 0.86;
+        } else if (_p.kind == 2) {   // ฝุ่น
+            _p.x += _p.vx;
+            _p.y += _p.vy;
+            _p.vx *= 0.92;
+            _p.vy *= 0.95;
         }
     }
     if (_p.age >= _p.life) array_delete(parts, _i, 1);

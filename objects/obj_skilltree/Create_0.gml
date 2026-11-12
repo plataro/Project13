@@ -1,15 +1,24 @@
 depth = -12500;
 
-px = 60;
-py = 30;
-pw = 840;
-ph = 480;
+// ★ เล็กลง (เดิม 840x480)
+px = 130;
+py = 46;
+pw = 700;
+ph = 448;
 
-node_w = 220;
-node_h = 50;
-col_x = [px + 140, px + 420, px + 700];
-row_y0 = py + 98;
-row_gap = 64;
+node_w = 184;
+node_h = 42;
+col_x = [px + 120, px + 350, px + 580];
+row_y0 = py + 92;
+row_gap = 54;
+
+close_x1 = px + pw - 120;
+close_x2 = px + pw - 20;
+close_y1 = py + ph - 40;
+close_y2 = py + ph - 12;
+branch_icon = ["sword", "fire", "star"];
+branch_col = [make_color_rgb(240, 120, 100), make_color_rgb(255, 160, 70), make_color_rgb(120, 200, 255)];
+open_t = 0;
 
 branch_names = ["ดาบ", "ยิง", "ร่างกาย"];
 nodes = skill_nodes();

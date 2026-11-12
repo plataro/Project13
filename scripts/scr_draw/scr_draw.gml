@@ -172,6 +172,45 @@ function ui_icon(_kind, _x, _y, _r, _c) {
             draw_circle(_x, _y - _r * 0.3, _r * 0.3, false);
             draw_circle(_x + _r * 0.6, _y + _r * 0.3, _r * 0.3, false);
             break;
+        case "coin":
+            draw_circle(_x, _y, _r * 0.8, false);
+            draw_set_color(merge_color(_c, c_black, 0.35));
+            draw_circle(_x, _y, _r * 0.5, true);
+            break;
+        case "gem":
+            draw_triangle(_x, _y - _r * 0.9, _x - _r * 0.7, _y - _r * 0.2, _x + _r * 0.7, _y - _r * 0.2, false);
+            draw_triangle(_x - _r * 0.7, _y - _r * 0.2, _x + _r * 0.7, _y - _r * 0.2, _x, _y + _r * 0.9, false);
+            break;
+        case "star":
+            for (var _st = 0; _st < 5; _st++) {
+                var _sa = 90 + _st * 72;
+                draw_triangle(_x, _y, _x + lengthdir_x(_r, _sa), _y + lengthdir_y(_r, _sa), _x + lengthdir_x(_r * 0.4, _sa + 36), _y + lengthdir_y(_r * 0.4, _sa + 36), false);
+                draw_triangle(_x, _y, _x + lengthdir_x(_r, _sa), _y + lengthdir_y(_r, _sa), _x + lengthdir_x(_r * 0.4, _sa - 36), _y + lengthdir_y(_r * 0.4, _sa - 36), false);
+            }
+            break;
+        case "burn":
+            draw_set_color(make_color_rgb(255, 120, 30));
+            draw_circle(_x, _y + _r * 0.3, _r * 0.6, false);
+            draw_triangle(_x - _r * 0.6, _y + _r * 0.2, _x + _r * 0.6, _y + _r * 0.2, _x, _y - _r, false);
+            draw_set_color(make_color_rgb(255, 230, 120));
+            draw_circle(_x, _y + _r * 0.4, _r * 0.3, false);
+            break;
+        case "poison":
+            draw_set_color(make_color_rgb(140, 220, 90));
+            draw_circle(_x, _y + _r * 0.3, _r * 0.6, false);
+            draw_triangle(_x - _r * 0.55, _y + _r * 0.1, _x + _r * 0.55, _y + _r * 0.1, _x, _y - _r * 0.9, false);
+            draw_set_color(make_color_rgb(40, 80, 30));
+            draw_circle(_x - _r * 0.2, _y + _r * 0.3, _r * 0.12, false);
+            draw_circle(_x + _r * 0.2, _y + _r * 0.3, _r * 0.12, false);
+            break;
+        case "stun":
+            draw_set_color(c_yellow);
+            var _sp = current_time / 4;
+            for (var _sn = 0; _sn < 3; _sn++) {
+                var _sa2 = _sp + _sn * 120;
+                draw_circle(_x + lengthdir_x(_r * 0.7, _sa2), _y + lengthdir_y(_r * 0.35, _sa2), _r * 0.25, false);
+            }
+            break;
         case "roll":
             draw_circle(_x, _y, _r * 0.75, true);
             draw_circle(_x, _y, _r * 0.7, true);
@@ -182,4 +221,95 @@ function ui_icon(_kind, _x, _y, _r, _c) {
             draw_circle(_x, _y + _r * 0.2, _r * 0.62, false);
             break;
     }
+}
+
+
+// =====================================================================
+// ★ ป้ายกดปุ่มในโลก (หยิบดาบ / เปิดหีบ / บันได / ร้าน)  วาดใน Draw ปกติ
+// =====================================================================
+function ui_prompt(_x, _y, _key, _txt, _a = 1, _col = UI_GOLD) {
+    if (_a < 0.02) return;
+    draw_set_font(fnt_dialog);
+    var _s = 0.5;
+    var _kw = max(24, string_width(_key) * _s + 14);
+    var _tw = string_width(_txt) * _s;
+    var _w = _kw + _tw + 24;
+    var _h = 30;
+    var _bob = sin(current_time / 260) * 2;
+    var _x1 = round(_x - _w / 2);
+    var _y1 = round(_y - _h + _bob - (1 - _a) * 8);
+    var _oa = draw_get_alpha();
+    draw_set_alpha(0.85 * _a);
+    draw_rectangle_color(_x1, _y1, _x1 + _w, _y1 + _h, UI_BG2, UI_BG2, UI_BG, UI_BG, false);
+    draw_set_alpha(_a);
+    draw_set_color(_col);
+    draw_rectangle(_x1, _y1, _x1 + _w, _y1 + _h, true);
+    draw_triangle(_x - 6, _y1 + _h, _x + 6, _y1 + _h, _x, _y1 + _h + 7, false);
+    // ปุ่ม (นูนนิด ๆ)
+    var _kx = _x1 + 7;
+    var _ky = _y1 + 5;
+    draw_set_color(make_color_rgb(150, 120, 70));
+    draw_rectangle(_kx, _ky + 2, _kx + _kw, _ky + 21, false);
+    draw_set_color(make_color_rgb(250, 235, 200));
+    draw_rectangle(_kx, _ky, _kx + _kw, _ky + 18, false);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(make_color_rgb(40, 30, 20));
+    draw_text_transformed(_kx + _kw / 2, _ky + 9, _key, _s, _s, 0);
+    draw_set_halign(fa_left);
+    ui_text(_kx + _kw + 8, _y1 + _h / 2, _txt, _s, UI_TEXT);
+    draw_set_valign(fa_top);
+    draw_set_alpha(_oa);
+    draw_set_color(c_white);
+}
+
+// =====================================================================
+// ★ ของที่ได้รับ: ป้ายเด้งเข้ามาขวาจอ ใต้แผงเงิน (ของชนิดเดียวกันรวมเป็น xN)
+// =====================================================================
+global.loot_feed = [];
+function loot_toast(_txt, _col = c_white, _icon = "gem", _amt = 0) {
+    for (var _i = 0; _i < array_length(global.loot_feed); _i++) {
+        var _f = global.loot_feed[_i];
+        if (_f.key == _txt && _f.t > 30) {
+            _f.n++;
+            _f.amt += _amt;
+            _f.t = 200;
+            _f.pop = 1;
+            return;
+        }
+    }
+    array_push(global.loot_feed, { key: _txt, txt: _txt, col: _col, icon: _icon, t: 200, n: 1, amt: _amt, pop: 1, sx: 1 });
+    if (array_length(global.loot_feed) > 6) array_delete(global.loot_feed, 0, 1);
+}
+function draw_loot_feed(_ytop) {
+    draw_set_font(fnt_dialog);
+    var _y = _ytop;
+    for (var _i = array_length(global.loot_feed) - 1; _i >= 0; _i--) {
+        var _f = global.loot_feed[_i];
+        _f.t--;
+        _f.sx = lerp(_f.sx, 0, 0.2);
+        _f.pop = max(0, _f.pop - 0.08);
+        if (_f.t <= 0) { array_delete(global.loot_feed, _i, 1); continue; }
+    }
+    for (var _j = array_length(global.loot_feed) - 1; _j >= 0; _j--) {
+        var _f2 = global.loot_feed[_j];
+        var _a = min(1, _f2.t / 25);
+        var _txt = (_f2.amt > 0) ? ("+" + string(_f2.amt) + " " + _f2.txt) : (_f2.txt + ((_f2.n > 1) ? "  x" + string(_f2.n) : ""));
+        var _w = string_width(_txt) * 0.48 + 50;
+        var _x2 = 946 + _f2.sx * 220;
+        var _x1 = _x2 - _w;
+        draw_set_alpha(0.8 * _a);
+        draw_rectangle_color(_x1, _y, _x2, _y + 26, UI_BG, UI_BG2, UI_BG2, UI_BG, false);
+        draw_set_alpha(_a);
+        draw_set_color(_f2.col);
+        draw_rectangle(_x1, _y, _x1 + 3, _y + 26, false);
+        var _ir = 8 * (1 + 0.35 * sin(_f2.pop * pi));
+        ui_icon(_f2.icon, _x1 + 20, _y + 13, _ir, _f2.col);
+        draw_set_valign(fa_middle);
+        ui_text(_x1 + 36, _y + 13, _txt, 0.48, merge_color(UI_TEXT, c_white, _f2.pop));
+        draw_set_valign(fa_top);
+        _y += 30;
+    }
+    draw_set_alpha(1);
+    draw_set_color(c_white);
 }

@@ -23,4 +23,4 @@ if (_spr != -1 && sprite_exists(_spr)) {
     draw_set_color(c_white);
 }
 
-draw_key_hint(x, y - 110, [ { k: ["E"], t: "หยิบดาบ" } ], prompt_a, t);
+ui_prompt(x, y - 92, "E", "หยิบดาบ", prompt_a);

@@ -150,6 +150,7 @@ start_attack = function(_n) {
 // เริ่มกลิ้ง: มีปุ่มเดิน = กลิ้งตามทิศเดิน, ไม่มี = กลิ้งตามเมาส์
 start_roll = function(_kx, _ky, _len) {
     state = PState.ROLL;
+    fx_dust(x, y - 2, 5, make_color_rgb(200, 190, 170));   // ★ ฝุ่นตอนกลิ้ง
     roll_timer = roll_time;
     dodge_timer = roll_iframes;
     roll_buffer = 0;
@@ -215,3 +216,5 @@ instance_create_depth(0, 0, -15000, obj_title_card);
 if (!instance_exists(obj_fx)) instance_create_depth(0, 0, -19000, obj_fx);
 if (!instance_exists(obj_pause)) instance_create_depth(0, 0, -14000, obj_pause);   // เผื่อเริ่มเทสจากห้องอื่นที่ไม่ใช่เมนู
 update_camera(false);   // ★ เข้าห้องมากล้องอยู่ที่ตัวละครทันที (เดิมเริ่มที่มุมซ้ายบน)
+
+dust_t = 0;   // ★ ตัวนับเวลาฝุ่นตอนวิ่ง

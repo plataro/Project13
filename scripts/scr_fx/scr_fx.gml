@@ -59,6 +59,19 @@ function fx_spark(_x, _y, _dir, _n, _col, _spread = 55) {
     }
 }
 
+// ★ ฝุ่นตอนวิ่ง (วงกลมฟุ้ง ๆ ค่อยขยายแล้วจาง)
+function fx_dust(_x, _y, _n = 1, _col = make_color_rgb(200, 190, 170), _vx = 0) {
+    if (!instance_exists(obj_fx)) return;
+    with (obj_fx) {
+        if (array_length(parts) > 120) return;
+        repeat (_n) {
+            array_push(parts, { kind: 2, x: _x + random_range(-6, 6), y: _y + random_range(-2, 2),
+                                vx: _vx + random_range(-0.5, 0.5), vy: random_range(-0.7, -0.2),
+                                age: 0, life: irandom_range(18, 28), r: random_range(3, 6), col: _col });
+        }
+    }
+}
+
 // ตีศัตรูโดน (เรียกจาก take_damage ของศัตรู)
 function fx_enemy_hit(_e, _dmg, _dir) {
     var _r = enemy_hurt_rect(_e);

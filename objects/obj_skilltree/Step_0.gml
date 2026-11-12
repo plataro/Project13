@@ -6,7 +6,7 @@ if (msg_timer > 0) {
 
 var _mx = device_mouse_x_to_gui(0);
 var _my = device_mouse_y_to_gui(0);
-var _on_close = point_in_rectangle(_mx, _my, px + pw - 164, py + ph - 52, px + pw - 24, py + ph - 14);
+var _on_close = point_in_rectangle(_mx, _my, close_x1, close_y1, close_x2, close_y2);
 
 if (open_delay <= 0 && (keyboard_check_pressed(ord("T")) || keyboard_check_pressed(vk_escape)
     || (mouse_check_button_pressed(mb_left) && _on_close))) {
