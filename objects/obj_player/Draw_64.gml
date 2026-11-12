@@ -211,5 +211,59 @@ if (_hp == 1 && _hp > 0) {
 
 draw_set_color(c_white);
 
+// =====================================================================
+// ★ ป้ายเตือนอัปสกิล: มี SP และมีสกิลที่ปลดได้
+//   ได้ SP ใหม่ = ป้ายใหญ่กลางจอ ~5 วิ แล้วย่อเป็นป้ายเล็กใต้มุมขวาบนค้างไว้
+// =====================================================================
+if (!_ui_busy && skill_affordable()) {
+    var _spn = global.save.sp;
+    if (_spn > sp_rem_last) sp_rem_t = 0;
+    sp_rem_last = _spn;
+    sp_rem_t++;
+    var _key = "[" + input_label("tree") + "]";
+    var _pul = 0.5 + 0.5 * sin(current_time / 180);
+    var _gold = make_color_rgb(255, 215, 90);
+    if (sp_rem_t < 300) {
+        var _in = min(1, sp_rem_t / 15);
+        var _out = clamp((300 - sp_rem_t) / 30, 0, 1);
+        var _a = _in * _out;
+        var _sc = 1 + 0.25 * (1 - _in) + 0.03 * _pul;
+        var _cy = 150;
+        var _w = 440 * _sc, _h = 92 * _sc;
+        draw_set_alpha(_a);
+        ui_panel(480 - _w / 2, _cy - _h / 2, 480 + _w / 2, _cy + _h / 2, 0.95 * _a);
+        draw_set_color(_gold);
+        draw_set_alpha(_a * (0.5 + 0.5 * _pul));
+        draw_rectangle(480 - _w / 2, _cy - _h / 2, 480 + _w / 2, _cy + _h / 2, true);
+        draw_rectangle(480 - _w / 2 + 2, _cy - _h / 2 + 2, 480 + _w / 2 - 2, _cy + _h / 2 - 2, true);
+        draw_set_alpha(_a);
+        draw_set_font(fnt_dialog);
+        draw_set_halign(fa_center);
+        ui_icon("star", 480 - _w / 2 + 34, _cy, 1.3 * _sc, _gold);
+        ui_icon("star", 480 + _w / 2 - 34, _cy, 1.3 * _sc, _gold);
+        ui_text_bold(480, _cy - 34 * _sc, ui_fit(L("มีแต้มสกิล ", "Skill points: ") + string(_spn) + "!", 0.95 * _sc, _w - 110), 0.95 * _sc, _gold);
+        ui_text(480, _cy + 8 * _sc, ui_fit(L("กด ", "Press ") + _key + L(" เพื่ออัปสกิล", " to upgrade skills"), 0.6 * _sc, _w - 110), 0.6 * _sc, c_white);
+        draw_set_halign(fa_left);
+        draw_set_alpha(1);
+    } else {
+        // ป้ายเล็กค้างไว้ (กะพริบเบา ๆ)
+        draw_set_font(fnt_dialog);
+        var _t2 = L("SP ", "SP ") + string(_spn) + "  " + _key + L(" อัปสกิล", " Upgrade");
+        var _bx2 = 750, _by2 = 12;   // ข้างซ้ายแผงเงิน
+        var _tw = string_width(_t2) * 0.46 + 40;
+        ui_panel(_bx2 - _tw, _by2, _bx2, _by2 + 30, 0.88);
+        draw_set_color(_gold);
+        draw_set_alpha(0.4 + 0.6 * _pul);
+        draw_rectangle(_bx2 - _tw, _by2, _bx2, _by2 + 30, true);
+        draw_set_alpha(1);
+        ui_icon("star", _bx2 - _tw + 16, _by2 + 15, 0.7, _gold);
+        draw_set_valign(fa_middle);
+        ui_text_bold(_bx2 - _tw + 30, _by2 + 15, _t2, 0.46, _gold);
+        draw_set_valign(fa_top);
+    }
+} else if (!skill_affordable()) {
+    sp_rem_last = -1;
+}
+
 // ขวาบน: เงิน / SP / อาวุธ
 draw_hud_money();

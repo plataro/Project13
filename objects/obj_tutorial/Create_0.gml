@@ -52,7 +52,7 @@ build_ctx = function() {
           when: function() { return instance_exists(obj_player) && obj_player.hp <= obj_player.max_hp - 2 && global.save.potions > 0; } },
         { key: "ctx_skill2", slot: 4, acts: ["shoot2"], text: L("ยิงกระจายสามทิศ", "Triple spread shot"), sub: L("ปลดสกิลแล้ว! คูลดาวน์นานกว่าปุ่ม 1", "Unlocked! Longer cooldown than 1"), timeout: 0,
           when: function() { return global.save.shot_lv >= 2 && instance_exists(obj_player); } },
-        { key: "ctx_weapon", acts: ["weapon"], text: L("สลับอาวุธ", "Switch weapon"), timeout: 0,
+        { key: "ctx_weapon", slot: 1, acts: ["weapon"], text: L("ได้อาวุธใหม่! สลับอาวุธ", "New weapon! Switch weapon"), sub: L("ช่องโจมตีจะเปลี่ยนตามอาวุธที่ถือ", "Your attack slot changes with the weapon"), timeout: 0,
           when: function() { return array_length(variable_struct_get_names(global.save.weapons)) > 0 && instance_exists(obj_player); } },
         { key: "ctx_charge", slot: 2, acts: ["charge"], text: L("ชาร์จค้อน", "Charge hammer"), sub: L("ค้างจนเกจเต็มแล้วปล่อย ทุ่มลงพื้นรอบตัว", "Hold until full, release to slam around you"), timeout: 0,
           when: function() { return global.save.weapon == "hammer" && instance_exists(obj_player); } },

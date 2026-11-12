@@ -166,7 +166,7 @@ if (!_frozen && room != rm_the_sanctuary_ss && input_pressed("shoot1") && shot_c
     _b.image_angle = _sa;
     _b.vx = lengthdir_x(11, _sa);   // ★ ขยับเองใน Step ของกระสุน (เดิมใช้ speed แล้วค้างอยู่กับที่)
     _b.vy = lengthdir_y(11, _sa);
-    shot_cd = 10;   // ★ ฉากด้านข้างไม่มีศัตรู ยิงปริศนาได้ไว
+    shot_cd = 40;   // ★ ไม่ให้ยิงรัว (ยิงโดนเป้า = ยิงต่อได้ทันที)
     face = (lengthdir_x(1, _sa) >= 0) ? 1 : -1;
 }
 

@@ -26,19 +26,32 @@ function skill_nodes() {
 
 // ★ พลังยิง (สกิล 1) ตามระดับที่เก็บจากหีบพลัง: เริ่ม 1 นัดแรงมากแต่รอนาน -> นัดเยอะขึ้น รอสั้นลง
 // lv 2 ขึ้นไปปลดสกิล 2 (ยิงสามทิศ)
-// ระดับ 1/2/3 ได้จากหีบบททดสอบของป่า/เหมือง/ปราสาท (ด่านละ +2 นัด)
+// ระดับ 1/2/3 ได้จากหีบบททดสอบของป่า/เหมือง/ปราสาท (ลูกไฟใหญ่+แรงขึ้น)
 function shot_data(_lv) {
+    // ★ หีบพลัง (บททดสอบ) ไม่เพิ่มจำนวนนัดแล้ว แต่ทำให้ลูกไฟ "ใหญ่ขึ้น + แรงขึ้น"
+    //   จำนวนนัดได้จากต้นไม้สกิล "แม็กเสริม" เท่านั้น (สูงสุด 2 นัด)
     switch (clamp(_lv, 0, 3)) {
-        case 0: return { ammo: 1, dmg: 3,   reload: 240 };
-        case 1: return { ammo: 2, dmg: 2.5, reload: 210 };
-        case 2: return { ammo: 4, dmg: 2,   reload: 180 };
+        case 0: return { ammo: 1, dmg: 3,   reload: 240, size: 1 };
+        case 1: return { ammo: 1, dmg: 4,   reload: 225, size: 1.25 };
+        case 2: return { ammo: 1, dmg: 5.5, reload: 210, size: 1.5 };
     }
-    return { ammo: 6, dmg: 1.5, reload: 150 };
+    return { ammo: 1, dmg: 7, reload: 195, size: 1.8 };
 }
 
 // ถือยาได้สูงสุด (ร้านค้า + สกิลกระเป๋ายา)
 function potion_cap() {
     return global.save.potion_max + (skill_has("g4") ? 1 : 0);
+}
+
+// ★ มีสกิลที่ปลดได้ตอนนี้ไหม (ใช้กับป้ายเตือนอัปสกิล)
+function skill_affordable() {
+    if (!flag_get("tree_unlocked") || global.save.sp <= 0) return false;
+    var _all = skill_nodes();
+    for (var _i = 0; _i < array_length(_all); _i++) {
+        var _n = _all[_i];
+        if (!skill_has(_n.key) && (_n.req == "" || skill_has(_n.req)) && global.save.sp >= _n.cost) return true;
+    }
+    return false;
 }
 
 function skill_has(_key) {
@@ -80,6 +93,7 @@ function player_apply_skills() {
     shot1_max         = _sd.ammo + (skill_has("a1") ? 1 : 0);
     shot1_reload      = round(_sd.reload * (skill_has("a2") ? 0.75 : 1));
     shot1_dmg         = _sd.dmg;
+    shot1_size        = _sd.size;   // ★ ขนาดลูกไฟ
     skill2_unlocked   = (global.save.shot_lv >= 2);
     bullet_speed      = skill_has("a3") ? 13 : 10;
     bullet_pierce     = skill_has("a4") ? 1 : 0;

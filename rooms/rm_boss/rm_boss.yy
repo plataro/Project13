@@ -15,10 +15,6 @@
       "path": "rooms/rm_boss/rm_boss.yy"
     },
     {
-      "name": "inst_28E52123",
-      "path": "rooms/rm_boss/rm_boss.yy"
-    },
-    {
       "name": "inst_59C05BB9",
       "path": "rooms/rm_boss/rm_boss.yy"
     },
@@ -132,33 +128,6 @@
           "scaleY": 1.0,
           "x": 1200.0,
           "y": 560.0
-        },
-        {
-          "$GMRInstance": "v4",
-          "%Name": "inst_28E52123",
-          "colour": 4294967295,
-          "frozen": false,
-          "hasCreationCode": false,
-          "ignore": false,
-          "imageIndex": 0,
-          "imageSpeed": 1.0,
-          "inheritCode": false,
-          "inheritedItemId": null,
-          "inheritItemSettings": false,
-          "isDnd": false,
-          "name": "inst_28E52123",
-          "objectId": {
-            "name": "obj_exit",
-            "path": "objects/obj_exit/obj_exit.yy"
-          },
-          "properties": [],
-          "resourceType": "GMRInstance",
-          "resourceVersion": "2.0",
-          "rotation": 0.0,
-          "scaleX": 1.0,
-          "scaleY": 1.0,
-          "x": 1200.0,
-          "y": 128.0
         },
         {
           "$GMRInstance": "v4",

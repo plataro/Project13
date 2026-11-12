@@ -73,7 +73,7 @@ var _rows = [
     [L("ดาเมจคริ", "Crit Damage"),      "x" + string_format(_st.critdmg, 1, 1), make_color_rgb(255, 170, 70)],
     [L("ความเร็ว", "Speed"),      string(round(_st.spd * 100)) + "%", make_color_rgb(140, 230, 160)],
     [L("ลดดาเมจรับ", "Damage Reduction"),     "-" + string(_st.def), make_color_rgb(150, 170, 200)],
-    [L("พลังยิง", "Fireball"),       string(_sd.ammo) + L(" นัด | x", " shots | x") + string(_sd.dmg), make_color_rgb(255, 150, 60)],
+    [L("พลังยิง", "Fireball"),       string(instance_exists(obj_player) ? obj_player.shot1_max : _sd.ammo) + L(" นัด | แรง ", " shots | dmg ") + string(_sd.dmg), make_color_rgb(255, 150, 60)],
     [L("ติดสถานะศัตรู", "On-hit Effects"),  ((_st.burn > 0) ? (L("ไฟ ", "Burn ") + string(round(_st.burn * 100)) + "% ") : "") + ((_st.poison > 0) ? (L("พิษ ", "Poison ") + string(round(_st.poison * 100)) + "% ") : "") + ((_st.stun > 0) ? (L("สตัน ", "Stun ") + string(round(_st.stun * 100)) + "%") : "") + ((_st.burn + _st.poison + _st.stun) <= 0 ? "-" : ""), make_color_rgb(200, 140, 255)]
 ];
 var _sx1 = px + 204;

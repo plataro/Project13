@@ -102,13 +102,7 @@ if (input_pressed("tree")) skilltree_toggle();
 if (input_pressed("weapon")) weapon_cycle(1);
 if (mouse_wheel_up()) weapon_cycle(-1);
 
-// ★ ไม่มีศัตรูไล่อยู่ใกล้ ๆ (เช่น ตอนทำปริศนา) = ลูกไฟรีโหลด/ยิงต่อได้ไวมาก
-var _calm = true;
-with (obj_enemy) if (alert_timer > 0 && point_distance(x, y, other.x, other.y) < 900 && !variable_instance_exists(id, "is_orb")) _calm = false;
-if (_calm) {
-    shot1_reload_timer = min(shot1_reload_timer, 8);
-    shot1_timer = min(shot1_timer, 8);
-}
+// ★ ยิงโดนเป้าปริศนา = รีโหลดทันที (ดูใน obj_bullet)
 if (shot1_reload_timer > 0) {
     shot1_reload_timer--;
     if (shot1_reload_timer <= 0) shot1_ammo = shot1_max;
@@ -223,6 +217,7 @@ switch (state) {
 			_b.lift = aim_height;
 			_b.pierce = bullet_pierce;
 			_b.damage = shot1_dmg;   // ★ แรงตามระดับพลังยิง
+			_b.size = shot1_size;    // ★ ใหญ่ขึ้นตามหีบพลัง
 
 			shot1_ammo--;
 			shot1_timer = shot1_gap;
@@ -245,6 +240,7 @@ switch (state) {
 				_b2.speed = bullet_speed;
 				_b2.lift = aim_height;
 				_b2.pierce = bullet_pierce;
+				_b2.size = 0.75 * shot1_size;   // ★ ใหญ่ขึ้นตามระดับลูกไฟ
 			}
 
 			skill2_timer = skill2_cooldown;

@@ -74,8 +74,8 @@ open_chest = function() {
             shot1_ammo = shot1_max;
             shot1_reload_timer = 0;
         }
-        float_text(x, y - 130, L("พลังยิงเพิ่มขึ้น!", "Fireball powered up!"), make_color_rgb(200, 120, 255), 1.4);
-        loot_toast(L("ลูกไฟ ", "Fireball ") + string(_sd.ammo) + L(" นัด", " shots"), make_color_rgb(255, 150, 60), "fire");
+        float_text(x, y - 130, L("ลูกไฟใหญ่ขึ้น แรงขึ้น!", "Bigger, stronger fireball!"), make_color_rgb(200, 120, 255), 1.4);
+        loot_toast(L("ลูกไฟ ขั้น ", "Fireball Lv ") + string(global.save.shot_lv + 1), make_color_rgb(255, 150, 60), "fire");
         if (_lv0 < 2 && global.save.shot_lv >= 2) loot_toast(L("ปลดสกิล 2: ยิงสามทิศ", "Skill 2 unlocked: Triple shot"), c_yellow, "fire3");
         fx_spark(x, y - 30, 90, 22, make_color_rgb(200, 120, 255), 120);
     }

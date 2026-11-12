@@ -12,7 +12,10 @@ var _by = y;
 with (obj_target) {
     if (!hit && point_distance(_bx, _by, x, y - 48) < 24) {
         if (mode == "sword") fx_spark(x, y - 48, 90, 4, c_white);   // ★ คริสตัล: กระสุนเด้ง
-        else on_hit();
+        else {
+            on_hit();
+            with (obj_player_ss) shot_cd = 0;   // ★ โดนเป้า = ยิงต่อได้ทันที
+        }
         _hit = true;
     }
 }
