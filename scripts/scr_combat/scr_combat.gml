@@ -201,16 +201,32 @@ function fog_point_lit(_eye, _px, _py) {
     return collision_line(_eye[0], _eye[1], _px, _py, obj_wall, false, true) == noone;
 }
 
-// ศัตรูตัวนี้ควรเห็นไหม: เช็กหลายจุดรอบรอยเท้า (เท้ากลาง ซ้าย ขวา และเหนือเท้านิดหน่อย)
-// จุดใดจุดหนึ่งอยู่ในโซนสว่าง = เห็น (ไม่ใช้จุดหัว กันหัวยื่นข้ามกำแพงมาโผล่ฝั่งผู้เล่น)
+// ศัตรูตัวนี้ควรเห็นไหม: เช็กหลายจุดทั้งรอยเท้าและลำตัวขึ้นไปถึงหัว (ตามที่วาดบนจอ)
+// จุดใดจุดหนึ่งอยู่ในโซนสว่าง = วาดทั้งตัว แล้วปล่อยให้หมอกทับส่วนที่อยู่ในเงาเอง
+// (เดิมเช็กแค่เท้า เท้าเข้าเงานิดเดียวทั้งตัวหายทั้งที่ลำตัวยังอยู่ในที่สว่าง)
 function enemy_visible(_e) {
     if (!fog_room() || !instance_exists(obj_player)) return true;
     var _eye = obj_player.fog_eye;
-    var _hw = max(6, (_e.bbox_right - _e.bbox_left) * 0.5 - 2);
+    var _r = enemy_hurt_rect(_e);
+    var _hw = (_r[2] - _r[0]) * 0.4;
+    var _h = _r[3] - _r[1];
+    var _z = variable_instance_exists(_e, "z") ? _e.z : 0;
     var _fy = _e.y - 4;
+
+    // รอยเท้า
     if (fog_point_lit(_eye, _e.x, _fy)) return true;
     if (fog_point_lit(_eye, _e.x - _hw, _fy)) return true;
     if (fog_point_lit(_eye, _e.x + _hw, _fy)) return true;
-    if (fog_point_lit(_eye, _e.x, _fy - _hw)) return true;
+
+    // ลำตัวขึ้นไปถึงหัว (ตำแหน่งบนจอ)
+    var _k = [0.3, 0.55, 0.8, 0.97];
+    for (var _i = 0; _i < 4; _i++) {
+        var _py = _e.y - _z - _h * _k[_i];
+        if (fog_point_lit(_eye, _e.x, _py)) return true;
+        if (_k[_i] == 0.55) {
+            if (fog_point_lit(_eye, _e.x - _hw, _py)) return true;
+            if (fog_point_lit(_eye, _e.x + _hw, _py)) return true;
+        }
+    }
     return false;
 }
