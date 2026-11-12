@@ -36,11 +36,13 @@ volley_n = 0;
 bullet_heat = 0;      // นับกระสุนที่โดนช่วงนี้ (ค่อย ๆ ลดลงเอง)
 shield_cd = 240;      // ห้ามตั้งเกราะซ้ำจนกว่าจะหมดเวลานี้
 shield_time = 330;    // ★ เกราะอยู่ได้นานสุด (เฟรม)
+shield_hp_max = 4;
 
 raise_shield = function() {
     if (shield > 0) return;
     shield = shield_time;
     shield_hp = 3 + phase;   // ★ ฟันกี่ทีแตก (เฟส 1 = 4, 2 = 5, 3 = 6)
+    shield_hp_max = shield_hp;
     bullet_heat = 0;
     float_text(x, y - 200, "เกราะ!", make_color_rgb(110, 190, 255), 1.3);
     fx_spark(x, y - 70, 0, 18, make_color_rgb(110, 190, 255), 180);
@@ -79,7 +81,10 @@ take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
         var _limit = (phase == 1) ? 9 : ((phase == 2) ? 8 : 7);   // ★ โดนกี่นัดถึงตั้งเกราะ
         if (bullet_heat >= _limit && shield_cd <= 0 && state != "trans") raise_shield();
     } else if (shield > 0) {
-        // ฟันด้วยดาบ = เข้าเลือดปกติ และกะเทาะเกราะ
+        // ★ ฟันด้วยดาบ = เข้าเลือดน้อยมาก (10%) แต่กะเทาะเกราะ ต้องฟันให้แตกก่อนถึงจะตีเข้าเต็ม
+        _dmg = max(1, round(_dmg * 0.1));
+        _crit = false;
+        fx_spark(x, y - 70, _dir, 8, make_color_rgb(110, 190, 255));
         shield_hp--;
         if (shield_hp <= 0) end_shield(true);
     }

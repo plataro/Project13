@@ -95,19 +95,19 @@ function wall_between(_x1, _y1, _x2, _y2) {
 function combo_step_data(_n) {
     switch (_n) {
         case 1:   // ฟันตรง เร็ว
-            return { time: 14, active_from: 3, active_to: 8, dmg: 1, kb: 8, radial: false,
+            return { kind: "slash", time: 14, active_from: 3, active_to: 8, dmg: 1, kb: 8, radial: false,
                      lunge_speed: 2, lunge_frames: 5,
                      circles: [ [56, 0, 40] ] };
         case 2:   // ฟันกวาดกว้าง
-            return { time: 16, active_from: 4, active_to: 10, dmg: 1, kb: 9, radial: false,
+            return { kind: "slash", time: 16, active_from: 4, active_to: 10, dmg: 1, kb: 9, radial: false,
                      lunge_speed: 1, lunge_frames: 4,
                      circles: [ [40, -44, 32], [58, 0, 34], [40, 44, 32] ] };
         case 3:   // แทงพุ่งไกล
-            return { time: 18, active_from: 4, active_to: 12, dmg: 1, kb: 10, radial: false,
+            return { kind: "thrust", time: 18, active_from: 4, active_to: 12, dmg: 1, kb: 10, radial: false,
                      lunge_speed: 7, lunge_frames: 8,
                      circles: [ [50, 0, 26], [90, 0, 26], [130, 0, 26] ] };
         default:  // ท่าจบ ฟาดรอบตัว
-            return { time: 26, active_from: 6, active_to: 14, dmg: 2, kb: 18, radial: true,
+            return { kind: "spin", time: 26, active_from: 6, active_to: 14, dmg: 2, kb: 18, radial: true,
                      lunge_speed: 0, lunge_frames: 0,
                      circles: [ [0, 0, 100] ] };
     }
