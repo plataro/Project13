@@ -5,6 +5,34 @@ if (!_show && instance_exists(obj_player) && point_distance(x, y, obj_player.x, 
 vis = clamp(vis + (_show ? 0.2 : -0.1), 0, 1);
 if (vis <= 0.01) exit;
 
+// ★ ลูกไฟของจอมเวท: วาดเป็นลูกไฟเรือง + วงนับถอยหลัง
+if (variable_instance_exists(id, "is_orb")) {
+    var _ok = orb_t / orb_t0;
+    var _oy = y - 40 + sin(current_time / 150 + id) * 4;
+    var _pul = 1 + 0.15 * sin(current_time / ((_ok < 0.3) ? 40 : 90));
+    draw_set_alpha(0.35 * vis);
+    draw_set_color(c_black);
+    draw_ellipse(x - 14, y - 4, x + 14, y + 4, false);
+    gpu_set_blendmode(bm_add);
+    draw_set_alpha(0.5 * vis);
+    draw_set_color(make_color_rgb(255, 120, 30));
+    draw_circle(x, _oy, 22 * _pul, false);
+    draw_set_alpha(vis);
+    draw_set_color(make_color_rgb(255, 210, 120));
+    draw_circle(x, _oy, 11 * _pul, false);
+    gpu_set_blendmode(bm_normal);
+    // วงเวลา: เหลือน้อย = แดง
+    draw_set_color((_ok < 0.3) ? c_red : c_orange);
+    draw_set_alpha(vis);
+    for (var _ai = 0; _ai < 24 * _ok; _ai++) {
+        var _aa = 90 - _ai * 15;
+        draw_circle(x + lengthdir_x(30, _aa), _oy + lengthdir_y(30, _aa), 2, false);
+    }
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+    exit;
+}
+
 var _col = tint;
 if (flash > 0) _col = c_red;
 else if (telegraph) _col = c_yellow;

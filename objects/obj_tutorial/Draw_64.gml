@@ -2,6 +2,30 @@ draw_set_font(fnt_dialog);
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
+// ===== ★ การ์ดเปิดตัวบอส: แถบดำบนล่าง + ชื่อ =====
+if (!is_undefined(global.boss_intro)) {
+    var _bt = global.boss_intro.t;
+    var _bar = 70 * clamp(min(_bt / 20, (180 - _bt) / 20), 0, 1);
+    draw_set_color(c_black);
+    draw_rectangle(0, 0, 960, _bar, false);
+    draw_rectangle(0, 540 - _bar, 960, 540, false);
+
+    var _ta = clamp(min((_bt - 35) / 15, (150 - _bt) / 15), 0, 1);
+    if (_ta > 0) {
+        var _slide = (1 - _ta) * 40;
+        draw_set_alpha(_ta);
+        draw_set_color(c_black);
+        draw_text_transformed(482 - _slide, 402, global.boss_intro.name, 1.6, 1.6, 0);
+        draw_set_color(c_red);
+        draw_text_transformed(480 - _slide, 400, global.boss_intro.name, 1.6, 1.6, 0);
+        draw_set_color(c_ltgray);
+        draw_text_transformed(480 + _slide, 448, global.boss_intro.title, 0.8, 0.8, 0);
+        draw_set_color(c_red);
+        draw_line_width(300 + _slide, 428, 660 - _slide, 428, 2);
+        draw_set_alpha(1);
+    }
+}
+
 // ===== หยุดรอกลิ้งหลบ =====
 if (freeze) {
     var _fa = min(1, freeze_t / 10);

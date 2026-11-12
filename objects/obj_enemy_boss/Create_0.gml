@@ -10,6 +10,51 @@ sep_strength = 0.3;
 engage_range = 220;             // บอสถูกดันยาก แต่ดันตัวเล็กออกได้แรง
 sight_range = is_final ? 3000 : 1000;   // บอสไล่เมื่อเห็นผู้เล่นในถิ่นตัวเอง
 
+// =====================================================================
+// ★ บอสแต่ละตัว (เลือกตามห้องอัตโนมัติ)
+// beast = เจ้าป่า (ป่า): ว่องไว กรงเล็บ หลายท่า
+// brute = ยักษ์ค้อน (เหมือง): ช้า เลือดเยอะ ตีหนัก
+// mage  = จอมเวท (ปราสาท): รักษาระยะ วาร์ป เกราะเวท ลูกไฟ
+// dragon = ราชามังกร (บอสสุดท้าย)
+// =====================================================================
+variant = "dragon";
+if (!is_final) {
+    if (room == rm_level_1_the_forest) variant = "beast";
+    else if (room == rm_level_2_the_abandoned_mine) variant = "brute";
+    else variant = "mage";
+}
+hp_mult = 1;
+boss_name = "ราชามังกร";                  // ★ ชื่อที่ขึ้นตอนเปิดตัว
+boss_title = "ผู้ปกครองท้องฟ้าสีเลือด";
+intro_done = false;
+claw_chain = 0;
+claw_side = 1;
+tp_cd = 0;
+tp_x = x;
+tp_y = y;
+switch (variant) {
+    case "beast":
+        boss_name = "พยัคฆ์ทมิฬ";
+        boss_title = "เจ้าป่าผู้กระหายเลือด";
+        move_speed = 2.4;
+        tint = make_color_rgb(215, 150, 110);
+        break;
+    case "brute":
+        boss_name = "กุมภัณฑ์ศิลา";
+        boss_title = "ยักษ์ค้อนแห่งเหมืองร้าง";
+        move_speed = 1.0;
+        hp_mult = 1.6;               // ★ เลือดเยอะกว่าตัวอื่น
+        tint = make_color_rgb(170, 140, 120);
+        break;
+    case "mage":
+        boss_name = "เวทารุณ";
+        boss_title = "จอมเวทผู้เฝ้าหอคอย";
+        move_speed = 1.4;
+        tint = make_color_rgb(165, 150, 255);
+        engage_range = 100000;       // รักษาระยะอยู่แล้ว ช่วงรอจังหวะแรกนับตลอด
+        break;
+}
+
 phase = 1;
 phase_total = is_final ? 3 : 2;
 state = "chase";      // chase, trans, burst_windup, burst, spiral_windup, spiral, leap_windup, leap_air, volley_windup, volley, recover
@@ -24,6 +69,7 @@ spiral_a = 0;
 // ---- ★ กันผู้เล่นยืนยิงตอดจากไกล ----
 far_range = 300;      // ไกลกว่านี้ = นับว่ายิงตอด
 far_timer = 0;        // เกจยิงตอด เต็มแล้วบอสกระโดดตกใส่
+if (variant == "mage") far_range = 99999;   // จอมเวทยิงจากไกลเองอยู่แล้ว ไม่ต้องไล่กระโดด
 leap_sx = x;
 leap_sy = y;
 leap_tx = x;
@@ -300,6 +346,143 @@ summon = function(_obj, _n, _drop) {
     }
 }
 
+// =====================================================================
+// ★ ท่าของบอสเล็กแต่ละตัว
+// =====================================================================
+// เจ้าป่า: ข่วนต่อเนื่องหลายที สลับซ้ายขวา เล็งใหม่ทุกที
+start_claws = function(_n) {
+    claw_chain = _n - 1;
+    claw_side = choose(-1, 1);
+    begin_attack(claw_side > 0 ? "beast_claw_r" : "beast_claw_l");
+}
+
+// ยักษ์: รอยแยกพื้นพุ่งเป็นเส้นไปหาผู้เล่น
+start_fissure = function() {
+    var _a = dir_to_player();
+    for (var _i = 0; _i < 8; _i++) {
+        var _d = 80 + _i * 70;
+        add_erupt(x + lengthdir_x(_d, _a), y + lengthdir_y(_d, _a), 54, 42 + _i * 4, 2);
+    }
+    state = "cast";
+    state_timer = 42 + 8 * 4 + 14;
+    telegraph = true;
+}
+
+// ยักษ์: ขว้างก้อนหินใหญ่ใส่ (เฟส 2 = 3 ก้อน)
+start_boulder = function() {
+    if (!instance_exists(obj_player)) return;
+    var _n = (phase >= 2) ? 3 : 1;
+    for (var _i = 0; _i < _n; _i++) {
+        var _tx = obj_player.x + ((_i == 0) ? 0 : lengthdir_x(150, irandom(359)));
+        var _ty = obj_player.y + ((_i == 0) ? 0 : lengthdir_y(150, irandom(359)));
+        add_erupt(_tx, _ty, 82, 56 + _i * 14, 3);
+    }
+    state = "cast";
+    state_timer = 56 + _n * 14 + 12;
+    telegraph = true;
+}
+
+// จอมเวท: วาร์ปไปจุดที่ห่างผู้เล่นพอดี ๆ
+start_teleport = function() {
+    if (!instance_exists(obj_player)) return;
+    var _found = false;
+    for (var _k = 0; _k < 20 && !_found; _k++) {
+        var _a = irandom(359);
+        var _d = random_range(280, 380);
+        var _tx = obj_player.x + lengthdir_x(_d, _a);
+        var _ty = obj_player.y + lengthdir_y(_d, _a);
+        if (!is_undefined(zone) && !point_in_rectangle(_tx, _ty, zone[0] + 40, zone[1] + 40, zone[2] - 40, zone[3] - 40)) continue;
+        if (collision_rectangle(_tx - 50, _ty - 50, _tx + 50, _ty + 10, obj_wall, false, true) != noone) continue;
+        tp_x = _tx;
+        tp_y = _ty;
+        _found = true;
+    }
+    if (!_found) return;
+    state = "tp";
+    state_timer = 18;
+    telegraph = true;
+    tp_cd = (phase >= 2) ? 130 : 170;
+}
+
+// จอมเวท: เรียกลูกไฟลอยรอบผู้เล่น ไม่ทำลายภายในเวลา = ระเบิดเป็นกระสุนรอบทิศ
+start_orbs = function() {
+    if (!instance_exists(obj_player)) return;
+    var _n = (phase >= 2) ? 3 : 2;
+    var _a0 = irandom(359);
+    for (var _i = 0; _i < _n; _i++) {
+        var _a = _a0 + _i * (360 / _n);
+        var _ox = obj_player.x + lengthdir_x(230, _a);
+        var _oy = obj_player.y + lengthdir_y(230, _a);
+        if (collision_rectangle(_ox - 24, _oy - 24, _ox + 24, _oy + 24, obj_wall, false, true) != noone) {
+            _ox = x + lengthdir_x(120, _a);
+            _oy = y + lengthdir_y(120, _a);
+        }
+        var _o = instance_create_depth(_ox, _oy, depth, obj_enemy);
+        _o.is_orb = true;
+        _o.orb_t = 240;               // ★ เวลาก่อนระเบิด (4 วิ)
+        _o.orb_t0 = 240;
+        _o.diff_applied = true;       // ไม่คูณเลือด = ตีทีเดียวแตก
+        _o.hp = 1;
+        _o.max_hp = 1;
+        _o.hp_shown = 1;
+        _o.show_bar = false;
+        _o.no_drop = true;
+        _o.master = id;
+        _o.alert_timer = 999;
+        _o.ai = method(_o, orb_ai);
+        fx_spark(_ox, _oy - 40, 90, 10, c_orange, 180);
+    }
+    float_text(x, y - 200, "ลูกไฟ! ทำลายก่อนมันระเบิด", c_orange, 1.1);
+    state = "recover";
+    state_timer = 30;
+}
+
+// เลือกท่าตามชนิดบอส ระยะ และเฟส
+attack_options = function(_d) {
+    var _o = [];
+    switch (variant) {
+        case "beast":
+            if (_d < 170) {
+                array_push(_o, "claws", "claws", "rake");
+            } else {
+                array_push(_o, "lunge", "pounce");
+                if (_d < 320) array_push(_o, "claws");
+            }
+            if (phase >= 2) array_push(_o, "lunge");
+            break;
+        case "brute":
+            if (_d < 190) {
+                array_push(_o, "smash", "pound");
+            } else {
+                array_push(_o, "fissure", "boulder");
+            }
+            if (phase >= 2) array_push(_o, (_d < 190) ? "pound" : "fissure");
+            break;
+        case "mage":
+            array_push(_o, "bolts", "orbs", "arcane_rings");
+            if (phase >= 2) array_push(_o, "arcane_rain");
+            break;
+        default:   // ราชามังกร: ท่าครบชุด
+            if (_d < 170) {
+                array_push(_o, "swing");
+                if (phase >= 2) array_push(_o, "slam");
+            } else {
+                array_push(_o, "dash", "bolts");
+                if (phase >= 2) array_push(_o, "burst");
+                if (_d > far_range) array_push(_o, "leap");
+            }
+            if (phase >= 3) array_push(_o, "spiral");
+            array_push(_o, "spikes");
+            if (phase >= 2) array_push(_o, "meteor", "rings");
+            if (phase >= 3 && _d >= 170) array_push(_o, "dash_chain");
+            break;
+    }
+    // สุ่มตั้งเกราะเองบ้าง (จอมเวทตั้งบ่อยกว่า)
+    var _gchance = (variant == "mage") ? 2 : 3;
+    if (shield <= 0 && shield_cd <= 0 && irandom(_gchance) == 0) array_push(_o, "guard");
+    return _o;
+}
+
 // ---- เข้าเฟสใหม่ ----
 enter_phase = function(_n) {
     phase = _n;
@@ -323,8 +506,12 @@ enter_phase = function(_n) {
 
     if (_n == 2) {
         move_speed = 2.2;
+        if (variant == "beast") move_speed = 3.0;
+        if (variant == "brute") move_speed = 1.3;
+        if (variant == "mage")  move_speed = 1.7;
         if (is_final) summon(obj_enemy_shooter, 2, false);
-        else summon(obj_enemy, 2, true);
+        else if (variant != "mage") summon(obj_enemy, 2, true);
+        if (variant == "mage") { shield = 0; shield_cd = 0; raise_shield(); }   // จอมเวทเข้าเฟส 2 พร้อมเกราะ
     }
     if (_n == 3) {
         move_speed = 2.7;
@@ -336,6 +523,13 @@ enter_phase = function(_n) {
 ai = function() {
     if (invuln > 0) invuln--;
     if (nova_cd > 0) nova_cd--;
+    if (tp_cd > 0) tp_cd--;
+
+    // ★ เปิดตัวบอส (ครั้งแรกที่เห็นผู้เล่น)
+    if (!intro_done) {
+        intro_done = true;
+        boss_intro_start(id, boss_name, boss_title);
+    }
     if (ult_flash > 0) ult_flash--;
     process_erupts();
 
@@ -363,6 +557,15 @@ ai = function() {
 
     // ท่าที่มี hitbox (swing, slam, dash) กำลังทำงานอยู่
     if (run_attack()) exit;
+
+    // ★ เจ้าป่า: ข่วนต่อทันที สลับซ้ายขวา
+    if (claw_chain > 0 && state == "chase") {
+        claw_chain--;
+        claw_side *= -1;
+        begin_attack(claw_side > 0 ? "beast_claw_r" : "beast_claw_l");
+        if (!is_undefined(atk_cur) && claw_chain == 0) atk_cur.recover = 34;   // ทีสุดท้ายพักนาน = ช่องสวน
+        exit;
+    }
 
     // ★ พุ่งต่อเนื่อง: จบครั้งหนึ่งแล้วเล็งใหม่พุ่งต่อทันที
     if (dash_chain > 0 && state == "chase") {
@@ -393,10 +596,18 @@ ai = function() {
                 strafe_sign *= -1;
                 strafe_timer = irandom_range(60, 150);
             }
-            if (_d > 110) {
+            if (variant == "mage") {
+                strafe(320, move_speed);   // จอมเวทวนรักษาระยะ ไม่เดินเข้าหา
+            } else if (_d > 110) {
                 var _dir = dir_to_player() + 25 * strafe_sign * clamp((_d - 150) / 250, 0, 1);
                 hsp = lengthdir_x(move_speed, _dir);
                 vsp = lengthdir_y(move_speed, _dir);
+            }
+
+            // ★ จอมเวท: ผู้เล่นเข้ามาใกล้ = วาร์ปหนี (ถ้ามีเกราะจะระเบิดเกราะก่อน)
+            if (variant == "mage" && _d < 170 && tp_cd <= 0 && !(shield > 0 && nova_cd <= 0)) {
+                start_teleport();
+                if (state == "tp") break;
             }
 
             // ★ เกจยิงตอด: ผู้เล่นอยู่ไกลสะสมขึ้น เข้ามาใกล้ลดลง เต็มแล้วกระโดดใส่ทันที (ไม่สนคูลดาวน์)
@@ -418,25 +629,7 @@ ai = function() {
                 attack_cd--;
             } else if (can_attack() || _d > far_range) {
                 // เลือกท่าตามระยะและเฟส ไม่ซ้ำท่าเดิมถ้ามีตัวเลือกอื่น
-                var _opts = [];
-                if (_d < 170) {
-                    array_push(_opts, "swing");
-                    if (phase >= 2) array_push(_opts, "slam");
-                } else {
-                    array_push(_opts, "dash");
-                    array_push(_opts, "volley");   // ★ ยิงกระสุนเล็งใส่ผู้เล่น (ทุกเฟส)
-                    if (phase >= 2) array_push(_opts, "burst");
-                    if (_d > far_range) array_push(_opts, "leap");
-                }
-                if (phase >= 3) array_push(_opts, "spiral");
-                // ★ ท่าเฉพาะบอสใหญ่
-                if (is_final) {
-                    array_push(_opts, "spikes");
-                    if (phase >= 2) { array_push(_opts, "meteor"); array_push(_opts, "rings"); }
-                    if (phase >= 3 && _d >= 170) array_push(_opts, "dash_chain");
-                }
-                // ★ สุ่มตั้งเกราะเองบ้าง (ผู้เล่นใช้แต่ดาบก็เจอได้)
-                if (shield <= 0 && shield_cd <= 0 && irandom(3) == 0) array_push(_opts, "guard");
+                var _opts = attack_options(_d);
 
                 var _pick = _opts[irandom(array_length(_opts) - 1)];
                 if (_pick == last_attack && array_length(_opts) > 1) {
@@ -465,9 +658,33 @@ ai = function() {
                         raise_shield();
                         break;
                     case "volley":
+                    case "bolts":
                         state = "volley_windup";
                         state_timer = 24;
                         break;
+                    // เจ้าป่า
+                    case "claws":  start_claws((phase >= 2) ? 4 : 3); break;
+                    case "rake":   begin_attack("beast_rake"); break;
+                    case "lunge":  begin_attack("beast_lunge"); break;
+                    case "pounce": start_leap(); break;
+                    // ยักษ์
+                    case "smash":  begin_attack("brute_smash"); break;
+                    case "pound":
+                        begin_attack("brute_pound");
+                        // เฟส 2: ทุบแล้วมีคลื่นหินแตกออกเป็นวง
+                        if (phase >= 2 && !is_undefined(atk_cur)) {
+                            for (var _pi = 0; _pi < 14; _pi++) {
+                                var _pa2 = _pi * 360 / 14;
+                                add_erupt(x + lengthdir_x(240, _pa2), y + lengthdir_y(240, _pa2), 44, atk_cur.windup + 16, 2);
+                            }
+                        }
+                        break;
+                    case "fissure": start_fissure(); break;
+                    case "boulder": start_boulder(); break;
+                    // จอมเวท
+                    case "orbs":         start_orbs(); break;
+                    case "arcane_rings": start_rings(); break;
+                    case "arcane_rain":  start_meteor(); break;
                     case "burst":
                         state = "burst_windup";
                         state_timer = 30;
@@ -478,6 +695,9 @@ ai = function() {
                         break;
                 }
                 attack_cd = (phase == 1) ? 90 : ((phase == 2) ? 50 : 35);
+                if (variant == "beast") attack_cd = (phase == 1) ? 50 : 34;    // ★ เจ้าป่าบุกถี่
+                if (variant == "brute") attack_cd = (phase == 1) ? 105 : 80;   // ★ ยักษ์ช้าแต่หนัก
+                if (variant == "mage")  attack_cd = (phase == 1) ? 75 : 55;
                 if (_pick == "guard") attack_cd = 25;   // ตั้งเกราะแล้วเดินหน้าบุกต่อเลย
             }
             break;
@@ -561,6 +781,21 @@ ai = function() {
                     state = "recover";
                     state_timer = 40;
                 }
+            }
+            break;
+
+        // ---- ★ จอมเวทวาร์ป ----
+        case "tp":
+            state_timer--;
+            flash = (state_timer mod 4 < 2) ? 2 : 0;
+            if (state_timer <= 0) {
+                fx_spark(x, y - 60, 90, 16, make_color_rgb(165, 150, 255), 180);
+                x = tp_x;
+                y = tp_y;
+                fx_spark(x, y - 60, 90, 16, make_color_rgb(165, 150, 255), 180);
+                telegraph = false;
+                state = "chase";
+                attack_cd = min(attack_cd, 20);
             }
             break;
 

@@ -44,6 +44,7 @@ function circle_hits_rect(_cx, _cy, _r, _x1, _y1, _x2, _y2) {
 
 // กล่องโดนตีของศัตรู: [ซ้าย, บน, ขวา, ล่าง] (ล่าง = ตีน)
 function enemy_hurt_rect(_e) {
+    if (variable_instance_exists(_e, "is_orb")) return [_e.x - 22, _e.y - 64, _e.x + 22, _e.y - 18];   // ลูกไฟลอย
     var _big = (_e.object_index == obj_enemy_boss);
     var _w = _big ? 110 : 44;
     var _h = _big ? 180 : 84;
@@ -170,6 +171,39 @@ function enemy_attack_base(_name) {
                      lock: 0, lead: 0, turn: 0,
                      lunge_speed: 0, lunge_frames: 0,
                      circles: [ [0, 0, 115] ] };
+        // ===== เจ้าป่า: ข่วนเร็ว ๆ สลับซ้ายขวา =====
+        case "beast_claw_r":
+            return { windup: 13, active: 6, recover: 6, dmg: 1, lift: 50,
+                     lock: 5, lead: 2, turn: 3,
+                     lunge_speed: 6, lunge_frames: 6,
+                     circles: [ [46, 30, 34], [66, -6, 36] ] };
+        case "beast_claw_l":
+            return { windup: 13, active: 6, recover: 6, dmg: 1, lift: 50,
+                     lock: 5, lead: 2, turn: 3,
+                     lunge_speed: 6, lunge_frames: 6,
+                     circles: [ [46, -30, 34], [66, 6, 36] ] };
+        case "beast_rake":   // หมุนตัวข่วนรอบตัว
+            return { windup: 18, active: 8, recover: 30, dmg: 1, lift: 40,
+                     lock: 0, lead: 0, turn: 0,
+                     lunge_speed: 0, lunge_frames: 0,
+                     circles: [ [0, 0, 108] ] };
+        case "beast_lunge":  // กระโจนตะครุบระยะกลาง
+            return { windup: 18, active: 14, recover: 26, dmg: 1, lift: 50,
+                     lock: 7, lead: 3, turn: 0,
+                     lunge_speed: 11, lunge_frames: 14,
+                     circles: [],
+                     rects: [ [0, 120, -42, 42] ] };
+        // ===== ยักษ์ค้อน: ช้าแต่หนัก =====
+        case "brute_smash":  // ทุบค้อนลงข้างหน้า
+            return { windup: 40, active: 8, recover: 50, dmg: 3, lift: 50,
+                     lock: 12, lead: 0, turn: 0,
+                     lunge_speed: 2, lunge_frames: 6,
+                     circles: [ [96, 0, 78] ] };
+        case "brute_pound":  // ทุบพื้นรอบตัว
+            return { windup: 50, active: 8, recover: 60, dmg: 2, lift: 40,
+                     lock: 0, lead: 0, turn: 0,
+                     lunge_speed: 0, lunge_frames: 0,
+                     circles: [ [0, 0, 150] ] };
         case "boss_dash_fast":   // ★ บอสใหญ่: พุ่งต่อเนื่อง 3 ครั้ง (เตรียมสั้น พักสั้น)
             return { windup: 24, active: 18, recover: 12, dmg: 2, lift: 70,
                      lock: 10, lead: 0, turn: 0,
@@ -240,3 +274,36 @@ function enemy_visible(_e) {
     }
     return false;
 }
+
+
+// ★ AI ลูกไฟของจอมเวท (ผูกกับ obj_enemy ด้วย method ตอนเรียก): ลอยนิ่ง นับถอยหลัง ครบแล้วระเบิดเป็นกระสุนรอบทิศ
+function orb_ai() {
+    hsp = 0;
+    vsp = 0;
+    orb_t--;
+    if (orb_t <= 0) {
+        var _a0 = irandom(359);
+        for (var _i = 0; _i < 8; _i++) {
+            var _b = instance_create_depth(x, y, depth, obj_enemy_bullet);
+            _b.direction = _a0 + _i * 45;
+            _b.image_angle = _b.direction;
+            _b.speed = 4;
+        }
+        fx_spark(x, y - 40, 0, 18, c_orange, 180);
+        fx_shake(2);
+        no_drop = true;
+        hp = 0;
+        instance_destroy();
+    }
+}
+
+// =====================================================================
+// ★ เปิดตัวบอส: หยุดเกม กล้องเลื่อนไปที่บอส ขึ้นชื่อ แล้วกลับมาที่ผู้เล่น
+// =====================================================================
+function boss_intro_start(_boss, _name, _title) {
+    var _key = "intro_" + room_get_name(room);
+    if (variable_struct_exists(global.story_seen, _key)) return;   // ดูแล้วไม่ขึ้นซ้ำ (ตายแล้วเริ่มใหม่ก็ไม่ขึ้น)
+    global.story_seen[$ _key] = true;
+    global.boss_intro = { boss: _boss, name: _name, title: _title, t: 0 };
+}
+global.boss_intro = undefined;

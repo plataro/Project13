@@ -5,6 +5,17 @@ var _x = 280;
 var _y = 30;
 var _w = 400;
 
+// ★ ชื่อบอสเหนือหลอด
+draw_set_font(fnt_dialog);
+draw_set_halign(fa_center);
+draw_set_valign(fa_bottom);
+draw_set_color(c_black);
+draw_text_transformed(_x + _w / 2 + 1, _y - 3, boss_name, 0.6, 0.6, 0);
+draw_set_color(make_color_rgb(255, 210, 200));
+draw_text_transformed(_x + _w / 2, _y - 4, boss_name, 0.6, 0.6, 0);
+draw_set_halign(fa_left);
+draw_set_valign(fa_top);
+
 draw_set_color(c_black);
 draw_rectangle(_x - 2, _y - 2, _x + _w + 2, _y + 18, false);
 draw_set_color((invuln > 0) ? c_gray : c_purple);

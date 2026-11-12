@@ -1,3 +1,42 @@
+// =====================================================================
+// ★ เปิดตัวบอส (ตั้งค่าโดย boss_intro_start)
+// เวลา: 0-30 กล้องเลื่อนไปหาบอส · 30-150 ขึ้นชื่อ · 150-180 กล้องกลับ (คลิก/Space ข้ามได้)
+// =====================================================================
+if (!is_undefined(global.boss_intro)) {
+    var _bi = global.boss_intro;
+    if (!instance_exists(_bi.boss) || !instance_exists(obj_player) || room == rm_menu) {
+        global.boss_intro = undefined;
+    } else if (!instance_exists(obj_dialogue) && !instance_exists(obj_fade)) {
+        _bi.t++;
+        if (_bi.t > 40 && _bi.t < 150 && (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left))) _bi.t = 150;
+        global.hitstop = max(global.hitstop, 2);   // หยุดทุกอย่างระหว่างเปิดตัว
+
+        // ตำแหน่งกล้อง: ผู้เล่น <-> บอส
+        var _cam = view_camera[0];
+        var _cw = camera_get_view_width(_cam);
+        var _ch = camera_get_view_height(_cam);
+        var _p = obj_player;
+        var _px = clamp(floor(_p.x - _cw / 2), 0, max(0, room_width - _cw));
+        var _py = clamp(floor(_p.y - _p.chest - _ch / 2), 0, max(0, room_height - _ch));
+        var _bx = clamp(floor(_bi.boss.x - _cw / 2), 0, max(0, room_width - _cw));
+        var _by = clamp(floor(_bi.boss.y - 90 - _ch / 2), 0, max(0, room_height - _ch));
+        var _k;
+        if (_bi.t < 30) _k = _bi.t / 30;
+        else if (_bi.t < 150) _k = 1;
+        else _k = 1 - (_bi.t - 150) / 30;
+        _k = clamp(_k, 0, 1);
+        _k = _k * _k * (3 - 2 * _k);   // ease
+        camera_set_view_pos(_cam, round(lerp(_px, _bx, _k)), round(lerp(_py, _by, _k)));
+
+        if (_bi.t == 30) fx_shake(4);
+        if (_bi.t >= 180) {
+            global.boss_intro = undefined;
+            global.hitstop = 0;
+            io_clear();
+        }
+    }
+}
+
 if (msg_t > 0) msg_t--;
 
 // ต้นไม้สกิลเปิดใช้ได้ตั้งแต่ถึงหมู่บ้านครั้งแรก
