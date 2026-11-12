@@ -53,6 +53,13 @@ lunge_dir = 0;
 lunge_timer = 0;
 lunge_speed = 0;
 
+// ---- ★ ค้อน: กดคลิกค้างเพื่อชาร์จ ----
+charge_hold = 0;          // นับเฟรมที่กดค้างก่อนเข้าโหมดชาร์จ
+charge_hold_need = 12;    // ★ กดค้างกี่เฟรมถึงเริ่มชาร์จ (ปล่อยก่อน = ทุบธรรมดา)
+charge_t = 0;
+charge_time = 80;         // ★ ชาร์จเต็มใช้กี่เฟรม (~1.3 วิ)
+charge_end_lag = 40;      // ★ พักหลังทุ่มชาร์จ
+
 // ---- สกิล 1: กดค้างยิงรัว ครบ 6 นัดต้องรอรีโหลด ----
 bullet_speed = 10;
 shot1_max = 6;
@@ -148,6 +155,8 @@ start_roll = function(_kx, _ky, _len) {
     combo = 0;
     combo_window = 0;
     combo_buffer = false;
+    charge_hold = 0;
+    charge_t = 0;
 
     if (_len > 0) {
         dir_x = _kx / _len;

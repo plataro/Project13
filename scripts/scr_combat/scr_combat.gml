@@ -117,15 +117,19 @@ function combo_step_data(_n) {
 function hammer_step_data(_n) {
     switch (_n) {
         case 1:   // ทุบลงตรงหน้า: วงกลมใหญ่ก้อนเดียว ไกลกว่าดาบ
-            return { kind: "smash", time: 32, active_from: 14, active_to: 18, dmg: 4, kb: 20, radial: false,
+            return { kind: "smash", shake: 3, time: 32, active_from: 14, active_to: 18, dmg: 4, kb: 20, radial: false,
                      lunge_speed: 1.5, lunge_frames: 4,
                      circles: [ [84, 0, 54] ] };
         case 2:   // เหวี่ยงตีข้าง: ตั้งใจให้กวาดจากข้างตัวเข้ามาด้านหน้าฝั่งเดียว (ไม่สมมาตรเหมือนดาบ)
             return { kind: "hswing", time: 34, active_from: 13, active_to: 19, dmg: 4, kb: 24, radial: false,
                      lunge_speed: 1, lunge_frames: 4,
                      circles: [ [24, -78, 36], [70, -48, 40], [96, 6, 40] ] };
+        case 9:   // ★ ท่าชาร์จเต็ม: ทุ่มลงพื้นรอบตัววงใหญ่ (ชาร์จนาน + พักหลังท่านาน = ช้ามาก)
+            return { kind: "quake", shake: 11, time: 64, active_from: 4, active_to: 12, dmg: 16, kb: 40, radial: true,
+                     lunge_speed: 0, lunge_frames: 0,
+                     circles: [ [0, 0, 175] ] };
         default:  // ท่าจบ: ทุบพื้น รอบตัว + คลื่นกระแทกวิ่งไปข้างหน้า
-            return { kind: "quake", time: 52, active_from: 20, active_to: 28, dmg: 7, kb: 30, radial: true,
+            return { kind: "quake", shake: 6, time: 52, active_from: 20, active_to: 28, dmg: 7, kb: 30, radial: true,
                      lunge_speed: 0, lunge_frames: 0,
                      circles: [ [0, 0, 74], [122, 0, 46], [180, 0, 38] ] };
     }

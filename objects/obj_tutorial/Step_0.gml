@@ -92,6 +92,7 @@ if (is_undefined(ctx)) {
         for (var _k = 0; _k < array_length(ctx.codes); _k++) {
             var _code = ctx.codes[_k];
             if (_code == -2) { if (mouse_wheel_up() || mouse_wheel_down()) _ok = true; }
+            else if (_code == -3) { if (obj_player.state == PState.CHARGE && obj_player.charge_t >= obj_player.charge_time) _ok = true; }   // ชาร์จเต็มสักครั้ง
             else if (keyboard_check_pressed(_code)) _ok = true;
         }
         if (ctx.timeout > 0 && ctx_t >= ctx.timeout) _ok = true;

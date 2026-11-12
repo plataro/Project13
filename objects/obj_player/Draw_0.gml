@@ -11,7 +11,7 @@ var _name = "idle";
 if (state == PState.ROLL) {
     _name = "run";
 }
-else if (state == PState.ATTACK) {
+else if (state == PState.ATTACK || state == PState.CHARGE) {
     _name = "attack";
 }
 else if (invuln_timer > invuln_time - 12) {
@@ -47,7 +47,8 @@ var _f = 0;
 switch (_name) {
 
     case "attack":
-        _f = floor(
+        if (state == PState.CHARGE) _f = 0;   // ชาร์จ = ค้างท่ายกค้อน
+        else _f = floor(
             ((attack_total - attack_timer) / attack_total) * _frames
         );
         break;
@@ -162,3 +163,38 @@ draw_sprite_ext(
     _color,
     1
 );
+
+// ==========================================
+// ★ เกจชาร์จค้อนบนหัว
+// ==========================================
+if (state == PState.CHARGE) {
+    var _full = (charge_t >= charge_time);
+    var _k = charge_t / charge_time;
+    var _gw = 56;
+    var _gh = 8;
+    var _gx = round(x - _gw / 2);
+    var _gy = round(y - sprite_get_yoffset(_spr) * global.pl_scale - 18);
+
+    // ตัวละครเรืองส้มขึ้นเรื่อย ๆ ตอนชาร์จ
+    gpu_set_blendmode(bm_add);
+    draw_sprite_ext(_spr, _f, round(x), round(y), global.pl_scale, global.pl_scale, 0,
+        _full ? c_yellow : c_orange, (_full ? 0.35 + 0.2 * sin(current_time / 60) : 0.25 * _k));
+    gpu_set_blendmode(bm_normal);
+
+    draw_set_color(c_black);
+    draw_rectangle(_gx - 2, _gy - 2, _gx + _gw + 1, _gy + _gh + 1, false);
+    draw_set_color(c_dkgray);
+    draw_rectangle(_gx, _gy, _gx + _gw - 1, _gy + _gh - 1, false);
+    draw_set_color(_full ? ((current_time div 80) mod 2 == 0 ? c_white : c_yellow) : merge_color(c_orange, c_yellow, _k));
+    draw_rectangle(_gx, _gy, _gx + max(1, _gw * _k) - 1, _gy + _gh - 1, false);
+    if (_full) {
+        draw_set_font(fnt_dialog);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_bottom);
+        draw_set_color(c_yellow);
+        draw_text_transformed(x, _gy - 2, "ปล่อย!", 0.5, 0.5, 0);
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    }
+    draw_set_color(c_white);
+}

@@ -12,6 +12,12 @@ if (is_undefined(step_data)) {
     exit;
 }
 
+// ★ ค้อนกระแทกพื้น: กล้องสั่นตอนทุบลง (โดนหรือไม่โดนก็สั่น)
+if (age == step_data.active_from && variable_struct_exists(step_data, "shake")) {
+    fx_shake(step_data.shake);
+    if (step_data.shake >= 8) fx_spark(x, y - 10, 0, 30, make_color_rgb(230, 190, 130), 180);
+}
+
 if (age >= step_data.active_from && age <= step_data.active_to) {
     var _me = id;
     var _ang = image_angle;

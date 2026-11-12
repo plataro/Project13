@@ -124,9 +124,27 @@ switch (state) {
             start_roll(_kx, _ky, _len);
         }
 
+        // ★ ค้อน: กดค้างอยู่ (ยังไม่ตัดสินว่าทุบธรรมดาหรือชาร์จ)
+        else if (charge_hold > 0) {
+            if (global.save.weapon != "hammer") {
+                charge_hold = 0;
+            } else if (mouse_check_button(mb_left)) {
+                charge_hold++;
+                if (charge_hold >= charge_hold_need) {
+                    charge_hold = 0;
+                    charge_t = 0;
+                    state = PState.CHARGE;
+                }
+            } else {
+                charge_hold = 0;
+                start_attack(1);   // ปล่อยเร็ว = ทุบธรรมดา
+            }
+        }
+
         // โจมตี
         else if (mouse_check_button_pressed(mb_left) && attack_cd <= 0) {
-            start_attack((combo_window > 0) ? min(combo + 1, weapon_combo_max()) : 1);
+            if (global.save.weapon == "hammer" && combo_window <= 0) charge_hold = 1;   // รอดูว่าจะกดค้างไหม
+            else start_attack((combo_window > 0) ? min(combo + 1, weapon_combo_max()) : 1);
         }
 
         // สกิล 1
@@ -196,6 +214,52 @@ switch (state) {
 
 
     // ==========================================
+    // CHARGE (ค้อน): เดินช้ามาก ปล่อยตอนเต็ม = ทุ่มรอบตัว
+    // ==========================================
+    case PState.CHARGE:
+
+        face = round(aim / 90) mod 4;
+
+        var _ctx = 0;
+        var _cty = 0;
+        if (_len > 0) {
+            _ctx = (_kx / _len) * move_speed * 0.25;
+            _cty = (_ky / _len) * move_speed * 0.25;
+        }
+        steer(_ctx, _cty, walk_friction);
+        hsp = mvx;
+        vsp = mvy;
+
+        var _was_full = (charge_t >= charge_time);
+        charge_t = min(charge_t + 1, charge_time);
+        if (!_was_full && charge_t >= charge_time) {
+            fx_shake(1.5);
+            fx_spark(x, y - 60, 90, 12, c_yellow, 160);
+        }
+
+        // กลิ้ง = ยกเลิกชาร์จ
+        if (roll_buffer > 0 && roll_cd_timer <= 0) {
+            start_roll(_kx, _ky, _len);
+            break;
+        }
+        // เปลี่ยนอาวุธระหว่างชาร์จ = ยกเลิก
+        if (global.save.weapon != "hammer") {
+            state = PState.MOVE;
+            charge_t = 0;
+            break;
+        }
+
+        if (!mouse_check_button(mb_left)) {
+            if (charge_t >= charge_time) {
+                start_attack(9);                 // ทุ่มชาร์จเต็ม
+            } else {
+                start_attack(1);                 // ชาร์จไม่เต็ม = ทุบธรรมดา
+            }
+            charge_t = 0;
+        }
+        break;
+
+    // ==========================================
     // ATTACK
     // ==========================================
     case PState.ATTACK:
@@ -253,9 +317,9 @@ switch (state) {
 
                 if (combo >= weapon_combo_max()) {
 
+                    attack_cd = (combo == 9) ? charge_end_lag : attack_end_lag;   // ทุ่มชาร์จ = พักนานกว่า
                     combo = 0;
                     combo_window = 0;
-                    attack_cd = attack_end_lag;
 
                 } else {
 

@@ -34,6 +34,8 @@ ctx_list = [
       when: function() { return global.save.shot_lv >= 2 && instance_exists(obj_player); } },
     { key: "ctx_weapon", keys: ["R", "ล้อเมาส์"], codes: [ord("R"), -2], text: "สลับอาวุธ", timeout: 0,
       when: function() { return array_length(variable_struct_get_names(global.save.weapons)) > 0 && instance_exists(obj_player); } },
+    { key: "ctx_charge", keys: ["คลิกซ้ายค้าง"], codes: [-3], text: "ค้อน: ชาร์จแล้วปล่อย ทุ่มลงพื้นรอบตัว", timeout: 0,
+      when: function() { return global.save.weapon == "hammer" && instance_exists(obj_player); } },
     { key: "ctx_tree", keys: ["T"], codes: [ord("T")], text: "เปิดต้นไม้สกิล (ใช้แต้ม SP อัปพลัง)", timeout: 0,
       when: function() { return flag_get("tree_unlocked") && instance_exists(obj_player); } },
     { key: "ctx_pause", keys: ["P"], codes: [ord("P")], text: "หยุดเกม / ตั้งค่า", timeout: 300,

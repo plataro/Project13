@@ -1,5 +1,6 @@
 enum PState {
 	MOVE,
 	ROLL,
-	ATTACK
+	ATTACK,
+	CHARGE    // ค้อน: กดค้างชาร์จ
 }
