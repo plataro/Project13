@@ -192,7 +192,8 @@ update_camera = function(_zoom) {
     if (_zoom) {
         var _camera_spd = point_distance(0, 0, mvx, mvy);
         var _zoom_target = 1.0;
-        if (state == PState.MOVE && _camera_spd > move_speed + 0.5) _zoom_target = 1.03;
+        // ★ ปิดซูมตอนวิ่ง: ขนาดกล้องเปลี่ยนทีละพิกเซลทุกเฟรม ภาพพิกเซลเลยสั่นแตกตอนวิ่ง
+        // if (state == PState.MOVE && _camera_spd > move_speed + 0.5) _zoom_target = 1.03;
         var _zspd = (_zoom_target > camera_zoom) ? 0.035 : 0.05;
         camera_zoom = lerp(camera_zoom, _zoom_target, _zspd);
         if (abs(camera_zoom - _zoom_target) < 0.0005) camera_zoom = _zoom_target;
@@ -202,8 +203,9 @@ update_camera = function(_zoom) {
     var _ch = round(_cw * camera_base_h / camera_base_w);
     camera_set_view_size(_cam, _cw, _ch);
 
-    var _cam_x = floor(x - _cw / 2);
-    var _cam_y = floor(y - chest - _ch / 2);
+    // ★ ปัดแบบเดียวกับที่วาดตัวละคร (round) ตัวละครจะไม่สั่นไปมา 1px ตอนวิ่ง
+    var _cam_x = round(x) - (_cw div 2);
+    var _cam_y = round(y) - round(chest) - (_ch div 2);
 
     var _shk = global.shake;
     camera_set_view_pos(_cam, _cam_x + round(random_range(-_shk, _shk)), _cam_y + round(random_range(-_shk, _shk)));

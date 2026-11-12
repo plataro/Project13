@@ -117,18 +117,28 @@ for (var _i = 0; _i <= _rays; _i++) {
 }
 draw_primitive_end();
 
-// ★ ศัตรูที่ "มองเห็นแล้ว" วาดตัวซ้ำทับหมอก
-//   (เดิมยืนชิดกำแพงด้านบน ส่วนหัวเลยเส้นกำแพงเข้าไปในโซนมืด ตัวเลยมืดตามไปด้วย)
-var _pl = id;
+// ★ ศัตรูยืนหน้ากำแพง (กำแพงอยู่เหนือเท้า) ส่วนตัวที่ทับกำแพงโดนหมอกกำแพงทับจนมืด
+//   = วาดซ้ำเฉพาะ "ส่วนที่ทับกำแพง" และเฉพาะตอนเท้ายังอยู่ในที่สว่าง
+//   ส่วนอื่นปล่อยให้หมอกทับตามจริง (ตัวที่อยู่ในหมอกยังมืดเหมือนเดิม)
+var _eye = [_px, _py];
 with (obj_enemy) {
     if (vis <= 0.02 || !variable_instance_exists(id, "fog_col")) continue;
-    // ยืนซ้อนอยู่หลังผู้เล่น = ไม่วาดตัวซ้ำ (ตรงนั้นสว่างอยู่แล้ว และจะได้ไม่ทับตัวผู้เล่น)
-    if (!(abs(x - _pl.x) < 60 && y < _pl.y && y > _pl.y - 140)) {
-        draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, fog_col, vis);
-        if (flash > 3) {
-            gpu_set_blendmode(bm_add);
-            draw_sprite_ext(sprite_index, image_index, round(x) + fog_ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.85);
-            gpu_set_blendmode(bm_normal);
+    if (sprite_index >= 0 && fog_point_lit(_eye, x, y - 4)) {
+        var _sh = sprite_get_height(sprite_index) * abs(image_yscale);
+        var _w = collision_line(x, y - 6, x, y - z - _sh, obj_wall, false, true);
+        if (_w != noone && _w.bbox_bottom < y - 2) {
+            var _cut = _w.bbox_bottom + 1;                                   // เส้นล่างของกำแพงที่อยู่ข้างหลัง
+            var _dx = round(x) + fog_ox - sprite_get_xoffset(sprite_index) * image_xscale;
+            var _dy = round(y - z) - sprite_get_yoffset(sprite_index) * image_yscale;
+            var _hp = clamp((_cut - _dy) / image_yscale, 0, sprite_get_height(sprite_index));
+            if (_hp > 0) {
+                draw_sprite_part_ext(sprite_index, image_index, 0, 0, sprite_get_width(sprite_index), _hp, _dx, _dy, image_xscale, image_yscale, fog_col, vis);
+                if (flash > 3) {
+                    gpu_set_blendmode(bm_add);
+                    draw_sprite_part_ext(sprite_index, image_index, 0, 0, sprite_get_width(sprite_index), _hp, _dx, _dy, image_xscale, image_yscale, c_white, vis * 0.85);
+                    gpu_set_blendmode(bm_normal);
+                }
+            }
         }
     }
     enemy_draw_hpbar();   // ★ หลอดเลือดอยู่หน้าตัวศัตรูเสมอ
