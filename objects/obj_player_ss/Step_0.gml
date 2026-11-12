@@ -83,6 +83,16 @@ if (!_frozen && on_stairs == noone && grounded && _kx != 0) {
 if (on_stairs != noone) {
     if (!instance_exists(on_stairs)) {
         on_stairs = noone;
+    } else if (_jp && !_frozen) {
+        // ★ กระโดดจากบันไดได้ (ตกลงมาโดนบันไดอีกก็ยืนต่อได้เหมือนพื้น)
+        on_stairs = noone;
+        vsp = -jump_speed;
+        vrem = 0;
+        hsp = _kx * (_run ? run_speed : walk_speed);
+        jump_buffer = 0;
+        coyote = 0;
+        _jp = false;
+        fx_dust(x, y - 2, 3, make_color_rgb(190, 180, 165));
     } else {
         var _st = on_stairs;
         var _spd = (_run ? run_speed : walk_speed) * 0.75;
@@ -208,6 +218,7 @@ repeat (abs(_mx)) {
     }
 }
 
+var _y_before = y;   // ★ ใช้เช็กการตกลงบนบันได
 vrem += vsp;
 var _my = round(vrem);
 vrem -= _my;
@@ -219,6 +230,31 @@ repeat (abs(_my)) {
         vsp = 0;
         vrem = 0;
         break;
+    }
+}
+
+// =====================================================================
+// ★ บันไดรับตัวเหมือนพื้น: กระโดด/ตกลงมาโดนแนวบันได = ยืนบนบันไดตรงจุดนั้นเลย
+//   (ทางเดียวจากด้านบน ขาขึ้นทะลุได้ / ไม่นับช่วงปลายสุดที่เป็นพื้นอยู่แล้ว)
+// =====================================================================
+if (on_stairs == noone && vsp >= 0 && !_frozen) {
+    var _me3 = id;
+    var _yb = _y_before;
+    with (obj_stairs_ss) {
+        if (_me3.on_stairs != noone) continue;
+        var _t = (_me3.x - x) / (dir * run);
+        if (_t < 0.04 || _t > 0.96) continue;
+        var _ly = y - rise * _t;
+        if (_yb <= _ly + 2 && _me3.y >= _ly - 1) {
+            _me3.on_stairs = id;
+            _me3.stair_s = _t;
+            _me3.y = round(_ly);
+            _me3.vsp = 0;
+            _me3.vrem = 0;
+            _me3.hsp = 0;
+            _me3.hrem = 0;
+            fx_dust(_me3.x, _me3.y - 2, 3, make_color_rgb(190, 180, 165));
+        }
     }
 }
 

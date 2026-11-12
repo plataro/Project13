@@ -1,6 +1,6 @@
 if (!carved) carve();
 
-locked = ((!ignore_boss) && instance_number(obj_enemy_boss) > 0) || (next_room == noone)
+locked = ((!ignore_boss) && (instance_number(obj_enemy_boss) > 0 || instance_exists(obj_boss_death))) || (next_room == noone)
       || (req_flag != "" && !flag_get(req_flag));
 lock_msg = "";
 if (locked) {

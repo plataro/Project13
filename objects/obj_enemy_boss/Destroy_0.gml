@@ -1,5 +1,18 @@
 event_inherited();
 
+// ★ ฉากตายอลังการ (ตัวบอสหายไปแล้ว obj_boss_death วาดต่อให้)
+if (hp <= 0) {
+    var _d = instance_create_depth(x, y, -100000, obj_boss_death);
+    _d.spr = sprite_index;
+    _d.img = image_index;
+    _d.xs = image_xscale;
+    _d.ys = image_yscale;
+    _d.col = tint;
+    _d.body_h = max(60, y - bbox_top);
+    _d.boss_name = boss_name;
+    _d.is_final = is_final;
+}
+
 // มินิบอสให้ 2 SP ครั้งเดียวต่อห้อง (ห้อง rm_boss เป็นบอสจริง ไม่ให้ SP)
 if (hp <= 0 && room != rm_boss) {
     award_sp_once(room_get_name(room), 2, x, y);
