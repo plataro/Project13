@@ -170,6 +170,12 @@ function enemy_attack_base(_name) {
                      lock: 0, lead: 0, turn: 0,
                      lunge_speed: 0, lunge_frames: 0,
                      circles: [ [0, 0, 115] ] };
+        case "boss_dash_fast":   // ★ บอสใหญ่: พุ่งต่อเนื่อง 3 ครั้ง (เตรียมสั้น พักสั้น)
+            return { windup: 24, active: 18, recover: 12, dmg: 2, lift: 70,
+                     lock: 10, lead: 0, turn: 0,
+                     lunge_speed: 12, lunge_frames: 18,
+                     circles: [],
+                     rects: [ [0, 190, -58, 58] ] };
         case "boss_dash":    // บอส: พุ่งชน
             return { windup: 40, active: 22, recover: 50, dmg: 2, lift: 70,
                      lock: 12, lead: 0, turn: 0,     // ★ เดิม lock 8

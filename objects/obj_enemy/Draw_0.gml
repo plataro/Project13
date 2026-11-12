@@ -14,6 +14,62 @@ var _ox = telegraph ? irandom_range(-2, 2) : 0;
 var _sw = (bbox_right - bbox_left) * 0.75;
 if (vis > 0.5) draw_shadow(x, y, _sw, _sw * 0.35);
 
+// ★ จุดปะทุบนพื้นของบอสใหญ่ (วงเตือนค่อย ๆ เข้ม แล้วระเบิด)
+if (variable_instance_exists(id, "erupts")) {
+    for (var _ei = 0; _ei < array_length(erupts); _ei++) {
+        var _e = erupts[_ei];
+        if (_e.t > 0) {
+            var _k = 1 - _e.t / _e.t0;
+            draw_set_color(c_red);
+            draw_set_alpha(0.08 + 0.22 * _k);
+            draw_ellipse(_e.x - _e.r, _e.y - _e.r * 0.6, _e.x + _e.r, _e.y + _e.r * 0.6, false);
+            draw_set_alpha(0.35 + 0.45 * _k);
+            draw_ellipse(_e.x - _e.r, _e.y - _e.r * 0.6, _e.x + _e.r, _e.y + _e.r * 0.6, true);
+            // วงในหดเข้าหาขอบ = ใกล้ระเบิด
+            var _ir = _e.r * _k;
+            draw_ellipse(_e.x - _ir, _e.y - _ir * 0.6, _e.x + _ir, _e.y + _ir * 0.6, true);
+        } else {
+            var _f2 = 1 + _e.t / 12;
+            draw_set_color(make_color_rgb(255, 150, 60));
+            draw_set_alpha(0.7 * _f2);
+            draw_ellipse(_e.x - _e.r, _e.y - _e.r * 0.6, _e.x + _e.r, _e.y + _e.r * 0.6, false);
+            // หนามพุ่งขึ้น
+            draw_set_color(make_color_rgb(255, 220, 160));
+            for (var _sp = -2; _sp <= 2; _sp++) {
+                var _sx2 = _e.x + _sp * _e.r * 0.3;
+                draw_triangle(_sx2 - 5, _e.y, _sx2 + 5, _e.y, _sx2, _e.y - _e.r * (0.9 - abs(_sp) * 0.2) * _f2, false);
+            }
+        }
+    }
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
+// ★ ไม้ตาย: วงพลังหดเข้าหาบอส / มึนงง: ดาวหมุนเหนือหัว
+if (variable_instance_exists(id, "ult_t")) {
+    if (state == "ult") {
+        var _uk = ult_t / ult_time;
+        var _ur = 140 + 520 * _uk;
+        draw_set_color(c_red);
+        draw_set_alpha(0.25 + 0.2 * sin(current_time / 80));
+        draw_ellipse(x - _ur, y - _ur * 0.6, x + _ur, y + _ur * 0.6, true);
+        draw_ellipse(x - _ur + 3, y - _ur * 0.6 + 2, x + _ur - 3, y + _ur * 0.6 - 2, true);
+        draw_set_alpha(0.12);
+        draw_ellipse(x - 140, y - 84, x + 140, y + 84, false);
+        draw_set_alpha(1);
+    } else if (state == "stunned") {
+        var _hr2 = enemy_hurt_rect(id);
+        for (var _st = 0; _st < 3; _st++) {
+            var _sa = current_time / 6 + _st * 120;
+            var _stx = x + lengthdir_x(40, _sa);
+            var _sty = _hr2[1] - 10 + lengthdir_y(12, _sa);
+            draw_set_color(c_yellow);
+            draw_circle(_stx, _sty, 5, false);
+        }
+        draw_set_color(c_white);
+    }
+}
+
 // ★ วงเตือนจุดตกของท่ากระโดด (เข้มขึ้นตอนล็อกจุดแล้ว)
 if (is_array(marker)) {
     draw_set_alpha(marker[3] ? 0.42 : 0.15 + 0.1 * sin(current_time / 60));
