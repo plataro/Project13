@@ -59,7 +59,7 @@ ui_text_bold(480, _cy0, L("เครดิต", "Credits"), 0.75, UI_GOLD);
 for (var _i = 0; _i < array_length(_cl); _i++) {
     var _ly = _cy0 + 60 + _i * 70;
     ui_text(480, _ly, _cl[_i][0], 0.48, UI_MUTED);
-    ui_text_bold(480, _ly + 26, _cl[_i][1], 0.6, UI_TEXT);
+    ui_text_bold(480, _ly + 26, _cl[_i][1], ui_fit(_cl[_i][1], 0.6, 880), UI_TEXT);   // ชื่อยาว = ย่อให้พอดีจอ
 }
 // ปิดท้ายเครดิต: ชื่อเกม หยุดกลางจอ
 var _ey = max(270, _cy0 + 60 + array_length(_cl) * 70 + 120);

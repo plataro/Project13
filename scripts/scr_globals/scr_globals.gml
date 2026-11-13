@@ -382,7 +382,8 @@ function credits_lines() {
     return [
         [L("โค้ดและระบบเกม", "Code & Systems"), "[ใส่ชื่อ]"],
         [L("ภาพและเนื้อเรื่อง", "Art & Story"), "[ใส่ชื่อ]"],
-        [L("เสียงและเพลง", "Sound & Music"), "[ใส่ชื่อและแหล่งที่มา]"],
+        [L("เพลง", "Music"), "Action RPG Exploration Themes - Chimera Forge Productions (itch.io)"],
+        [L("เสียงเอฟเฟกต์", "Sound Effects"), "[ใส่แหล่งที่มา]"],
         [L("ฟอนต์", "Font"), "Mitr (Cadson Demak, SIL OFL)"]
     ];
 }
