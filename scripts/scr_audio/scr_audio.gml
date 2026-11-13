@@ -136,21 +136,23 @@ function audio_register() {
     S.title_card    = [snd_title_card];
 
     // ---------- เพลง (วนลูป) ----------
+    // ★ = placeholder (ไฟล์เงียบ 2 วิ) รอเปลี่ยนเป็นเพลงจริง: เปิด asset ใน GameMaker แล้วเลือกไฟล์ใหม่
     M.menu      = mus_journey_begins;
-    M.sanctuary = mus_guided_by_oath;
+    M.cutscene  = mus_sanctuary_cutscene;     // ★ คัทซีนภาพเปิดเรื่อง (ก่อนตื่นในวิหาร)
+    M.sanctuary = mus_sanctuary;              // ★ วิหาร (หลังคัทซีน คุย/เดินสำรวจ)
     M.forest    = mus_lost_in_the_woods;
     M.village   = mus_wealth_beyond_measure;
-    M.mine      = mus_wrong_step;
-    M.castle    = mus_empower_thyself;
+    M.mine      = mus_mine;                   // ★ เหมือง
+    M.castle    = mus_castle;                 // ★ ปราสาท
     M.final_approach = mus_time_draws_near;   // ทางเข้าห้องบอส (side-scroll) + ห้องบอสก่อนเปิดตัว
-    M.miniboss  = mus_beast_hunting;          // สู้มินิบอส (เปลี่ยนตอนเปิดตัว กลับเพลงด่านเมื่อชนะ)
-    M.boss      = mus_messenger_of_chaos;     // สู้ราชามังกร
-    M.ending    = mus_destined_to_win;
-    // mus_misty_lands ยังไม่ได้ใช้
+    M.miniboss  = mus_wrong_step;          // สู้มินิบอส (เปลี่ยนตอนเปิดตัว กลับเพลงด่านเมื่อชนะ)
+    M.boss      = mus_messenger_of_chaos;     // ราชามังกร เฟส 1-2
+    M.boss_p3   = mus_destined_to_win;        // ราชามังกร เฟส 3
+    M.ending    = mus_ending;                 // ★ ฉากจบ
+    // (ลบเพลงที่ไม่ใช้ออกแล้ว: misty_lands, empower_thyself, beast_hunting, guided_by_oath, incoming_attack)
 
     // ---------- เพลงสั้นเล่นครั้งเดียว (stinger) ----------
     M.gameover  = mus_blood_for_blood;   // ตาย
-    M.trial     = mus_incoming_attack;   // เริ่มบททดสอบหีบ (จบแล้วกลับเพลงด่าน)
 }
 audio_register();
 
@@ -275,6 +277,8 @@ function audio_update() {
 
     var _vol = global.set_music / 100;
     var _want = global.music_key;
+    // ★ คัทซีนที่มีเพลงของตัวเอง = เล่นเพลงคัทซีนทับเพลงห้องชั่วคราว
+    if (instance_exists(obj_cutscene) && obj_cutscene.music_key != "") _want = obj_cutscene.music_key;
     if (!variable_struct_exists(global.mus, _want)) _want = "";
 
     // เพลงที่ควรเล่นอยู่หยุดไปเอง (เช่นเบราว์เซอร์บล็อกตอนแรก) = เริ่มใหม่

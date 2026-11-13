@@ -584,6 +584,7 @@ attack_options = function(_d) {
 enter_phase = function(_n) {
     phase = _n;
     sfx("boss_phase");
+    if (is_final && _n == 3) music_play("boss_p3");   // ★ ราชามังกรเฟส 3 เปลี่ยนเพลง
     state = "trans";
     state_timer = 60;
     invuln = 60;

@@ -29,6 +29,12 @@ if (!closing) {
     black = min(1, black + 0.04);
     if (black >= 1) {
         var _cb = on_done;
+        // ★ จบคัทซีน: จอดำแล้วค่อย ๆ สว่างเข้าฉาก (ไม่ตัดฉับ)
+        if (fade_in_after && !instance_exists(obj_fade)) {
+            var _f = instance_create_depth(0, 0, -10000, obj_fade);
+            _f.phase = 1;
+            _f.alpha = 1;
+        }
         instance_destroy();
         if (is_callable(_cb)) _cb();
     }

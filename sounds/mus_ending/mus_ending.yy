@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"mus_incoming_attack",
+  "%Name":"mus_ending",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,9 +10,9 @@
   "compression":3,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":19.2570750,
+  "duration":2.0,
   "exportDir":"",
-  "name":"mus_incoming_attack",
+  "name":"mus_ending",
   "parent":{
     "name":"BG",
     "path":"folders/Audios/BG.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"mus_incoming_attack.ogg",
+  "soundFile":"mus_ending.ogg",
   "volume":1.0,
 }

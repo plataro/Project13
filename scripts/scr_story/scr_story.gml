@@ -187,6 +187,8 @@ function cutscene_start(_key, _on_done = undefined) {
     var _c = instance_create_depth(0, 0, -16000, obj_cutscene);
     _c.slides = cutscene_slides(_key);
     _c.on_done = _on_done;
+    _c.music_key = (_key == "intro") ? "cutscene" : "";   // ★ คัทซีนเปิดเรื่องมีเพลงของตัวเอง
+    _c.fade_in_after = (_key == "intro");                  // ★ จบแล้วค่อย ๆ สว่างเข้าฉาก
     if (array_length(_c.slides) == 0) instance_destroy(_c);
 }
 

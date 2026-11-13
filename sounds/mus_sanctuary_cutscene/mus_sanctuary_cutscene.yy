@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"mus_beast_hunting",
+  "%Name":"mus_sanctuary_cutscene",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,9 +10,9 @@
   "compression":3,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":32.0000000,
+  "duration":2.0,
   "exportDir":"",
-  "name":"mus_beast_hunting",
+  "name":"mus_sanctuary_cutscene",
   "parent":{
     "name":"BG",
     "path":"folders/Audios/BG.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"mus_beast_hunting.ogg",
+  "soundFile":"mus_sanctuary_cutscene.ogg",
   "volume":1.0,
 }

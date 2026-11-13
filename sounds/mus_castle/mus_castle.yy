@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"mus_guided_by_oath",
+  "%Name":"mus_castle",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,9 +10,9 @@
   "compression":3,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":48.0090250,
+  "duration":2.0,
   "exportDir":"",
-  "name":"mus_guided_by_oath",
+  "name":"mus_castle",
   "parent":{
     "name":"BG",
     "path":"folders/Audios/BG.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"mus_guided_by_oath.ogg",
+  "soundFile":"mus_castle.ogg",
   "volume":1.0,
 }

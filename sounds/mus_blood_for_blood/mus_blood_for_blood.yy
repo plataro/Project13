@@ -10,7 +10,7 @@
   "compression":3,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":17.0000000,
+  "duration":17.0,
   "exportDir":"",
   "name":"mus_blood_for_blood",
   "parent":{
