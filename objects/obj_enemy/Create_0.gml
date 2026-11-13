@@ -208,7 +208,7 @@ run_attack = function() {
                 atk_state = "active";
                 atk_timer = atk_cur.active;
                 atk_lunge = atk_cur.lunge_frames;
-                sfx_at("enemy_attack", x, y, 0.9, 0.1, 50);
+                sfx_at((object_index == obj_enemy_boss) ? "boss_attack" : "enemy_attack", x, y, 0.9, 0.06, 50);
                 var _h = instance_create_depth(x, y, depth, obj_enemy_hitbox);
                 _h.owner = id;
                 _h.atk = atk_cur;

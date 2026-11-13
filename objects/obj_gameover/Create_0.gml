@@ -6,3 +6,4 @@ pop = 0;            // แอนิเมชันแผงเด้งเข้
 // ตำแหน่งปุ่ม (ใช้ทั้ง Step และ Draw)
 btn_y = function(_i) { return 300 + _i * 46; };
 sfx("gameover");
+music_stinger("gameover", id);   // ★ เพลงตาย (ปิดหน้านี้ = ตัดเพลง กลับเพลงด่าน)

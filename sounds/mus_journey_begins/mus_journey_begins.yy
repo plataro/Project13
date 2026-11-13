@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"mus_journey_begins.wav",
+  "soundFile":"mus_journey_begins.ogg",
   "volume":1.0,
 }

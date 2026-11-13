@@ -11,6 +11,7 @@ function award_sp_once(_key, _n, _x, _y) {
     if (flag_get("sp_" + _key)) return;
     flag_set("sp_" + _key);
     global.save.sp += _n;
+    if (!instance_exists(obj_boss_death)) sfx("sp_gain");   // มินิบอสมีเสียงชนะในฉากตายอยู่แล้ว
     float_text(_x, _y - 80, "+" + string(_n) + " SP", c_yellow, 1.5);
     loot_toast("SP", c_aqua, "star", _n);
 }

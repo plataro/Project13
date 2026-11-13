@@ -25,6 +25,9 @@ global.music_inst = -1;
 global.music_room = -1;
 global.music_vol_now = -1;
 global.music_dying = [];  // [[instance, เวลาหยุด], ...] เพลงเก่าที่กำลังเฟดออก
+global.stinger_inst = -1; // เพลงสั้นที่กำลังเล่น (เพลงหลักหยุดรอ)
+global.stinger_owner = noone;
+global.stinger_room = -1;
 
 // ★ ใช้แทนเมื่อยังไม่มีไฟล์ของชื่อนั้น (หาไฟล์มาน้อยลงได้)
 global.snd_alias = {
@@ -66,9 +69,9 @@ function audio_register() {
     // S.roll          = [snd_roll];
     S.shoot         = [snd_shoot];
     S.shoot_spread  = [snd_shoot_spread];
-    // S.whirl         = [snd_whirl];
+    S.whirl         = [snd_whirl];   // สกิล 3 ดาบพายุหมุน
     S.swing_spin    = [snd_swing_3];   // ท่าจบคอมโบ ฟาดรอบตัว (ท่า 4 / ท่า 6 ถ้าปลดคอมโบยาว)
-    // S.bolt          = [snd_bolt];
+    S.bolt          = [snd_bolt];    // สกิล 4
     S.ult           = [snd_ult];   // เล่นตอนระเบิดจริง (ไม่ใช่ตอนกด)
     S.player_hurt   = [snd_player_hurt];
     S.gameover      = [snd_gameover];
@@ -79,7 +82,9 @@ function audio_register() {
     S.enemy_die     = [snd_enemy_die];
     // S.enemy_alert   = [snd_enemy_alert];
     // S.enemy_windup  = [snd_enemy_windup];
-    S.enemy_attack  = [snd_enemy_attack];
+    S.enemy_attack  = [snd_enemy_attack, snd_enemy_attack_2, snd_enemy_attack_3, snd_enemy_attack_4];
+    S.boss_attack   = [snd_boss_attack_1, snd_boss_attack_2];   // บอส/มินิบอสฟัน
+    S.erupt         = [snd_erupt];   // บอส: หนาม/พื้นปะทุ
     // S.enemy_shoot   = [snd_enemy_shoot];
     S.boss_roar     = [snd_boss_roar];
     S.boss_phase    = [snd_boss_phase];
@@ -99,11 +104,13 @@ function audio_register() {
     S.pickup_gold   = [snd_pickup_gold];
     // S.pickup_item   = [snd_pickup_item];
     S.sword_get     = [snd_sword_get];   // เก็บดาบในวิหาร
-    // S.potion        = [snd_potion];
-    // S.buff          = [snd_buff];
+    S.potion        = [snd_potion];
+    S.buff          = [snd_buff];    // ใช้ไอเทมบัฟ
     // S.buy           = [snd_buy];
     // S.sell          = [snd_sell];
-    S.skill_unlock  = [snd_notify];
+    S.skill_unlock  = [snd_skill_unlock];
+    S.sp_gain       = [snd_boss_clear];   // ได้แต้มสกิล
+    S.boss_clear    = [snd_boss_clear];   // ข้อความ "ปราบแล้ว" ของมินิบอส
     // S.chest_open    = [snd_chest_open];
     // S.trial_start   = [snd_trial_start];
     S.trial_clear   = [snd_trial_clear];   // ผ่านบททดสอบหีบ
@@ -129,15 +136,21 @@ function audio_register() {
     S.title_card    = [snd_title_card];
 
     // ---------- เพลง (วนลูป) ----------
-    // (ตอนนี้มี 2 เพลง ใช้ซ้ำหลายฉากไปก่อน ได้เพลงใหม่ค่อยเปลี่ยนทีละบรรทัด)
     M.menu      = mus_journey_begins;
-    M.sanctuary = mus_journey_begins;
-    M.forest    = mus_misty_lands;
-    M.village   = mus_journey_begins;
-    M.mine      = mus_misty_lands;
-    M.castle    = mus_misty_lands;
-    // M.boss      = mus_boss;      // ยังไม่มี = ห้องบอสเงียบ
-    M.ending    = mus_journey_begins;
+    M.sanctuary = mus_guided_by_oath;
+    M.forest    = mus_lost_in_the_woods;
+    M.village   = mus_wealth_beyond_measure;
+    M.mine      = mus_wrong_step;
+    M.castle    = mus_empower_thyself;
+    M.final_approach = mus_time_draws_near;   // ทางเข้าห้องบอส (side-scroll) + ห้องบอสก่อนเปิดตัว
+    M.miniboss  = mus_beast_hunting;          // สู้มินิบอส (เปลี่ยนตอนเปิดตัว กลับเพลงด่านเมื่อชนะ)
+    M.boss      = mus_messenger_of_chaos;     // สู้ราชามังกร
+    M.ending    = mus_destined_to_win;
+    // mus_misty_lands ยังไม่ได้ใช้
+
+    // ---------- เพลงสั้นเล่นครั้งเดียว (stinger) ----------
+    M.gameover  = mus_blood_for_blood;   // ตาย
+    M.trial     = mus_incoming_attack;   // เริ่มบททดสอบหีบ (จบแล้วกลับเพลงด่าน)
 }
 audio_register();
 
@@ -198,9 +211,9 @@ function music_for_room(_r) {
         case rm_the_village:
         case rm_shop_ss:                     return "village";
         case rm_level_2_the_abandoned_mine:  return "mine";
-        case rm_level_3_the_castle:
-        case rm_the_final_ss:                return "castle";
-        case rm_boss:                        return "boss";
+        case rm_level_3_the_castle:          return "castle";
+        case rm_the_final_ss:
+        case rm_boss:                        return "final_approach";   // เพลงบอสเริ่มตอนเปิดตัวบอส
         case rm_end:                         return "ending";
     }
     return global.music_key;   // ห้องอื่น (ห้องทดสอบ) = เล่นเพลงเดิมต่อ
@@ -209,6 +222,23 @@ function music_for_room(_r) {
 // สั่งเปลี่ยนเพลงเอง (เช่นตอนบอสโผล่) "" = เงียบ
 function music_play(_key) { global.music_key = _key; }
 function music_stop() { global.music_key = ""; }
+function music_room_default() { global.music_key = music_for_room(room); }   // กลับเพลงประจำห้อง
+
+// ★ เพลงสั้นเล่นครั้งเดียว: เพลงหลักเฟดออก เล่นจบแล้วเพลงหลักเริ่มใหม่
+// _owner = instance ที่ถ้าหายไป ให้ตัดเพลงสั้นทิ้งทันที (เช่นหน้า game over)
+function music_stinger(_key, _owner = noone) {
+    if (!variable_struct_exists(global.mus, _key)) return;
+    if (global.stinger_inst != -1) audio_stop_sound(global.stinger_inst);
+    if (global.music_inst != -1 && audio_is_playing(global.music_inst)) {
+        audio_sound_gain(global.music_inst, 0, 400);
+        array_push(global.music_dying, [global.music_inst, current_time + 450]);
+    }
+    global.music_inst = -1;
+    global.music_now = "";
+    global.stinger_inst = audio_play_sound(global.mus[$ _key], 10, false, global.set_music / 100);
+    global.stinger_owner = _owner;
+    global.stinger_room = room;
+}
 
 // ★ เรียกทุกเฟรม (จาก obj_scaler) จัดการเปลี่ยนเพลงตามห้อง / เฟด / ปรับระดับเสียง
 function audio_update() {
@@ -226,8 +256,22 @@ function audio_update() {
         global.music_key = music_for_room(room);
     }
 
+    // เพลงสั้นกำลังเล่น = เพลงหลักรอ (จบเอง / เปลี่ยนห้อง / เจ้าของหายไป = ตัดทิ้ง)
+    if (global.stinger_inst != -1) {
+        var _st = global.stinger_inst;
+        var _own = global.stinger_owner;
+        if (!audio_is_playing(_st) || room != global.stinger_room || (_own != noone && !instance_exists(_own))) {
+            audio_sound_gain(_st, 0, 500);
+            array_push(global.music_dying, [_st, current_time + 550]);
+            global.stinger_inst = -1;
+        } else {
+            audio_sound_gain(_st, global.set_music / 100, 0);
+            return;
+        }
+    }
+
     // เบราว์เซอร์ยังไม่ให้เล่นเสียง (ผู้เล่นยังไม่คลิก/กดปุ่ม) = รอก่อน
-    if (!audio_system_is_available()) exit;
+    if (!audio_system_is_available()) return;
 
     var _vol = global.set_music / 100;
     var _want = global.music_key;

@@ -311,6 +311,7 @@ process_erupts = function() {
         _e.t--;
         if (_e.t == 0) {
             fx_spark(_e.x, _e.y - 10, 90, 6, c_orange, 120);
+            sfx_at("erupt", _e.x, _e.y, 0.6, 0.1, 150);   // ★ ปะทุหลายจุดติดกัน = เว้นช่วงเสียงไม่ให้รัว
             if (_e.r >= 60) _big = true;
             if (instance_exists(obj_player) && player_hit_by_circle(obj_player, _e.x, _e.y - 10, _e.r)) {
                 var _hp0 = obj_player.hp;

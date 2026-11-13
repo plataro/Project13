@@ -327,6 +327,7 @@ function boss_intro_start(_boss, _name, _title) {
     global.story_seen[$ _key] = true;
     global.boss_intro = { boss: _boss, name: _name, title: _title, t: 0, k: 0 };
     sfx("boss_roar");
+    music_play(_boss.is_final ? "boss" : "miniboss");   // ★ เพลงสู้บอส
 }
 global.boss_intro = undefined;
 

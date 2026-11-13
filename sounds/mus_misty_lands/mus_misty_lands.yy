@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"mus_misty_lands.wav",
+  "soundFile":"mus_misty_lands.ogg",
   "volume":1.0,
 }

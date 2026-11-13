@@ -8,10 +8,12 @@ if (!inited) {
         t_end = t_fade + 130;
         sfx("boss_die");                                  // ★ มังกรร้องตอนเริ่มดิ้น
         snd_loop = sfx("boss_death_riser", 0.75, 0, 0);   // ★ เสียงไต่ขึ้น ตัดตอนระเบิดใหญ่
+        music_stop();
     } else {
         t_text = t_burst + 30;
         t_fade = -1;
         snd_loop = sfx("miniboss_struggle", 0.8, 0, 0);
+        music_stop();
     }
 }
 t++;
@@ -97,6 +99,12 @@ if (t_fade > 0 && t >= t_fade) {
         _f.target_room = rm_end;
         _f.alpha = 1;   // มืดอยู่แล้ว ไปห้องจบเลย แล้วค่อยสว่างขึ้น
     }
+}
+
+// ---- ★ มินิบอส: ข้อความปราบแล้ว = เสียงชนะ แล้วกลับเพลงด่าน ----
+if (!is_final && t == t_text) {
+    sfx("boss_clear");
+    music_room_default();
 }
 
 // ---- ถ่านไฟ ----

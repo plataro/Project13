@@ -19,6 +19,7 @@ if (_go && pop >= 1) {
     if (sel == 0) {
         save_restore_snapshot();              // คืนเหรียญ/ของ/ยา เท่าตอนเข้าห้อง
         global.player_hp = global.max_hp;
+        global.music_room = -1;   // ★ เริ่มห้องใหม่ = เพลงกลับไปเพลงประจำห้อง (ไม่ค้างเพลงบอส)
         room_restart();
     } else if (!instance_exists(obj_fade)) {
         // กลับเมนู (เซฟล่าสุดคือตอนเข้าห้องนี้ กด "เล่นต่อ" ได้)
