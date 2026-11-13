@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"freesound_community_edm_death_swell_104583",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":6.7134695,
+  "exportDir":"",
+  "name":"freesound_community_edm_death_swell_104583",
+  "parent":{
+    "name":"SFX",
+    "path":"folders/Audios/SFX.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"freesound_community_edm_death_swell_104583.wav",
+  "volume":1.0,
+}

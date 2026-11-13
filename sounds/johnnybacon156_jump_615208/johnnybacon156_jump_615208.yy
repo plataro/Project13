@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"johnnybacon156_jump_615208",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":1.7502041,
+  "exportDir":"",
+  "name":"johnnybacon156_jump_615208",
+  "parent":{
+    "name":"SFX",
+    "path":"folders/Audios/SFX.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"johnnybacon156_jump_615208.wav",
+  "volume":1.0,
+}
