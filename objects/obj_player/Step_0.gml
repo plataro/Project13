@@ -60,7 +60,7 @@ if (skill3_timer > 0) skill3_timer--;   // ★ ดาบพายุหมุน
 if (skill4_timer > 0) skill4_timer--;   // ★ สายฟ้า
 if (ult_fx > 0) {
     ult_fx--;
-    if (ult_fx == 42) { fx_hitstop(6); fx_spark(x, y - 30, 0, 40, make_color_rgb(255, 230, 150), 180); }   // ★ จังหวะระเบิด
+    if (ult_fx == 42) { sfx("ult"); fx_hitstop(6); fx_spark(x, y - 30, 0, 40, make_color_rgb(255, 230, 150), 180); }   // ★ จังหวะระเบิด
 }
 for (var _bi2 = array_length(bolts) - 1; _bi2 >= 0; _bi2--) {
     bolts[_bi2].life--;

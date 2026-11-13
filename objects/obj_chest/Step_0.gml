@@ -36,6 +36,7 @@ else if (!opened) {
                 trial_t--;
             } else if (trial_wave >= trial_waves) {
                 trial_state = 0;
+                sfx("trial_clear");
                 fx_shake(6);
                 open_chest();
                 float_text(x, y - 200, L("ผ่านบททดสอบ!", "Trial cleared!"), c_yellow, 1.5);

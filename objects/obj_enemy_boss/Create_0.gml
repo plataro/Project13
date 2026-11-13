@@ -402,9 +402,17 @@ start_ult = function() {
     with (obj_enemy_hitbox) instance_destroy();
     float_text(x, y - 220, L("ไม้ตาย!", "Ultimate!"), c_red, 1.8);
     fx_shake(6);
+    // ★ เสียงร่าย: ปรับความเร็วให้จุดดังสุดของเสียง (~5.3 วิ) ตรงกับตอนระเบิด
+    ult_snd = sfx("boss_ult_charge", 1, 0, 0, clamp(5.3 / (ult_time / 60), 0.85, 1.25));
+}
+ult_snd = -1;
+ult_snd_stop = function() {
+    if (ult_snd != -1) { audio_stop_sound(ult_snd); ult_snd = -1; }
 }
 
 ult_interrupt = function() {
+    ult_snd_stop();
+    sfx("boss_phase");   // ★ ขัดจังหวะสำเร็จ
     state = "stunned";
     stun_t = stun_time;
     telegraph = false;
@@ -947,6 +955,8 @@ ai = function() {
             if (ult_t mod 30 == 0) fx_shake(1 + 3 * (1 - ult_t / ult_time));
             if (ult_t <= 0) {
                 state = "ult_boom";
+                ult_snd_stop();
+                sfx("boss_ult_boom");
                 state_timer = 40;
                 ult_flash = 30;
                 fx_shake(14);

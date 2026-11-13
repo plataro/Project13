@@ -192,7 +192,7 @@ function fx_kill(_x, _y, _big) {
     fx_hitstop(_big ? 10 : 4);
     fx_shake(_big ? 9 : 3);
     fx_spark(_x, _y - 30, 0, _big ? 40 : 14, _big ? c_orange : c_ltgray, 180);
-    sfx_at(_big ? "boss_die" : "enemy_die", _x, _y);
+    if (!_big) sfx_at("enemy_die", _x, _y);   // ★ บอส/มินิบอส: เสียงอยู่ในฉากตาย obj_boss_death
 }
 
 // ผู้เล่นโดนตี

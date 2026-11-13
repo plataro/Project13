@@ -37,6 +37,7 @@ global.snd_alias = {
     enemy_shoot:   "shoot",
     hit_boss:      "hit_enemy",
     boss_die:      "enemy_die",
+    boss_burst:    "miniboss_burst",
     pickup_item:   "pickup_gold",
     sword_get:     "pickup_item",
     sell:          "buy",
@@ -64,38 +65,48 @@ function audio_register() {
     // S.charge_full   = [snd_charge_full];
     // S.roll          = [snd_roll];
     S.shoot         = [snd_shoot];
-    // S.shoot_spread  = [snd_shoot_spread];
+    S.shoot_spread  = [snd_shoot_spread];
     // S.whirl         = [snd_whirl];
     S.swing_spin    = [snd_swing_3];   // ท่าจบคอมโบ ฟาดรอบตัว (ท่า 4 / ท่า 6 ถ้าปลดคอมโบยาว)
     // S.bolt          = [snd_bolt];
-    // S.ult           = [snd_ult];
+    S.ult           = [snd_ult];   // เล่นตอนระเบิดจริง (ไม่ใช่ตอนกด)
     S.player_hurt   = [snd_player_hurt];
-    // S.gameover      = [snd_gameover];
+    S.gameover      = [snd_gameover];
 
     // ---------- ศัตรู ----------
     S.hit_enemy     = [snd_hit_flesh_1, snd_hit_flesh_2];
     S.hit_boss      = [snd_sword_clashhit, snd_hit_metal];   // บอสใส่เกราะ = เสียงโลหะ
-    // S.enemy_die     = [snd_enemy_die];
+    S.enemy_die     = [snd_enemy_die];
     // S.enemy_alert   = [snd_enemy_alert];
     // S.enemy_windup  = [snd_enemy_windup];
     S.enemy_attack  = [snd_enemy_attack];
     // S.enemy_shoot   = [snd_enemy_shoot];
     S.boss_roar     = [snd_boss_roar];
     S.boss_phase    = [snd_boss_phase];
-    S.boss_die      = [snd_boss_die];
+    S.boss_ult_charge = [snd_charge_long];  // บอสร่ายไม้ตาย (หยุดเมื่อถูกขัดจังหวะ)
+    S.boss_ult_boom = [snd_ult];             // ไม้ตายบอสระเบิดทั้งห้อง
+
+    // ---------- ฉากบอสตาย (obj_boss_death) ----------
+    S.boss_die          = [snd_boss_die];        // ราชามังกร: เสียงมังกรตายตอนเริ่มดิ้น
+    S.boss_death_riser  = [snd_riser_long];      // ราชามังกร: เสียงไต่ขึ้นระหว่างดิ้น (ตัดตอนระเบิดใหญ่)
+    S.boss_burst        = [snd_ult];             // ราชามังกร: ระเบิดใหญ่
+    S.boss_afterglow    = [snd_death_swell];     // ราชามังกร: เสียงค้างหลังระเบิด ตอนถ่านไฟลอย
+    S.miniboss_struggle = [snd_magic_chargeup];  // มินิบอส: เสียงพลังรั่วระหว่างดิ้น (ตัดตอนระเบิด)
+    S.miniboss_burst    = [snd_boom_crash];      // มินิบอส: ระเบิด / ราชามังกร: ระเบิดย่อยกลางทาง
     S.boss_shield   = [snd_shield_impact_from_sword];   // ฟันโดนเกราะบอส
 
     // ---------- ของ / ร้าน / สกิล ----------
-    // S.pickup_gold   = [snd_pickup_gold];
+    S.pickup_gold   = [snd_pickup_gold];
     // S.pickup_item   = [snd_pickup_item];
     S.sword_get     = [snd_sword_get];   // เก็บดาบในวิหาร
     // S.potion        = [snd_potion];
     // S.buff          = [snd_buff];
     // S.buy           = [snd_buy];
     // S.sell          = [snd_sell];
-    // S.skill_unlock  = [snd_skill_unlock];
+    S.skill_unlock  = [snd_notify];
     // S.chest_open    = [snd_chest_open];
     // S.trial_start   = [snd_trial_start];
+    S.trial_clear   = [snd_trial_clear];   // ผ่านบททดสอบหีบ
 
     // ---------- ฉาก / พัซเซิล ----------
     // S.door          = [snd_door];          // เปลี่ยนฉาก
@@ -103,9 +114,9 @@ function audio_register() {
     // S.lever         = [snd_lever];
     // S.plate         = [snd_plate];
     // S.target_hit    = [snd_target_hit];
-    // S.checkpoint    = [snd_checkpoint];
+    S.checkpoint    = [snd_notify];
     // S.break_wood    = [snd_break_wood];
-    // S.jump          = [snd_jump];
+    S.jump          = [snd_jump];
     // S.land          = [snd_land];
     // S.footstep      = [snd_footstep_1, snd_footstep_2];
 
@@ -115,7 +126,7 @@ function audio_register() {
     // S.ui_back       = [snd_ui_back];
     // S.ui_error      = [snd_ui_error];
     // S.blip          = [snd_dialogue_blip];
-    // S.title_card    = [snd_title_card];
+    S.title_card    = [snd_title_card];
 
     // ---------- เพลง (วนลูป) ----------
     // (ตอนนี้มี 2 เพลง ใช้ซ้ำหลายฉากไปก่อน ได้เพลงใหม่ค่อยเปลี่ยนทีละบรรทัด)
@@ -127,7 +138,6 @@ function audio_register() {
     M.castle    = mus_misty_lands;
     // M.boss      = mus_boss;      // ยังไม่มี = ห้องบอสเงียบ
     M.ending    = mus_journey_begins;
-    // snd_charge_long (เสียงชาร์จยาว 8 วิ) ยังไม่ได้ใช้ที่ไหน
 }
 audio_register();
 

@@ -6,9 +6,12 @@ if (!inited) {
         t_text = t_burst + 70;
         t_fade = t_text + 170;         // ★ ข้อความ "ชัยชนะ" ค้างแล้วค่อย ๆ เฟดดำ
         t_end = t_fade + 130;
+        sfx("boss_die");                                  // ★ มังกรร้องตอนเริ่มดิ้น
+        snd_loop = sfx("boss_death_riser", 0.75, 0, 0);   // ★ เสียงไต่ขึ้น ตัดตอนระเบิดใหญ่
     } else {
         t_text = t_burst + 30;
         t_fade = -1;
+        snd_loop = sfx("miniboss_struggle", 0.8, 0, 0);
     }
 }
 t++;
@@ -21,6 +24,7 @@ if (is_final && t < t_burst) {
             gui_flash = 0.55;
             fx_shake(9);
             fx_hitstop(8);
+            sfx("miniboss_burst", 0.7, 0.05, 0);   // ★ ระเบิดย่อยกลางทาง
             array_push(rings, { r: 10, spd: 16, a: 0.8 });
             fx_spark(x, _cy, 0, 30, c_white, 180);
         }
@@ -47,6 +51,14 @@ if (t < t_burst) {
 // ---- ระเบิดใหญ่ ----
 if (t == t_burst) {
     gui_flash = 1;
+    // ★ เสียงระเบิดใหญ่ (ตัดเสียงช่วงดิ้นทิ้ง)
+    if (snd_loop != -1) { audio_stop_sound(snd_loop); snd_loop = -1; }
+    if (is_final) {
+        sfx("boss_burst", 1, 0, 0);
+        sfx("boss_afterglow", 0.6, 0, 0);
+    } else {
+        sfx("miniboss_burst", 1, 0, 0);
+    }
     fx_shake(is_final ? 24 : 16);
     fx_hitstop(is_final ? 24 : 14);
     array_push(rings, { r: 10, spd: 26, a: 1 });
