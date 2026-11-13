@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"_10__Blood_for_Blood__STINGER_",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":17.0,
+  "exportDir":"",
+  "name":"_10__Blood_for_Blood__STINGER_",
+  "parent":{
+    "name":"BG",
+    "path":"folders/Audios/BG.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"_10__Blood_for_Blood__STINGER_.wav",
+  "volume":1.0,
+}

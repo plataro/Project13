@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"_3__Beast_Hunting__LOOP_",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":32.0,
+  "exportDir":"",
+  "name":"_3__Beast_Hunting__LOOP_",
+  "parent":{
+    "name":"BG",
+    "path":"folders/Audios/BG.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"_3__Beast_Hunting__LOOP_.wav",
+  "volume":1.0,
+}

@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"_Loop__juanjo_sound___Lost_in_The_Woods",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":85.38463,
+  "exportDir":"",
+  "name":"_Loop__juanjo_sound___Lost_in_The_Woods",
+  "parent":{
+    "name":"BG",
+    "path":"folders/Audios/BG.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"_Loop__juanjo_sound___Lost_in_The_Woods.wav",
+  "volume":1.0,
+}

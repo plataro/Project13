@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"_Loop__juanjo_sound___Wealth_Beyond_Measure",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":87.692314,
+  "exportDir":"",
+  "name":"_Loop__juanjo_sound___Wealth_Beyond_Measure",
+  "parent":{
+    "name":"BG",
+    "path":"folders/Audios/BG.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"_Loop__juanjo_sound___Wealth_Beyond_Measure.wav",
+  "volume":1.0,
+}

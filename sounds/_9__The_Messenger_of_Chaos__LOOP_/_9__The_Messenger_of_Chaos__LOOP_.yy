@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"_9__The_Messenger_of_Chaos__LOOP_",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":50.97,
+  "exportDir":"",
+  "name":"_9__The_Messenger_of_Chaos__LOOP_",
+  "parent":{
+    "name":"BG",
+    "path":"folders/Audios/BG.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"_9__The_Messenger_of_Chaos__LOOP_.wav",
+  "volume":1.0,
+}
