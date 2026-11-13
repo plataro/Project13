@@ -33,7 +33,7 @@
   "origin":9,
   "parent":{
     "name":"spr_pl_attack",
-    "path":"folders/Sprites/Animations/spr_pl_attack.yy",
+    "path":"folders/Sprites/PAnimations/spr_pl_attack.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

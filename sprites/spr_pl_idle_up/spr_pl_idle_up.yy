@@ -29,7 +29,7 @@
   "origin":9,
   "parent":{
     "name":"spr_pl_idle",
-    "path":"folders/Sprites/Animations/spr_pl_idle.yy",
+    "path":"folders/Sprites/PAnimations/spr_pl_idle.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

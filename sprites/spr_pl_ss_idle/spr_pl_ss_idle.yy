@@ -31,7 +31,7 @@
   "origin":9,
   "parent":{
     "name":"SIDE SCROLLING",
-    "path":"folders/Sprites/Animations/SIDE SCROLLING.yy",
+    "path":"folders/Sprites/PAnimations/SIDE SCROLLING.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

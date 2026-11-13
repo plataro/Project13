@@ -30,7 +30,7 @@
   "origin":9,
   "parent":{
     "name":"spr_pl_hurt",
-    "path":"folders/Sprites/Animations/spr_pl_hurt.yy",
+    "path":"folders/Sprites/PAnimations/spr_pl_hurt.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

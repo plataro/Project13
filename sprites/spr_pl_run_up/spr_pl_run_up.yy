@@ -33,7 +33,7 @@
   "origin":9,
   "parent":{
     "name":"spr_pl_run",
-    "path":"folders/Sprites/Animations/spr_pl_run.yy",
+    "path":"folders/Sprites/PAnimations/spr_pl_run.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

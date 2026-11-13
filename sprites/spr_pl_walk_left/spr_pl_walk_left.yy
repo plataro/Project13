@@ -31,7 +31,7 @@
   "origin":9,
   "parent":{
     "name":"spr_pl_walk",
-    "path":"folders/Sprites/Animations/spr_pl_walk.yy",
+    "path":"folders/Sprites/PAnimations/spr_pl_walk.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
