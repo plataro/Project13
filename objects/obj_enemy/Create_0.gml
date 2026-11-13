@@ -167,6 +167,7 @@ strafe = function(_ring, _spd) {
 engage = function() {
     if (engaged) return;
     engaged = true;
+    sfx_at("enemy_alert", x, y, 0.8, 0.1, 150);
     engage_hits = 0;
     engage_grace = round(engage_grace_time * random_range(0.8, 1.2));
 }
@@ -184,6 +185,7 @@ begin_attack = function(_name) {
     if (is_undefined(atk_cur)) return;
     atk_state = "windup";
     atk_timer = atk_cur.windup;
+    sfx_at("enemy_windup", x, y, 0.6, 0.1, 80);
     atk_dir = aim_at_player(atk_cur.lead);
     telegraph = true;
 }
@@ -206,6 +208,7 @@ run_attack = function() {
                 atk_state = "active";
                 atk_timer = atk_cur.active;
                 atk_lunge = atk_cur.lunge_frames;
+                sfx_at("enemy_attack", x, y, 0.9, 0.1, 50);
                 var _h = instance_create_depth(x, y, depth, obj_enemy_hitbox);
                 _h.owner = id;
                 _h.atk = atk_cur;

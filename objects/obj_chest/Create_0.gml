@@ -22,6 +22,7 @@ trial_r = 520;       // ★ รัศมีเขตบททดสอบ ออ
 // เปิดหีบ แจกของทั้งหมด
 open_chest = function() {
     opened = true;
+    sfx_at("chest_open", x, y);
     if (key != "") flag_set("chest_" + key);
 
     if (gold > 0) {

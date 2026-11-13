@@ -1,5 +1,7 @@
 // Begin Step: ทำก่อนทุก object (เปิดเมนูแล้วผู้เล่นจะไม่ฟัน/กลิ้งตามคลิกนั้น)
 input_update();   // ★ อ่านจอย/อุปกรณ์ล่าสุด ครั้งเดียวต่อเฟรม
+audio_update();   // ★ เพลงตามห้อง / เฟด / ระดับเสียง (scr_audio)
+ui_sound_watch(sel, open ? screen : -1);
 var _mx = device_mouse_x_to_gui(0);
 var _my = device_mouse_y_to_gui(0);
 var _click = mouse_check_button_pressed(mb_left);
@@ -71,7 +73,7 @@ if (bind_wait != "") {
 // ปิด / ย้อนกลับ
 if (keyboard_check_pressed(vk_escape) || input_pressed("pause") || input_pad_pressed(gp_face2)) {
     if (screen == 1) close_settings();
-    else if (screen == 3) { input_save(); screen = 1; sel = 5; }
+    else if (screen == 3) { input_save(); screen = 1; sel = 7; }
     else if (screen == 2) { screen = 0; sel = 2; }
     else if (!menu_mode) do_resume();
     exit;
@@ -80,7 +82,7 @@ if (keyboard_check_pressed(vk_escape) || input_pressed("pause") || input_pad_pre
 // เลื่อนด้วยคีย์บอร์ด
 if (input_ui_down()) sel = (sel + 1) mod _n;
 if (input_ui_up()) sel = (sel - 1 + _n) mod _n;
-if (screen == 1 && sel < 5) {
+if (screen == 1 && sel < 7) {
     if (input_ui_right()) change_setting(sel, 1);
     if (input_ui_left()) change_setting(sel, -1);
 }

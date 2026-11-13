@@ -1,3 +1,4 @@
+ui_sound_watch(hover_row, tab);   // ★ เสียงเลื่อนรายการ / สลับแท็บ
 if (open_delay > 0) open_delay--;
 if (msg_timer > 0) {
     msg_timer--;

@@ -1,3 +1,4 @@
+ui_sound_watch(sel, screen);   // ★ เสียงเลื่อน/เลือกเมนู
 if (instance_exists(obj_fade)) exit;
 if (instance_exists(obj_pause) && obj_pause.open) exit;   // หน้าตั้งค่าเปิดทับอยู่
 

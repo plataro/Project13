@@ -1,5 +1,6 @@
 if (!active && place_meeting(x, y, obj_player_ss)) {
     active = true;
+    sfx("checkpoint");
     image_blend = c_lime;
     with (obj_player_ss) {
         check_x = other.bbox_left + (other.bbox_right - other.bbox_left) / 2;

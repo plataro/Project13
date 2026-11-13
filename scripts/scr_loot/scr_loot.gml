@@ -69,12 +69,14 @@ function pickup_collect(_kind, _value, _x, _y) {
     switch (_kind) {
         case "gold":
             _s.gold += _value;
+            sfx("pickup_gold", 0.7, 0.12, 50);
             loot_toast("G", make_color_rgb(255, 210, 80), "coin", _value);
             return true;
 
         case "potion":
             if (_s.potions >= potion_cap()) return false;
             _s.potions++;
+            sfx("pickup_item");
             loot_toast(L("ยาฟื้นเลือด", "Healing Potion"), make_color_rgb(255, 110, 110), "potion");
             return true;
 
@@ -83,6 +85,7 @@ function pickup_collect(_kind, _value, _x, _y) {
             if (is_undefined(_d)) return true;
             _n = variable_struct_exists(_s.items, _kind) ? _s.items[$ _kind] : 0;
             _s.items[$ _kind] = _n + 1;
+            sfx("pickup_item");
             loot_toast(_d.name, _d.col, "gem");
             return true;
     }
@@ -123,6 +126,7 @@ function player_use_potion() {
     _s.potions--;
     var _heal = variable_instance_exists(id, "potion_heal") ? potion_heal : 2;
     hp = min(max_hp, hp + _heal);
+    sfx("potion");
     float_text(x, y - 90, "+" + string(_heal), c_lime, 1.2);
     return true;
 }

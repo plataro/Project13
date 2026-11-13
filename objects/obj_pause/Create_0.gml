@@ -93,7 +93,9 @@ get_items = function() {
             var _off = L("ปิด", "Off");
             return [
                 L("ภาษา:  ไทย", "Language:  English"),
-                L("เสียง:  ", "Volume:  ") + string(global.set_volume) + "%",
+                L("เสียงรวม:  ", "Master volume:  ") + string(global.set_volume) + "%",
+                L("เพลง:  ", "Music:  ") + string(global.set_music) + "%",
+                L("เสียงเอฟเฟกต์:  ", "Sound effects:  ") + string(global.set_sfx) + "%",
                 L("กล้องสั่น:  ", "Screen shake:  ") + shake_name(),
                 L("หยุดจังหวะตอนตีโดน:  ", "Hit-stop:  ") + (global.fx_hitstop_on ? _on : _off),
                 L("ตัวเลขดาเมจ:  ", "Damage numbers:  ") + (global.show_dmg ? _on : _off),
@@ -136,12 +138,19 @@ change_setting = function(_row, _d) {
             global.set_volume = clamp(global.set_volume + _d * 10, 0, 100);
             break;
         case 2:
-            global.fx_shake_scale = shake_vals[(shake_index() + _d + 4) mod 4];
+            global.set_music = clamp(global.set_music + _d * 10, 0, 100);
             break;
         case 3:
-            global.fx_hitstop_on = !global.fx_hitstop_on;
+            global.set_sfx = clamp(global.set_sfx + _d * 10, 0, 100);
+            sfx("ui_move");   // ★ ให้ได้ยินว่าดังแค่ไหน
             break;
         case 4:
+            global.fx_shake_scale = shake_vals[(shake_index() + _d + 4) mod 4];
+            break;
+        case 5:
+            global.fx_hitstop_on = !global.fx_hitstop_on;
+            break;
+        case 6:
             global.show_dmg = !global.show_dmg;
             break;
     }
@@ -157,11 +166,15 @@ confirm = function(_row) {
             else { screen = 2; sel = 1; }
             break;
         case 1:
-            if (_row == 6) close_settings();
-            else if (_row == 5) { screen = 3; sel = 0; bind_wait = ""; }
-            else if (_row == 1) {
+            if (_row == 8) close_settings();
+            else if (_row == 7) { screen = 3; sel = 0; bind_wait = ""; }
+            else if (_row >= 1 && _row <= 3) {
                 // เสียง: กดวนขึ้นทีละ 20% ถึง 100 แล้ววนกลับ 0
-                global.set_volume = (global.set_volume >= 100) ? 0 : min(100, global.set_volume + 20);
+                var _v = (_row == 1) ? global.set_volume : ((_row == 2) ? global.set_music : global.set_sfx);
+                _v = (_v >= 100) ? 0 : min(100, _v + 20);
+                if (_row == 1) global.set_volume = _v;
+                else if (_row == 2) global.set_music = _v;
+                else { global.set_sfx = _v; sfx("ui_move"); }
                 settings_apply();
             }
             else change_setting(_row, 1);
@@ -171,7 +184,7 @@ confirm = function(_row) {
             var _nr = array_length(_rl2);
             if (_row < _nr) { bind_wait = _rl2[_row]; bind_delay = 8; }
             else if (_row == _nr) input_reset_defaults();
-            else { input_save(); screen = 1; sel = 5; }
+            else { input_save(); screen = 1; sel = 7; }
             break;
         case 2:
             if (_row == 0) go_title();
@@ -183,6 +196,7 @@ confirm = function(_row) {
 // ตำแหน่งแถวบนจอ (ใช้ทั้งวาดและเช็กเมาส์)
 row_y = function(_i) {
     if (screen == 3) return 90 + _i * 22;   // ★ หน้าตั้งค่าปุ่ม รายการยาว (18 แถว)
+    if (screen == 1) return 188 + _i * 34;  // ★ หน้าตั้งค่า 9 แถว (เพิ่มเพลง/เอฟเฟกต์) บีบให้พอดีจอ
     return 214 + _i * 40;
 }
 bind_wait = "";   // ★ การกระทำที่กำลังรอให้กดปุ่มใหม่

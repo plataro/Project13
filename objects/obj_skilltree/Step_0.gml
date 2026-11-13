@@ -1,3 +1,4 @@
+ui_sound_watch(hover_key, 0, "");   // ★ เสียงเลื่อนไปสกิลอื่น
 if (open_delay > 0) open_delay--;
 if (msg_timer > 0) {
     msg_timer--;

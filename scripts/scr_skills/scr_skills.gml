@@ -102,12 +102,13 @@ function skill_unlock(_key) {
     var _n = skill_find(_key);
     var _s = global.save;
 
-    if (is_undefined(_n)) return L("ไม่พบสกิล", "Skill not found");
-    if (skill_has(_key)) return L("ปลดแล้ว", "Already unlocked");
-    if (_n.req != "" && !skill_has(_n.req)) return L("ต้องปลดสกิลก่อนหน้า", "Unlock the previous skill first");
-    if (_s.sp < _n.cost) return L("แต้มสกิลไม่พอ", "Not enough skill points");
+    if (is_undefined(_n)) { sfx("ui_error"); return L("ไม่พบสกิล", "Skill not found"); }
+    if (skill_has(_key)) { sfx("ui_error"); return L("ปลดแล้ว", "Already unlocked"); }
+    if (_n.req != "" && !skill_has(_n.req)) { sfx("ui_error"); return L("ต้องปลดสกิลก่อนหน้า", "Unlock the previous skill first"); }
+    if (_s.sp < _n.cost) { sfx("ui_error"); return L("แต้มสกิลไม่พอ", "Not enough skill points"); }
 
     _s.sp -= _n.cost;
+    sfx("skill_unlock");
     _s.skills[$ _key] = true;
 
     if (instance_exists(obj_player)) {

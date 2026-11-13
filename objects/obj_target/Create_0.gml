@@ -23,6 +23,7 @@ locked_open = false;   // ประตูเปิดแล้ว = ค้าง
 on_hit = function() {
     if (hit) return;
     hit = true;
+    sfx_at("target_hit", x, y);
     hit_t = 20;
     lock_t = relock;
     fx_spark(x, y - 48, 90, 14, (mode == "sword") ? make_color_rgb(150, 220, 255) : c_yellow, 180);

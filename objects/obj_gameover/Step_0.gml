@@ -1,3 +1,4 @@
+ui_sound_watch(sel, 0);
 alpha = min(alpha + 0.03, 0.8);
 if (alpha < 0.8) exit;
 pop = min(1, pop + 0.08);

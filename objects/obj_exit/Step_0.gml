@@ -31,6 +31,7 @@ if (!locked && !instance_exists(obj_fade) && !instance_exists(obj_dialogue) && i
     global.player_hp = obj_player.hp;
     if (set_flag != "") flag_set(set_flag);
     global.arrive = to_door;     // ห้องถัดไปจะให้ผู้เล่นเกิดที่ทางออกชื่อนี้
+    sfx("door");
     var _f = instance_create_depth(0, 0, -10000, obj_fade);
     _f.target_room = next_room;
 }

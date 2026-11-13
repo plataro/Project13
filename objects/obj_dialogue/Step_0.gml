@@ -13,8 +13,10 @@ var _next = keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E"))
 var _has_ch = variable_struct_exists(lines[index], "choices");
 
 if (chars < total) {
+    var _c0 = floor(chars);
     chars += type_speed;
     if (_next) chars = total;
+    else if (floor(chars) div 3 != _c0 div 3) sfx("blip", 0.5, 0.06, 0);   // ★ เสียงติ๊กทุก 3 ตัวอักษร
 } else if (_has_ch) {
     // ★ ตัวเลือก: คลิกเมาส์เท่านั้น (ไม่รับคีย์บอร์ด) และกดได้หลังตัวเลือกขึ้นครบ choice_delay เฟรม
     var _ch = lines[index].choices;

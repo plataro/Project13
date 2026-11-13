@@ -4,3 +4,4 @@ image_blend = c_gray;
 channel = 0;
 latch = false;     // true = กดแล้วค้างตลอด
 pressed = false;
+snd_pressed = -1;     // ★ เล่นเสียงตอนเพิ่งถูกกด

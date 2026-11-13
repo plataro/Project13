@@ -304,6 +304,7 @@ function orb_ai() {
         var _a0 = irandom(359);
         for (var _i = 0; _i < 8; _i++) {
             var _b = instance_create_depth(x, y, depth, obj_enemy_bullet);
+            sfx_at("enemy_shoot", x, y, 0.7, 0.1, 60);
             _b.direction = _a0 + _i * 45;
             _b.image_angle = _b.direction;
             _b.speed = 4;
@@ -325,6 +326,7 @@ function boss_intro_start(_boss, _name, _title) {
     if (variable_struct_exists(global.story_seen, _key)) return;   // ดูแล้วไม่ขึ้นซ้ำ (ตายแล้วเริ่มใหม่ก็ไม่ขึ้น)
     global.story_seen[$ _key] = true;
     global.boss_intro = { boss: _boss, name: _name, title: _title, t: 0, k: 0 };
+    sfx("boss_roar");
 }
 global.boss_intro = undefined;
 

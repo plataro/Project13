@@ -106,11 +106,12 @@ function shop_buy(_id) {
     var _info = shop_item_info(_id);
     var _s = global.save;
 
-    if (is_undefined(_info)) return L("ไม่มีสินค้า", "No such item");
-    if (!_info.ok) return _info.why;
-    if (_s.gold < _info.price) return L("เหรียญไม่พอ", "Not enough gold");
+    if (is_undefined(_info)) { sfx("ui_error"); return L("ไม่มีสินค้า", "No such item"); }
+    if (!_info.ok) { sfx("ui_error"); return _info.why; }
+    if (_s.gold < _info.price) { sfx("ui_error"); return L("เหรียญไม่พอ", "Not enough gold"); }
 
     _s.gold -= _info.price;
+    sfx("buy");
 
     // ★ เครื่องประดับ: ซื้อแล้วสวมเลยถ้าช่องว่าง / มีแล้ว = สวมหรือถอด
     if (!is_undefined(acc_data(_id))) {
@@ -170,6 +171,7 @@ function shop_sell(_kind, _all = false, _mul = 1) {
     _s.items[$ _kind] = _n - _cnt;
     var _gain = round(_d.price * _mul) * _cnt;
     _s.gold += _gain;
+    if (_gain > 0) sfx("sell");
     return _gain;
 }
 
@@ -271,6 +273,7 @@ function buff_use(_id) {
     var _n = variable_struct_exists(_s.buff_items, _id) ? _s.buff_items[$ _id] : 0;
     if (_n <= 0) return "";
     _s.buff_items[$ _id] = _n - 1;
+    sfx("buff");
     var _d = buff_data(_id);
     if (_id == "cleanse") {
         if (instance_exists(obj_player)) with (obj_player) { st_burn = 0; st_poison = 0; }

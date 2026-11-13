@@ -82,6 +82,8 @@ function fx_enemy_hit(_e, _dmg, _dir) {
     fx_hitstop(_big ? 2 : 2 + min(_p, 3));
     fx_shake((_big ? 1.5 : 1) + _p * 0.5);
     fx_spark(_cx, _cy, _dir, 4 + _p * 2, (_p >= 3) ? c_yellow : c_white);
+    // ★ ตีแรง = เสียงทุ้มลงนิดหน่อย
+    sfx_at(_big ? "hit_boss" : "hit_enemy", _cx, _cy, 1, 0.06, 25);
 }
 
 // =====================================================================
@@ -190,6 +192,7 @@ function fx_kill(_x, _y, _big) {
     fx_hitstop(_big ? 10 : 4);
     fx_shake(_big ? 9 : 3);
     fx_spark(_x, _y - 30, 0, _big ? 40 : 14, _big ? c_orange : c_ltgray, 180);
+    sfx_at(_big ? "boss_die" : "enemy_die", _x, _y);
 }
 
 // ผู้เล่นโดนตี

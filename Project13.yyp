@@ -110,6 +110,7 @@
     {"id":{"name":"rm_the_sanctuary_ss","path":"rooms/rm_the_sanctuary_ss/rm_the_sanctuary_ss.yy",},},
     {"id":{"name":"rm_the_village","path":"rooms/rm_the_village/rm_the_village.yy",},},
     {"id":{"name":"scr_anim","path":"scripts/scr_anim/scr_anim.yy",},},
+    {"id":{"name":"scr_audio","path":"scripts/scr_audio/scr_audio.yy",},},
     {"id":{"name":"scr_camera_ss","path":"scripts/scr_camera_ss/scr_camera_ss.yy",},},
     {"id":{"name":"scr_combat","path":"scripts/scr_combat/scr_combat.yy",},},
     {"id":{"name":"scr_draw","path":"scripts/scr_draw/scr_draw.yy",},},

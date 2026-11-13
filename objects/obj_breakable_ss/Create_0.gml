@@ -8,6 +8,7 @@ flash = 0;
 
 hit = function() {
     hp--;
+    sfx_at("break_wood", x, y, 1, 0.1);
     flash = 6;
     fx_spark(x + sprite_width / 2, y + sprite_height / 2, 90, 8, make_color_rgb(200, 150, 90), 160);
     fx_shake(2);

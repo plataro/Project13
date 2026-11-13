@@ -3,3 +3,4 @@ if (global.arrive == "shop") text = "";   // ★ ออกจากร้าน�
 t = 0;
 alpha = 0;
 if (text == "") instance_destroy();
+if (text != "") sfx("title_card");

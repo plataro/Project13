@@ -15,6 +15,9 @@ with (obj_lever_ss) {
     if (channel == other.channel && on) other.open = true;
 }
 
+if (snd_open != -1 && open != snd_open) sfx_at("gate", x, y);
+snd_open = open;
+
 var _ty = open ? open_y : close_y;
 var _dy = clamp(_ty - y, -move_spd, move_spd);
 

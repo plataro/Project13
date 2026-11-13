@@ -18,6 +18,7 @@ var _touch = (_p != noone) && !instance_exists(obj_fade) && !instance_exists(obj
 if ((_near && input_pressed("interact")) || _touch) {
     flag_set("sword");
     picked = true;
+    sfx("pickup_item");
     loot_toast(L("ดาบ", "Sword"), c_white, "sword");
     start_t = 3;
 }

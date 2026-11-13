@@ -38,3 +38,4 @@ node_rect = function(_n) {
     var _y = row_y0 + _n.tier * row_gap;
     return [_cx - node_w / 2, _y, _cx + node_w / 2, _y + node_h];
 }
+sfx("ui_select");   // ★ เปิดสกิลทรี

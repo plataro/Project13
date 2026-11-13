@@ -29,6 +29,7 @@ ai = function() {
             var _ty = obj_player.y + obj_player.vsp * _lead * 0.6;
             var _a = point_direction(x, y, _tx, _ty);
             var _b = instance_create_depth(x, y, depth, obj_enemy_bullet);
+            sfx_at("enemy_shoot", x, y, 0.7, 0.1, 60);
             _b.direction = _a;
             _b.image_angle = _a;
             _b.speed = bullet_speed;

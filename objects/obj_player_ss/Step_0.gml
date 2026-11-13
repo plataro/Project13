@@ -87,6 +87,7 @@ if (on_stairs != noone) {
         // ★ กระโดดจากบันไดได้ (ตกลงมาโดนบันไดอีกก็ยืนต่อได้เหมือนพื้น)
         on_stairs = noone;
         vsp = -jump_speed;
+        sfx("jump");
         vrem = 0;
         hsp = _kx * (_run ? run_speed : walk_speed);
         jump_buffer = 0;
@@ -196,6 +197,7 @@ vsp = min(vsp + grav, max_fall);
 
 if (jump_buffer > 0 && coyote > 0) {
     fx_dust(x, y - 2, 3, make_color_rgb(190, 180, 165));   // ★ ฝุ่นตอนกระโดด
+    sfx("jump");
     vsp = -jump_speed;
     vrem = 0;
     jump_buffer = 0;
@@ -262,7 +264,7 @@ if (on_stairs == noone && vsp >= 0 && !_frozen) {
 grounded = place_meeting(x, y + 1, _solids);
 
 // ★ ฝุ่น: ตอนวิ่งบนพื้น / ตอนลงพื้น
-if (grounded && !ss_was_grounded) fx_dust(x, y - 2, 4, make_color_rgb(190, 180, 165));
+if (grounded && !ss_was_grounded) { fx_dust(x, y - 2, 4, make_color_rgb(190, 180, 165)); sfx("land", 0.8); }
 ss_was_grounded = grounded;
 if (grounded && abs(hsp) > 1.5) {
     ss_dust_t--;

@@ -9,3 +9,4 @@ open_y = y - sprite_height;
 open_down = false;        // ★ true = เปิดโดยจมลงพื้น (ตั้งใน Creation Code) แทนการยกขึ้นเพดาน
 inited = false;
 move_spd = 6;
+snd_open = -1;   // ★ จำสถานะเปิด/ปิดไว้เล่นเสียงตอนเปลี่ยน

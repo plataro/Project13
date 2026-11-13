@@ -113,6 +113,7 @@ take_damage = function(_dmg, _sx, _sy) {
     if (is_invulnerable()) exit;
     hp -= _dmg;
     fx_player_hurt(_dmg);
+    sfx("player_hurt");
     invuln_timer = invuln_time;
     var _d = point_direction(_sx, _sy, x, y);
     kb_x = lengthdir_x(8, _d);
@@ -150,6 +151,11 @@ start_attack = function(_n) {
     lunge_timer = _d.lunge_frames;
     lunge_speed = _d.lunge_speed;
 
+    // ★ เสียงฟัน (ค้อน / ทุ่มชาร์จ / ดาบ)
+    if (_n == 9) sfx("hammer_smash");
+    else if (global.save.weapon == "hammer") sfx("hammer_swing", 1, 0.06);
+    else sfx("swing", 1, 0.06 + _n * 0.02);
+
     var _h = instance_create_depth(x, y, depth, obj_hitbox);
 	_h.owner = id;
 	_h.image_angle = aim;
@@ -161,6 +167,7 @@ start_attack = function(_n) {
 // เริ่มกลิ้ง: มีปุ่มเดิน = กลิ้งตามทิศเดิน, ไม่มี = กลิ้งตามเมาส์
 start_roll = function(_kx, _ky, _len) {
     state = PState.ROLL;
+    sfx("roll");
     fx_dust(x, y - 2, 5, make_color_rgb(200, 190, 170));   // ★ ฝุ่นตอนกลิ้ง
     roll_timer = roll_time;
     dodge_timer = roll_iframes;
@@ -226,6 +233,7 @@ update_camera = function(_zoom) {
 // ★ สกิล 3: ดาบพายุหมุน — หมุนตัวพุ่งไปทางที่เล็ง ฟันรอบตัวหลายรอบ (แต่ละรอบโดนได้ 1 ครั้ง)
 // =====================================================================
 start_whirl = function() {
+    sfx("whirl");
     skill3_timer = skill3_cooldown;
     combo = 0;
     combo_window = 0;
@@ -257,6 +265,7 @@ start_whirl = function() {
 //   โดนเป้าปริศนาแบบยิง (obj_target mode "shot") ได้ด้วย
 // =====================================================================
 cast_bolt = function() {
+    sfx("bolt");
     var _cands = [];   // [id, x, y(จุดวาด), เป็นเป้า?]
     with (obj_enemy) if (hp > 0) array_push(_cands, [id, x, y - ((object_index == obj_enemy_boss) ? 90 : 40), false]);
     with (obj_target) if (!hit && mode != "sword") array_push(_cands, [id, x, y - 48, true]);
@@ -327,6 +336,7 @@ cast_bolt = function() {
 // ★ ท่าไม้ตาย: รวมพลังแป๊บนึง (อมตะ) แล้วระเบิดแสงรอบตัววงใหญ่
 // =====================================================================
 cast_ult = function() {
+    sfx("ult");
     global.ult_charge = 0;
     combo = 0;
     combo_window = 0;

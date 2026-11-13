@@ -79,3 +79,4 @@ refresh_sell = function() {
     }
 }
 refresh_sell();
+sfx("ui_select");   // ★ เปิดร้าน

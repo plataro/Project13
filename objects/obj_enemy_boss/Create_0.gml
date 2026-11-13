@@ -274,6 +274,7 @@ leap_land = function() {
         var _a0 = irandom(359);
         for (var _j = 0; _j < _n; _j++) {
             var _b = instance_create_depth(x, y, depth, obj_enemy_bullet); _b.from_boss = true;
+            sfx_at("enemy_shoot", x, y, 0.7, 0.1, 60);
             _b.direction = _a0 + _j * (360 / _n);
             _b.image_angle = _b.direction;
             _b.speed = 4.5;
@@ -572,6 +573,7 @@ attack_options = function(_d) {
 // ---- เข้าเฟสใหม่ ----
 enter_phase = function(_n) {
     phase = _n;
+    sfx("boss_phase");
     state = "trans";
     state_timer = 60;
     invuln = 60;
@@ -870,6 +872,7 @@ ai = function() {
                 var _va = point_direction(x, y, obj_player.x, obj_player.y);
                 for (var _v = 0; _v < _vn; _v++) {
                     var _vb = instance_create_depth(x, y, depth, obj_enemy_bullet); _vb.from_boss = true;
+                    sfx_at("enemy_shoot", x, y, 0.7, 0.1, 60);
                     _vb.direction = _va + (_v - (_vn - 1) / 2) * 14;
                     _vb.image_angle = _vb.direction;
                     _vb.speed = 6.5;
@@ -1000,6 +1003,7 @@ ai = function() {
                 var _step = 360 / _dirs;
                 for (var _j = 0; _j < _dirs; _j++) {
                     var _b = instance_create_depth(x, y, depth, obj_enemy_bullet); _b.from_boss = true;
+                    sfx_at("enemy_shoot", x, y, 0.7, 0.1, 60);
                     _b.direction = burst_a0 + burst_wave * (_step / 2) + _j * _step;
                     _b.image_angle = _b.direction;
                     _b.speed = (phase >= 3) ? 5.5 : 5;
@@ -1029,6 +1033,7 @@ ai = function() {
             if (state_timer mod 5 == 0) {
                 for (var _s = 0; _s < 2; _s++) {
                     var _sb = instance_create_depth(x, y, depth, obj_enemy_bullet);
+                    sfx_at("enemy_shoot", x, y, 0.7, 0.1, 60);
                     _sb.direction = spiral_a + _s * 180;
                     _sb.image_angle = _sb.direction;
                     _sb.speed = 4.5;
@@ -1055,6 +1060,7 @@ ai = function() {
                 var _off = burst_n * (180 / _bn);
                 for (var _bi = 0; _bi < _bn; _bi++) {
                     var _eb = instance_create_depth(x, y, depth, obj_enemy_bullet); _eb.from_boss = true;
+                    sfx_at("enemy_shoot", x, y, 0.7, 0.1, 60);
                     _eb.direction = _off + _bi * (360 / _bn);
                     _eb.image_angle = _eb.direction;
                     _eb.speed = 4;

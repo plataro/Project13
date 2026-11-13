@@ -23,6 +23,7 @@ else if (!opened) {
     if (trial_state == 0) {
         if (_press) {
             trial_state = 1;
+            sfx("trial_start");
             trial_wave = 0;
             trial_t = 45;
             float_text(x, y - 110, L("บททดสอบเริ่ม!", "Trial begins!"), make_color_rgb(200, 120, 255), 1.4);

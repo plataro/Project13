@@ -231,6 +231,7 @@ switch (state) {
 
 			shot1_ammo--;
 			shot1_timer = shot1_gap;
+			sfx("shoot", 0.8);
 
 			if (shot1_ammo <= 0) {
 				shot1_reload_timer = shot1_reload;
@@ -254,6 +255,7 @@ switch (state) {
 			}
 
 			skill2_timer = skill2_cooldown;
+			sfx("shoot_spread");
 		}
 
 		// ★ ท่าไม้ตาย (เกจเต็ม)
@@ -324,6 +326,7 @@ switch (state) {
         var _was_full = (charge_t >= charge_time);
         charge_t = min(charge_t + 1, charge_time);
         if (!_was_full && charge_t >= charge_time) {
+            sfx("charge_full");
             fx_shake(1.5);
             fx_spark(x, y - 60, 90, 12, c_yellow, 160);
         }

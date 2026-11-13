@@ -22,6 +22,7 @@ if (!opening) {
     }
     if (_total > 0 && _hit >= _total) {
         opening = true;
+        sfx_at("gate", x + sprite_width / 2, y);
         global.story_seen[$ _gkey] = true;   // ★ จำว่าเปิดแล้ว (เซฟอัตโนมัติผ่าน obj_tutorial)
         var _ch1 = channel;
         with (obj_target) if (channel == _ch1) locked_open = true;
