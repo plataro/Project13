@@ -124,18 +124,20 @@ var _eye = [_px, _py];
 with (obj_enemy) {
     if (vis <= 0.02 || !variable_instance_exists(id, "fog_col")) continue;
     if (sprite_index >= 0 && fog_point_lit(_eye, x, y - 4)) {
-        var _sh = sprite_get_height(sprite_index) * abs(image_yscale);
+        var _xs = image_xscale * dscale;   // ★ Chaser วาดขยาย 2 เท่า
+        var _ys = image_yscale * dscale;
+        var _sh = sprite_get_height(sprite_index) * abs(_ys);
         var _w = collision_line(x, y - 6, x, y - z - _sh, obj_wall, false, true);
         if (_w != noone && _w.bbox_bottom < y - 2) {
             var _cut = _w.bbox_bottom + 1;                                   // เส้นล่างของกำแพงที่อยู่ข้างหลัง
-            var _dx = round(x) + fog_ox - sprite_get_xoffset(sprite_index) * image_xscale;
-            var _dy = round(y - z) - sprite_get_yoffset(sprite_index) * image_yscale;
-            var _hp = clamp((_cut - _dy) / image_yscale, 0, sprite_get_height(sprite_index));
+            var _dx = round(x) + fog_ox - sprite_get_xoffset(sprite_index) * _xs;
+            var _dy = round(y - z) - sprite_get_yoffset(sprite_index) * _ys;
+            var _hp = clamp((_cut - _dy) / _ys, 0, sprite_get_height(sprite_index));
             if (_hp > 0) {
-                draw_sprite_part_ext(sprite_index, image_index, 0, 0, sprite_get_width(sprite_index), _hp, _dx, _dy, image_xscale, image_yscale, fog_col, vis);
+                draw_sprite_part_ext(sprite_index, image_index, 0, 0, sprite_get_width(sprite_index), _hp, _dx, _dy, _xs, _ys, fog_col, vis);
                 if (flash > 3) {
                     gpu_set_blendmode(bm_add);
-                    draw_sprite_part_ext(sprite_index, image_index, 0, 0, sprite_get_width(sprite_index), _hp, _dx, _dy, image_xscale, image_yscale, c_white, vis * 0.85);
+                    draw_sprite_part_ext(sprite_index, image_index, 0, 0, sprite_get_width(sprite_index), _hp, _dx, _dy, _xs, _ys, c_white, vis * 0.85);
                     gpu_set_blendmode(bm_normal);
                 }
             }

@@ -34,6 +34,8 @@ if (variable_instance_exists(id, "is_orb")) {
     exit;
 }
 
+chaser_anim();   // ★ เลือกสไปรต์/เฟรมของ Chaser ตามท่าทาง
+
 // ★ สัญญาณเตือน: ท่าประชิด = ตัวกะพริบขาว + "!" เหนือหัว / ท่าระยะไกล = แดงวาบ + "!" สีแดง
 var _melee_tel = telegraph && (atk_state == "windup" || (variable_instance_exists(id, "state") && (state == "leap_windup")));
 var _col = tint;
@@ -133,7 +135,7 @@ if (atk_state == "windup" && !is_undefined(atk_cur)) {
     draw_set_color(c_white);
 }
 
-draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, _col, vis);
+draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale * dscale, image_yscale * dscale, 0, _col, vis);
 fog_col = _col;   // ★ จำไว้ให้หมอกวาดตัวซ้ำทับ (ตัวไม่มืดตามขอบกำแพง)
 fog_ox = _ox;
 
@@ -158,7 +160,7 @@ if (shield > 0 && (shield > 60 || (shield div 5) mod 2 == 0)) {
 // ★ ท่าประชิด: ตัวกะพริบขาว
 if (_melee_tel && flash <= 0 && (current_time div 70) mod 2 == 0) {
     gpu_set_blendmode(bm_add);
-    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.7);
+    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale * dscale, image_yscale * dscale, 0, c_white, vis * 0.7);
     gpu_set_blendmode(bm_normal);
 }
 // ★ เครื่องหมาย "!" เหนือหัว
@@ -181,7 +183,7 @@ if (telegraph && vis > 0.3) {
 // แฟลชขาวช่วงแรกที่โดนตี (บวกสีขาวทับตัวศัตรู)
 if (flash > 3) {
     gpu_set_blendmode(bm_add);
-    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale, image_yscale, 0, c_white, vis * 0.85);
+    draw_sprite_ext(sprite_index, image_index, round(x) + _ox, round(y - z), image_xscale * dscale, image_yscale * dscale, 0, c_white, vis * 0.85);
     gpu_set_blendmode(bm_normal);
 }
 

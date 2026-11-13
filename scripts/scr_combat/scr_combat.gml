@@ -48,6 +48,7 @@ function enemy_hurt_rect(_e) {
     var _big = (_e.object_index == obj_enemy_boss);
     var _w = _big ? 110 : 44;
     var _h = _big ? 180 : 84;
+    if (_e.object_index == obj_enemy) _h = 66;   // ★ Chaser ก็อบลิน ตัวเตี้ยกว่า (สไปรต์ x2 สูงราว 60px)
     return [_e.x - _w / 2, _e.y - _h, _e.x + _w / 2, _e.y];
 }
 
