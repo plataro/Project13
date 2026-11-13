@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_pl_ss_idle",
-    "path":"sprites/spr_pl_ss_idle/spr_pl_ss_idle.yy",
+    "name":"spr_pl_right",
+    "path":"sprites/spr_pl_right/spr_pl_right.yy",
   },
   "spriteMaskId":null,
   "visible":true,

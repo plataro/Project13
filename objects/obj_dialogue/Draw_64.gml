@@ -17,7 +17,7 @@ for (var _i = 0; _i < 2; _i++) {
     var _emo = _cd.emotions[$ _s.emo];
     if (is_undefined(_emo)) _emo = 0;
 
-    var _fit = portrait_h / sprite_get_height(_spr);   // ★ ปรับขนาดให้สูงเท่ากันทุกรูป
+    var _fit = portrait_h / (sprite_get_bbox_bottom(_spr) - sprite_get_bbox_top(_spr) + 1);   // ★ ขยายตามความสูงของภาพจริง ให้สูงเท่ากันทุกตัว
     var _active = (speaker == _side);
     var _bob = (_active && _talking) ? sin(current_time / 90) * 3 : 0;
     var _sc = _active ? 1 : 0.95;

@@ -1,14 +1,15 @@
 draw_shadow(x, y, 22, 8);
 
-var _body = make_color_rgb(110, 70, 140);
-if (shop_type == "smith") _body = make_color_rgb(190, 100, 40);
-if (shop_type == "buyer") _body = make_color_rgb(60, 150, 100);
-if (shop_type == "jeweler") _body = make_color_rgb(60, 160, 190);
-if (shop_type == "alchemist") _body = make_color_rgb(150, 60, 160);
-draw_set_color(_body);
-draw_rectangle(round(x) - 18, round(y) - 70, round(x) + 18, round(y) - 6, false);
-draw_set_color(make_color_rgb(235, 200, 160));
-draw_circle(round(x), round(y) - 82, 14, false);
+// ★ ภาพพ่อค้าแม่ค้าตามชนิดร้าน (ภาพนิ่ง หายใจเบา ๆ)
+var _spr = spr_npc_villager;
+switch (shop_type) {
+    case "smith":     _spr = spr_npc_smith; break;
+    case "buyer":     _spr = spr_npc_buyer; break;
+    case "jeweler":   _spr = spr_npc_jeweler; break;
+    case "alchemist": _spr = spr_npc_alchemist; break;
+}
+var _br = sin(current_time / 420 + x) * 0.03;
+draw_sprite_ext(_spr, 0, round(x), round(y), 2.5, 2.5 * (1 + _br), 0, c_white, 1);
 
 draw_set_font(fnt_dialog);
 draw_set_halign(fa_center);

@@ -5,7 +5,7 @@ global.ss_cam_ready = false;
 mask_index = spr_mask_ss;
 depth = -100;
 image_speed = 0;       // คุมเฟรมเอง
-sc = 2;                // ขนาดภาพ
+sc = 3;                // ขนาดภาพ
 face = 1;              // 1 = ขวา, -1 = ซ้าย
 
 hsp = 0;

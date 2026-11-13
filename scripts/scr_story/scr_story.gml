@@ -7,17 +7,30 @@ global.arrive = "";        // ชื่อประตูที่ผู้เ�
 // emotions: ตั้งชื่ออารมณ์เองได้ ตัวเลขคือลำดับเฟรมใน sprite (เริ่มที่ 0)
 function portrait_data() {
     return {
+        // ★ ใช้ภาพตัวละครจริงขยายใหญ่ (ภาพเดียว ทุกอารมณ์ใช้เฟรม 0)
         a: {
-            sprite: spr_portrait_a,
+            sprite: spr_pl_right,
             mirror_on_right: true,
-            emotions: { normal: 0, happy: 1, sad: 2, angry: 3, surprised: 4 }
+            emotions: { normal: 0, happy: 0, sad: 0, angry: 0, surprised: 0 }
         },
         b: {
-            sprite: spr_portrait_b,
+            sprite: spr_dragon_right,
             mirror_on_right: true,
-            emotions: { normal: 0, happy: 1, sad: 2 }
+            emotions: { normal: 0, happy: 0, sad: 0 }
         }
     };
+}
+
+// ★ วาดหน้าตัวละครในกรอบสี่เหลี่ยม (ครอปเฉพาะส่วนที่มีภาพ ไม่ใช่ทั้งแคนวาส)
+function draw_portrait_box(_spr, _img, _x, _y, _size, _col, _alpha) {
+    var _l = sprite_get_bbox_left(_spr);
+    var _t = sprite_get_bbox_top(_spr);
+    var _w = sprite_get_bbox_right(_spr) - _l + 1;
+    var _h = sprite_get_bbox_bottom(_spr) - _t + 1;
+    var _side = max(_w, min(_h, _w * 1.15));        // ครอปจากหัวลงมา
+    var _sc = _size / _side;
+    var _cx = _l + _w / 2 - _side / 2;
+    draw_sprite_part_ext(_spr, _img, max(0, _cx), _t, _side, min(_side, _h), _x + max(0, -_cx) * _sc, _y, _sc, _sc, _col, _alpha);
 }
 
 function story_lines(_key) {

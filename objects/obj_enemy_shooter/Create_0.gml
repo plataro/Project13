@@ -3,7 +3,7 @@ event_inherited();
 hp = 2;
 max_hp = hp;
 move_speed = 1.6;
-tint = c_orange;
+tint = make_color_rgb(255, 170, 70);    // ★ ภาพเดียวกับตัวอื่น แยกด้วยสีส้ม
 ring_dist = 300;
 engage_range = 100000;   // ตัวยิงหนีผู้เล่น = นับช่วงรอตลอดตอนเห็นตัว (ไม่งั้นจะไม่ยิงเลย)
 

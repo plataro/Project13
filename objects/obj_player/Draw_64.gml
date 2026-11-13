@@ -55,9 +55,7 @@ var _emo = _pd.a.emotions;
 var _img = _emo.normal;
 if (hud_hurt_t > 0 && variable_struct_exists(_emo, "surprised")) _img = _emo.surprised;
 else if (_hp <= 1 && variable_struct_exists(_emo, "sad")) _img = _emo.sad;
-var _pw = sprite_get_width(_ps);
-var _psc = (_fs - 8) / _pw;
-draw_sprite_part_ext(_ps, _img, 0, 0, _pw, _pw, _fx + 4 + _shake, _fy + 4, _psc, _psc, (hud_hurt_t > 20) ? make_color_rgb(255, 150, 150) : c_white, 1);
+draw_portrait_box(_ps, _img, _fx + 4 + _shake, _fy + 4, _fs - 8, (hud_hurt_t > 20) ? make_color_rgb(255, 150, 150) : c_white, 1);
 
 // หลอดเลือด
 draw_set_color(c_black);

@@ -4,7 +4,8 @@ is_final = (room == rm_boss);      // บอสสุดท้าย = 3 เฟ�
 hp = is_final ? 320 : 40;          // ★ บอสใหญ่เลือดเยอะขึ้น (เดิม 200) / มินิบอสตั้งเลือดใหม่ใน Creation Code ของห้อง
 max_hp = hp;
 move_speed = 1.5;
-tint = c_ltgray;
+tint = c_white;
+dscale = is_final ? 2.3 : 2;   // ★ ภาพบอส 128x128 ขยายตอนวาด
 sep_radius = 120;
 sep_strength = 0.3;
 engage_range = 220;             // บอสถูกดันยาก แต่ดันตัวเล็กออกได้แรง
@@ -58,20 +59,17 @@ switch (variant) {
         boss_name = L("พยัคฆ์ทมิฬ", "Shadow Tiger");
         boss_title = L("เจ้าป่าผู้กระหายเลือด", "Bloodthirsty Lord of the Forest");
         move_speed = 2.4;
-        tint = make_color_rgb(215, 150, 110);
         break;
     case "brute":
         boss_name = L("กุมภัณฑ์ศิลา", "Stone Ogre");
         boss_title = L("ยักษ์ค้อนแห่งเหมืองร้าง", "Hammer Giant of the Abandoned Mine");
         move_speed = 1.0;
         hp_mult = 1.6;               // ★ เลือดเยอะกว่าตัวอื่น
-        tint = make_color_rgb(170, 140, 120);
         break;
     case "mage":
         boss_name = L("เวทารุณ", "Vetharun");
         boss_title = L("จอมเวทผู้เฝ้าหอคอย", "Archmage of the Tower");
         move_speed = 1.4;
-        tint = make_color_rgb(165, 150, 255);
         engage_range = 100000;       // รักษาระยะอยู่แล้ว ช่วงรอจังหวะแรกนับตลอด
         break;
 }
@@ -989,7 +987,7 @@ ai = function() {
             vsp = 0;
             stun_t--;
             if (stun_t <= 0) {
-                tint = c_ltgray;
+                tint = c_white;
                 state = "chase";
                 attack_cd = 30;
             }

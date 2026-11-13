@@ -1,5 +1,16 @@
 var _a = (respawn_timer > 0 && (respawn_timer mod 8 < 4)) ? 0.35 : 1;
-draw_sprite_ext(sprite_index, image_index, round(x), round(y), face * sc, sc, 0, c_white, _a);
+// ★ ท่าทางจากภาพนิ่ง: เดิน/วิ่ง = เด้ง + เอียง, กระโดด = ยืดตอนขึ้น หดตอนตก
+var _bob = 0, _ang = 0, _sx = 1, _sy = 1;
+switch (anim_state) {
+    case "walk": _bob = abs(sin(anim_t)) * 4; _ang = sin(anim_t) * 5; break;
+    case "run":  _bob = abs(sin(anim_t)) * 6; _ang = sin(anim_t) * 6 - 8 * face; break;
+    case "jump":
+        var _v = clamp(vsp / max(1, jump_speed), -1, 1);
+        _sy = 1 - _v * 0.1; _sx = 1 + _v * 0.08; _ang = -_v * 6 * face;
+        break;
+    default: _sy = 1 + sin(current_time / 400) * 0.02; break;
+}
+draw_sprite_ext(sprite_index, 0, round(x), round(y - _bob), face * sc * _sx, sc * _sy, _ang, c_white, _a);
 
 // ★ เอฟเฟกต์ฟันดาบ (โค้งครึ่งวงหน้าตัว)
 if (atk_t > 0 && atk_t <= 13) {

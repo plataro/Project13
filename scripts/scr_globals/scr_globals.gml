@@ -380,10 +380,9 @@ function room_title(_r) {
 // ★ รายชื่อเครดิต (เมนูหลัก + หน้าจบเกม) [หัวข้อ, ชื่อ]
 function credits_lines() {
     return [
-        [L("โค้ดและระบบเกม", "Code & Systems"), "[ใส่ชื่อ]"],
-        [L("ภาพและเนื้อเรื่อง", "Art & Story"), "[ใส่ชื่อ]"],
+        [L("โค้ดและระบบเกม", "Code & Systems"), "Claude (Anthropic)"],
+        [L("ภาพ เนื้อเรื่อง และเกมดีไซน์", "Art, Story & Game Design"), "jzbzz"],
         [L("เพลง", "Music"), "Action RPG Exploration Themes - Chimera Forge Productions (itch.io)"],
-        [L("เสียงเอฟเฟกต์", "Sound Effects"), "[ใส่แหล่งที่มา]"],
         [L("ฟอนต์", "Font"), "Mitr (Cadson Demak, SIL OFL)"]
     ];
 }

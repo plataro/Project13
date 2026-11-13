@@ -114,7 +114,7 @@ if (on_stairs != noone) {
         if (_leave) on_stairs = noone;
 
         // แอนิเมชันเดิน + กล้อง แล้วจบ (บนบันไดไม่ใช้ฟิสิกส์ปกติ)
-        sprite_index = (_kx != 0) ? spr_pl_ss_walk : spr_pl_ss_idle;
+        sprite_index = spr_pl_right;   // ★ ภาพนิ่ง ท่าเดินทำใน Draw
         anim_t += ((_kx != 0) ? 10 : 8) / 60;
         image_index = floor(anim_t) mod sprite_get_number(sprite_index);
         scr_camera_ss(x, y - 72, face);
@@ -292,15 +292,11 @@ if (_new != anim_state) {
 
 var _n;
 switch (anim_state) {
-    case "idle": sprite_index = spr_pl_ss_idle; anim_t += 8 / 60;  break;
-    case "walk": sprite_index = spr_pl_ss_walk; anim_t += 10 / 60; break;
-    case "run":  sprite_index = spr_pl_ss_run;  anim_t += 16 / 60; break;
-    case "jump":
-        sprite_index = spr_pl_ss_jump;
-        _n = sprite_get_number(sprite_index);
-        // เฟรมแรก = พุ่งขึ้น, เฟรมท้าย = ตกลง ตามความเร็วแนวตั้ง
-        anim_t = clamp(((vsp + jump_speed) / (jump_speed + max_fall)) * (_n - 1), 0, _n - 1);
-        break;
+    // ★ ภาพนิ่งภาพเดียว (spr_pl_right) ท่าทางทำใน Draw: anim_t = จังหวะก้าว
+    case "idle": sprite_index = spr_pl_right; anim_t += 0;    break;
+    case "walk": sprite_index = spr_pl_right; anim_t += 0.18; break;
+    case "run":  sprite_index = spr_pl_right; anim_t += 0.3;  break;
+    case "jump": sprite_index = spr_pl_right; break;
 }
 image_index = floor(anim_t) mod sprite_get_number(sprite_index);
 

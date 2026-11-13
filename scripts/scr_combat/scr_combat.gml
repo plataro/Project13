@@ -46,9 +46,8 @@ function circle_hits_rect(_cx, _cy, _r, _x1, _y1, _x2, _y2) {
 function enemy_hurt_rect(_e) {
     if (variable_instance_exists(_e, "is_orb")) return [_e.x - 22, _e.y - 64, _e.x + 22, _e.y - 18];   // ลูกไฟลอย
     var _big = (_e.object_index == obj_enemy_boss);
-    var _w = _big ? 110 : 44;
-    var _h = _big ? 180 : 84;
-    if (_e.object_index == obj_enemy) _h = 66;   // ★ Chaser ก็อบลิน ตัวเตี้ยกว่า (สไปรต์ x2 สูงราว 60px)
+    var _w = _big ? 110 : 40;
+    var _h = _big ? 170 : 58;   // ★ ตัวเล็ก: ภาพ x2 สูงราว 52px / บอส: ภาพ x2 สูงราว 170px
     return [_e.x - _w / 2, _e.y - _h, _e.x + _w / 2, _e.y];
 }
 

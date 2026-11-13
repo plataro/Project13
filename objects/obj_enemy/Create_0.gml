@@ -81,20 +81,15 @@ atk_state = "";   // "", "windup", "active", "recover"
 atk_timer = 0;
 atk_lunge = 0;
 
-// ---- ★ แอนิเมชัน Chaser (ก็อบลิน) ----
-// ใช้เฉพาะ obj_enemy ตัวเอง (Dasher/Shooter/บอส ยังใช้สไปรต์เดิม) ลูกไฟของบอสถูกข้ามใน chaser_anim()
-is_chaser = (object_index == obj_enemy);
-dscale = 1;          // ขนาดตอนวาด (ไม่ไปยุ่งกับกล่องชน mask_index)
+// ---- ★ แอนิเมชันศัตรู (ภาพนิ่งทิศละ 1 ภาพ ท่าทางทำในโค้ด: scr_enemy_anim) ----
+dscale = 2;   // ขนาดตอนวาด (ไม่ไปยุ่งกับกล่องชน mask_index) บอสตั้งใหม่ใน Create ของบอส
 face = 3;            // 0 ขวา, 1 บน, 2 ซ้าย, 3 ล่าง (เหมือนผู้เล่น)
-anim_t = 0;
-anim_name = "idle";
-hurt_t = 0;          // เหลือกี่เฟรมที่ยังเล่นท่าเจ็บ
+anim_t = random(10);
+hurt_t = 0;          // เหลือกี่เฟรมที่ยังสั่นเจ็บ
 hurt_time = 24;
-if (is_chaser) {
-    dscale = 2;
-    sprite_index = spr_enemy_chaser_idle_down;
-    image_speed = 0;
-}
+dflip = 1; dbob = 0; dang = 0; dsx = 1; dsy = 1;
+sprite_index = spr_enemy_down;
+image_speed = 0;
 
 // ---- ฟังก์ชันช่วย ----
 dist_to_player = function() {
@@ -318,7 +313,7 @@ take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
         if (engage_hits >= engage_hits_max) engage_grace = min(engage_grace, 14);
     }
     hp_bar_timer = 180;   // ★ แสดงหลอดเลือด 3 วินาทีหลังโดนตี
-    hurt_t = hurt_time;   // ★ เล่นท่าเจ็บ (Chaser)
+    hurt_t = hurt_time;   // ★ สั่นเจ็บ
     kb_x = lengthdir_x(8, _dir);
     kb_y = lengthdir_y(8, _dir);
 

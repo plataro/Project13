@@ -47,35 +47,16 @@ if (!opened && (shot_up > 0 || trial)) {
     gpu_set_blendmode(bm_normal);
 }
 
-if (!opened) {
-    // ★ สีหีบตามชนิด: ธรรมดา = ไม้ / เครื่องประดับพิเศษ = ม่วงขอบทอง / ยา = แดงมีกากบาท
-    var _special = (acc != "");
-    var _potchest = (!_special && potion > 0 && gold <= 0 && shot_up <= 0 && !trial);
-    var _c1 = _special ? make_color_rgb(70, 40, 100) : (_potchest ? make_color_rgb(150, 45, 50) : make_color_rgb(150, 95, 40));
-    var _c2 = _special ? make_color_rgb(50, 26, 76) : (_potchest ? make_color_rgb(110, 30, 36) : make_color_rgb(110, 65, 25));
-    draw_set_color(_c1);
-    draw_rectangle(_x - 24, _y - 34, _x + 24, _y - 2, false);
-    draw_set_color(_c2);
-    draw_rectangle(_x - 24, _y - 42, _x + 24, _y - 30, false);
-    if (_special) {
-        draw_set_color(make_color_rgb(255, 210, 120));
-        draw_rectangle(_x - 24, _y - 42, _x + 24, _y - 2, true);
-        draw_rectangle(_x - 25, _y - 43, _x + 25, _y - 1, true);
-    }
-    if (_potchest) {
-        draw_set_color(c_white);
-        draw_rectangle(_x - 2, _y - 28, _x + 2, _y - 8, false);
-        draw_rectangle(_x - 10, _y - 20, _x + 10, _y - 16, false);
-    } else {
-        draw_set_color(_special ? make_color_rgb(255, 210, 120) : c_yellow);
-        draw_rectangle(_x - 4, _y - 30, _x + 4, _y - 20, false);
-    }
-} else {
-    draw_set_color(make_color_rgb(95, 60, 30));
-    draw_rectangle(_x - 24, _y - 30, _x + 24, _y - 2, false);
-    draw_set_color(make_color_rgb(60, 40, 20));
-    draw_rectangle(_x - 24, _y - 52, _x + 24, _y - 44, false);
-}
+// ★ ภาพหีบ (ปิด/เปิด) ย้อมสีตามชนิด: ธรรมดา = ปกติ / เครื่องประดับพิเศษ = ม่วงทอง / ยา = แดง / บททดสอบ = ม่วง
+var _special = (acc != "");
+var _potchest = (!_special && potion > 0 && gold <= 0 && shot_up <= 0 && !trial);
+var _tcol = c_white;
+if (_special) _tcol = make_color_rgb(230, 180, 255);
+else if (_potchest) _tcol = make_color_rgb(255, 150, 150);
+else if (shot_up > 0 || trial) _tcol = make_color_rgb(200, 170, 255);
+var _csc = 3;
+var _hop = (!opened && near) ? abs(sin(current_time / 160)) * 2 : 0;   // เด้งเบา ๆ ตอนอยู่ใกล้
+draw_sprite_ext(opened ? spr_chest_open : spr_chest_close, 0, _x, _y - _hop, _csc, _csc, 0, _tcol, 1);
 
 draw_set_font(fnt_dialog);
 draw_set_halign(fa_center);

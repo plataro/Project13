@@ -3,7 +3,7 @@ event_inherited();
 hp = 4;
 max_hp = hp;
 move_speed = 1.8;
-tint = c_fuchsia;
+tint = make_color_rgb(255, 120, 200);   // ★ ภาพเดียวกับตัวอื่น แยกด้วยสีชมพู
 ring_dist = 240;
 attack_token_cd = 150;
 engage_range = 300;      // พุ่งจากระยะไกล = นับช่วงรอตั้งแต่ผู้เล่นเข้าระยะพุ่ง   // พุ่งเสร็จพักนานกว่าตัวอื่น
