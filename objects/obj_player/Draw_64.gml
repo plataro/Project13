@@ -277,8 +277,10 @@ if (!_ui_busy && skill_affordable()) {
         draw_set_halign(fa_center);
         ui_icon("star", 480 - _w / 2 + 34, _cy, 1.3 * _sc, _gold);
         ui_icon("star", 480 + _w / 2 - 34, _cy, 1.3 * _sc, _gold);
-        ui_text_bold(480, _cy - 34 * _sc, ui_fit(L("มีแต้มสกิล ", "Skill points: ") + string(_spn) + "!", 0.95 * _sc, _w - 110), 0.95 * _sc, _gold);
-        ui_text(480, _cy + 8 * _sc, ui_fit(L("กด ", "Press ") + _key + L(" เพื่ออัปสกิล", " to upgrade skills"), 0.6 * _sc, _w - 110), 0.6 * _sc, c_white);
+        var _t1 = L("มีแต้มสกิล ", "Skill points: ") + string(_spn) + "!";
+        var _t1b = L("กด ", "Press ") + _key + L(" เพื่ออัปสกิล", " to upgrade skills");
+        ui_text_bold(480, _cy - 34 * _sc, _t1, ui_fit(_t1, 0.95 * _sc, _w - 110), _gold);
+        ui_text(480, _cy + 8 * _sc, _t1b, ui_fit(_t1b, 0.6 * _sc, _w - 110), c_white);
         draw_set_halign(fa_left);
         draw_set_alpha(1);
     } else {
