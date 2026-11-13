@@ -38,6 +38,7 @@ global.snd_alias = {
     hit_boss:      "hit_enemy",
     boss_die:      "enemy_die",
     pickup_item:   "pickup_gold",
+    sword_get:     "pickup_item",
     sell:          "buy",
     buff:          "potion",
     gate:          "door",
@@ -57,35 +58,37 @@ function audio_register() {
     // ---------- ต่อสู้ (ผู้เล่น) ----------
     S.swing         = [snd_swing_1];   // ท่าฟัน (คอมโบท่า 1, 2 / ท่า 4 ถ้าคอมโบยาว)
     S.swing_thrust  = [snd_swing_2];   // ท่าแทง (คอมโบท่า 3 / ท่า 5 ถ้าคอมโบยาว)
-    // S.hammer_swing  = [snd_hammer_swing];
-    // S.hammer_smash  = [snd_hammer_smash];
+    S.hammer_swing  = [snd_hammer_swing];
+    S.hammer_smash  = [snd_hammer_smash];
+    S.charge_start  = [snd_charge_start];   // เริ่มชาร์จค้อน (ยาวพอดีกับเวลาชาร์จเต็ม ~1.3 วิ)
     // S.charge_full   = [snd_charge_full];
     // S.roll          = [snd_roll];
-    // S.shoot         = [snd_shoot];
+    S.shoot         = [snd_shoot];
     // S.shoot_spread  = [snd_shoot_spread];
     // S.whirl         = [snd_whirl];
     S.swing_spin    = [snd_swing_3];   // ท่าจบคอมโบ ฟาดรอบตัว (ท่า 4 / ท่า 6 ถ้าปลดคอมโบยาว)
     // S.bolt          = [snd_bolt];
     // S.ult           = [snd_ult];
-    // S.player_hurt   = [snd_player_hurt];
+    S.player_hurt   = [snd_player_hurt];
     // S.gameover      = [snd_gameover];
 
     // ---------- ศัตรู ----------
-    S.hit_enemy     = [snd_sword_clashhit];
-    // S.hit_boss      = [snd_hit_boss];
+    S.hit_enemy     = [snd_hit_flesh_1, snd_hit_flesh_2];
+    S.hit_boss      = [snd_sword_clashhit, snd_hit_metal];   // บอสใส่เกราะ = เสียงโลหะ
     // S.enemy_die     = [snd_enemy_die];
     // S.enemy_alert   = [snd_enemy_alert];
     // S.enemy_windup  = [snd_enemy_windup];
-    // S.enemy_attack  = [snd_enemy_attack];
+    S.enemy_attack  = [snd_enemy_attack];
     // S.enemy_shoot   = [snd_enemy_shoot];
-    // S.boss_roar     = [snd_boss_roar];
-    // S.boss_phase    = [snd_boss_phase];
-    // S.boss_die      = [snd_boss_die];
+    S.boss_roar     = [snd_boss_roar];
+    S.boss_phase    = [snd_boss_phase];
+    S.boss_die      = [snd_boss_die];
     S.boss_shield   = [snd_shield_impact_from_sword];   // ฟันโดนเกราะบอส
 
     // ---------- ของ / ร้าน / สกิล ----------
     // S.pickup_gold   = [snd_pickup_gold];
     // S.pickup_item   = [snd_pickup_item];
+    S.sword_get     = [snd_sword_get];   // เก็บดาบในวิหาร
     // S.potion        = [snd_potion];
     // S.buff          = [snd_buff];
     // S.buy           = [snd_buy];
@@ -115,14 +118,16 @@ function audio_register() {
     // S.title_card    = [snd_title_card];
 
     // ---------- เพลง (วนลูป) ----------
-    // M.menu      = mus_menu;
-    // M.sanctuary = mus_sanctuary;
-    // M.forest    = mus_forest;
-    // M.village   = mus_village;
-    // M.mine      = mus_mine;
-    // M.castle    = mus_castle;
-    // M.boss      = mus_boss;
-    // M.ending    = mus_ending;
+    // (ตอนนี้มี 2 เพลง ใช้ซ้ำหลายฉากไปก่อน ได้เพลงใหม่ค่อยเปลี่ยนทีละบรรทัด)
+    M.menu      = mus_journey_begins;
+    M.sanctuary = mus_journey_begins;
+    M.forest    = mus_misty_lands;
+    M.village   = mus_journey_begins;
+    M.mine      = mus_misty_lands;
+    M.castle    = mus_misty_lands;
+    // M.boss      = mus_boss;      // ยังไม่มี = ห้องบอสเงียบ
+    M.ending    = mus_journey_begins;
+    // snd_charge_long (เสียงชาร์จยาว 8 วิ) ยังไม่ได้ใช้ที่ไหน
 }
 audio_register();
 

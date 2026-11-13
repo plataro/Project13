@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"mus_journey_begins",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":3,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":65.8000227,
+  "exportDir":"",
+  "name":"mus_journey_begins",
+  "parent":{
+    "name":"BG",
+    "path":"folders/Audios/BG.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"mus_journey_begins.wav",
+  "volume":1.0,
+}

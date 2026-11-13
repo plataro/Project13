@@ -135,7 +135,13 @@ steer = function(_tx, _ty, _step) {
 }
 
 // เริ่มท่าฟันที่ _n (1-4)
+charge_snd = -1;   // ★ เสียงชาร์จค้อนที่กำลังเล่น (ปล่อย/กลิ้ง = ตัดเสียงทิ้ง)
+stop_charge_snd = function() {
+    if (charge_snd != -1) { audio_stop_sound(charge_snd); charge_snd = -1; }
+}
+
 start_attack = function(_n) {
+    stop_charge_snd();
     combo = _n;
     combo_window = 0;
     combo_buffer = false;
@@ -169,6 +175,7 @@ start_attack = function(_n) {
 // เริ่มกลิ้ง: มีปุ่มเดิน = กลิ้งตามทิศเดิน, ไม่มี = กลิ้งตามเมาส์
 start_roll = function(_kx, _ky, _len) {
     state = PState.ROLL;
+    stop_charge_snd();
     sfx("roll");
     fx_dust(x, y - 2, 5, make_color_rgb(200, 190, 170));   // ★ ฝุ่นตอนกลิ้ง
     roll_timer = roll_time;

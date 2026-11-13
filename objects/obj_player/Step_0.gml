@@ -203,6 +203,7 @@ switch (state) {
                     charge_hold = 0;
                     charge_t = 0;
                     state = PState.CHARGE;
+                    charge_snd = sfx("charge_start", 0.8, 0);
                 }
             } else {
                 charge_hold = 0;
@@ -340,6 +341,7 @@ switch (state) {
         if (global.save.weapon != "hammer") {
             state = PState.MOVE;
             charge_t = 0;
+            stop_charge_snd();
             break;
         }
 
