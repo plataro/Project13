@@ -301,7 +301,7 @@ cast_bolt = function() {
             } else {
                 var _hr = player_hit(skill4_dmg);
                 var _dir = point_direction(_px, _py, _tx, _ty);
-                with (_o) take_damage(_hr[0], _dir, _hr[1], "bullet");   // เวท = นับแบบกระสุน (บอสตั้งเกราะกันได้)
+                _o.take_damage(_hr[0], _dir, _hr[1], "bullet");   // เวท = นับแบบกระสุน (บอสตั้งเกราะกันได้)
                 player_on_hit(_o);
             }
             fx_spark(_tx, _ty, 90, 8, make_color_rgb(170, 220, 255), 180);

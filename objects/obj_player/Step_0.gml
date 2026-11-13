@@ -179,7 +179,7 @@ switch (state) {
         vsp = mvy;
 
         // ★ ฝุ่นตอนวิ่ง (วิ่งเร็ว = ถี่ขึ้น)
-        var _spd = point_distance(0, 0, mvx, mvy);
+        _spd = point_distance(0, 0, mvx, mvy);
         if (_spd > 1.2) {
             dust_t--;
             if (dust_t <= 0) {
