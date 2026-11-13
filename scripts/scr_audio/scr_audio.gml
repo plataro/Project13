@@ -29,6 +29,8 @@ global.music_dying = [];  // [[instance, เวลาหยุด], ...] เพ�
 // ★ ใช้แทนเมื่อยังไม่มีไฟล์ของชื่อนั้น (หาไฟล์มาน้อยลงได้)
 global.snd_alias = {
     hammer_swing:  "swing",
+    swing_spin:    "swing",
+    swing_thrust:  "swing",
     whirl:         "swing",
     shoot_spread:  "shoot",
     bolt:          "shoot",
@@ -53,7 +55,8 @@ function audio_register() {
     var M = global.mus;
 
     // ---------- ต่อสู้ (ผู้เล่น) ----------
-    // S.swing         = [snd_swing_1, snd_swing_2, snd_swing_3];
+    S.swing         = [snd_swing_1];   // ท่าฟัน (คอมโบท่า 1, 2 / ท่า 4 ถ้าคอมโบยาว)
+    S.swing_thrust  = [snd_swing_2];   // ท่าแทง (คอมโบท่า 3 / ท่า 5 ถ้าคอมโบยาว)
     // S.hammer_swing  = [snd_hammer_swing];
     // S.hammer_smash  = [snd_hammer_smash];
     // S.charge_full   = [snd_charge_full];
@@ -61,13 +64,14 @@ function audio_register() {
     // S.shoot         = [snd_shoot];
     // S.shoot_spread  = [snd_shoot_spread];
     // S.whirl         = [snd_whirl];
+    S.swing_spin    = [snd_swing_3];   // ท่าจบคอมโบ ฟาดรอบตัว (ท่า 4 / ท่า 6 ถ้าปลดคอมโบยาว)
     // S.bolt          = [snd_bolt];
     // S.ult           = [snd_ult];
     // S.player_hurt   = [snd_player_hurt];
     // S.gameover      = [snd_gameover];
 
     // ---------- ศัตรู ----------
-    // S.hit_enemy     = [snd_hit_enemy_1, snd_hit_enemy_2];
+    S.hit_enemy     = [snd_sword_clashhit];
     // S.hit_boss      = [snd_hit_boss];
     // S.enemy_die     = [snd_enemy_die];
     // S.enemy_alert   = [snd_enemy_alert];
@@ -77,6 +81,7 @@ function audio_register() {
     // S.boss_roar     = [snd_boss_roar];
     // S.boss_phase    = [snd_boss_phase];
     // S.boss_die      = [snd_boss_die];
+    S.boss_shield   = [snd_shield_impact_from_sword];   // ฟันโดนเกราะบอส
 
     // ---------- ของ / ร้าน / สกิล ----------
     // S.pickup_gold   = [snd_pickup_gold];
@@ -140,14 +145,15 @@ function snd_resolve(_key) {
 
 // ★ เล่นเสียงเอฟเฟกต์
 // _vol = ความดัง 0-1, _pvar = สุ่มระดับเสียงสูงต่ำ (ไม่ให้ซ้ำซาก), _gap = ms ขั้นต่ำก่อนเล่นชื่อเดิมซ้ำ
-function sfx(_key, _vol = 1, _pvar = 0.08, _gap = 35) {
+// _pitch = ระดับเสียงพื้นฐาน (1 = ปกติ, มากกว่า 1 = แหลมขึ้น)
+function sfx(_key, _vol = 1, _pvar = 0.08, _gap = 35, _pitch = 1) {
     if (global.set_sfx <= 0) return -1;
     var _t = current_time;
     if (variable_struct_exists(global.snd_last, _key) && _t - global.snd_last[$ _key] < _gap) return -1;
     var _s = snd_resolve(_key);
     if (_s == -1) return -1;
     global.snd_last[$ _key] = _t;
-    var _p = 1 + random_range(-_pvar, _pvar);
+    var _p = _pitch + random_range(-_pvar, _pvar);
     return audio_play_sound(_s, 5, false, _vol * global.set_sfx / 100, 0, _p);
 }
 

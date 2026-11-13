@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":1.6979592,
+  "duration":0.7473696,
   "exportDir":"",
   "name":"snd_shield_impact_from_sword",
   "parent":{

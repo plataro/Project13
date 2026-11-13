@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":1.0971428,
+  "duration":0.69519275,
   "exportDir":"",
   "name":"snd_sword_clashhit",
   "parent":{

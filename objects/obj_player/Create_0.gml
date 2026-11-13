@@ -154,7 +154,9 @@ start_attack = function(_n) {
     // ★ เสียงฟัน (ค้อน / ทุ่มชาร์จ / ดาบ)
     if (_n == 9) sfx("hammer_smash");
     else if (global.save.weapon == "hammer") sfx("hammer_swing", 1, 0.06);
-    else sfx("swing", 1, 0.06 + _n * 0.02);
+    else if (_d.kind == "spin") sfx("swing_spin", 1, 0.03);   // ★ ท่าจบคอมโบ ฟาดรอบตัว
+    else if (_d.kind == "thrust") sfx("swing_thrust", 1, 0.04);   // ★ ท่าแทง (ท่า 3)
+    else sfx("swing", 1, 0.04, 35, 1 + (_n - 1) * 0.05);      // ★ ท่าคอมโบถัดไป = แหลมขึ้นทีละนิด
 
     var _h = instance_create_depth(x, y, depth, obj_hitbox);
 	_h.owner = id;

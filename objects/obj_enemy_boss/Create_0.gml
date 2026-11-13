@@ -190,6 +190,7 @@ take_damage = function(_dmg, _dir, _crit = false, _src = "melee") {
         _crit = false;
         fx_spark(x, y - 70, _dir, 8, make_color_rgb(110, 190, 255));
         shield_hp--;
+        sfx("boss_shield", 1, 0.06, 25);
         if (shield_hp <= 0) end_shield(true);
     }
 
